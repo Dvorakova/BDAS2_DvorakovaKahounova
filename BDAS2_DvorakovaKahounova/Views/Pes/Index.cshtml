@@ -1,0 +1,25 @@
+﻿@model List<BDAS2_DvorakovaKahounova.Models.Pes>
+
+<h2>Seznam psů</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Jméno</th>
+            <th>Číslo čipu</th>
+            <th>Datum narození</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pes in Model)
+        {
+            <tr>
+                <td>@pes.ID_PSA</td>
+                <td>@pes.JMENO</td>
+                <td>@pes.CISLO_CIPU</td>
+                <td>@pes.NAROZENI.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
