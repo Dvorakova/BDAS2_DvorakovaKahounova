@@ -28,5 +28,12 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult Kontakty()
+        {
+            ViewBag.Title = "Kontakty";
+            return View();
+        }
+
     }
 }
