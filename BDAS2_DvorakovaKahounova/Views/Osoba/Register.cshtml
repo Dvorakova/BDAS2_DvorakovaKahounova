@@ -1,0 +1,17 @@
+﻿@model BDAS2_DvorakovaKahounova.Models.Osoba
+
+<h2>Registrace</h2>
+
+<form asp-action="Register" method="post">
+    <label>Jméno:</label>
+    <input asp-for="JMENO" /><br />
+    <label>Příjmení:</label>
+    <input asp-for="PRIJMENI" /><br />
+    <label>Telefon:</label>
+    <input asp-for="TELEFON" /><br />
+    <label>Email:</label>
+    <input asp-for="EMAIL" /><br />
+    <label>Heslo:</label>
+    <input asp-for="HESLO" type="password" /><br />
+    <input type="submit" value="Registrovat" />
+</form>
