@@ -1,17 +1,33 @@
 ﻿@model BDAS2_DvorakovaKahounova.Models.Osoba
 
-<h2>Registrace</h2>
+<h2 class="text-center mt-4">Registrace</h2>
 
-<form asp-action="Register" method="post">
-    <label>Jméno:</label>
-    <input asp-for="JMENO" /><br />
-    <label>Příjmení:</label>
-    <input asp-for="PRIJMENI" /><br />
-    <label>Telefon:</label>
-    <input asp-for="TELEFON" /><br />
-    <label>Email:</label>
-    <input asp-for="EMAIL" /><br />
-    <label>Heslo:</label>
-    <input asp-for="HESLO" type="password" /><br />
-    <input type="submit" value="Registrovat" />
-</form>
+<div class="container">
+    <form asp-action="Register" method="post" class="mt-4">
+        <div class="mb-3">
+            <label for="JMENO" class="form-label">Jméno:</label>
+            <input asp-for="JMENO" class="form-control" id="JMENO" required />
+        </div>
+        <div class="mb-3">
+            <label for="PRIJMENI" class="form-label">Příjmení:</label>
+            <input asp-for="PRIJMENI" class="form-control" id="PRIJMENI" required />
+        </div>
+        <div class="mb-3">
+            <label for="TELEFON" class="form-label">Telefon:</label>
+            <input asp-for="TELEFON" class="form-control" id="TELEFON" required />
+        </div>
+        <div class="mb-3">
+            <label for="EMAIL" class="form-label">Email:</label>
+            <input asp-for="EMAIL" type="email" class="form-control" id="EMAIL" required />
+        </div>
+        <div class="mb-3">
+            <label for="HESLO" class="form-label">Heslo:</label>
+            <input asp-for="HESLO" type="password" class="form-control" id="HESLO" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Registrovat</button>
+    </form>
+    <div class="text-center mt-3">
+        <a href="@Url.Action("Login", "Osoba")" class="text-custom">Máte již účet? Přihlaste se!</a>
+    </div>
+</div>
+

@@ -1,9 +1,19 @@
-﻿<h2>Přihlášení</h2>
+﻿<h2 class="text-center mt-4">Přihlášení</h2>
 
-<form asp-action="Login" method="post">
-    <label>Email:</label>
-    <input type="text" name="email" /><br />
-    <label>Heslo:</label>
-    <input type="password" name="heslo" /><br />
-    <input type="submit" value="Přihlásit se" />
-</form>
+<div class="container login-page">
+    <form asp-action="Login" method="post" class="mt-4">
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" name="email" class="form-control" id="email" required />
+        </div>
+        <div class="mb-3">
+            <label for="heslo" class="form-label">Heslo:</label>
+            <input type="password" name="heslo" class="form-control" id="heslo" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Přihlásit se</button>
+    </form>
+    <div class="text-center mt-3">
+        <a href="@Url.Action("Register", "Osoba")" class="text-custom">Ještě nemáte účet? Zaregistrujte se!</a>
+    </div>
+
+</div>
