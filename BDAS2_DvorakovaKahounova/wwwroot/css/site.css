@@ -29,39 +29,94 @@ body {
     margin-bottom: 60px;
 }
 
+h1 {
+    color: var(--fialova);
+}
+
 h2 {
     color: var(--fialova); /* Barva nadpisu */
 }
 
-/*.container {
-    max-width: 400px;*/ /* Maximální šíøka formuláøe */
-    /*margin: auto;*/ /* Vycentrování formuláøe */
-/*}*/
+/* --Login--*/
 
-.login-page .container {
-    max-width: 400px; /* Maximální šíøka formuláøe */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh; /* Výška stránky */
+}
+
+    .login-page h2 {
+        color: var(--fialova);
+        margin-top: 0; /* Nastaví vrchní odsazení na nulu */
+        margin-bottom: 1.5rem; /* Nastaví dolní odsazení */
+    }
+
+    .login-page .container {
+        max-width: 300px; /* Maximální šíøka formuláøe */
+        margin: auto; /* Vycentrování formuláøe */
+    }
+
+    .login-page .btn {
+        font-size: 16px; /* Velikost písma pro tlaèítko */
+        background-color: var(--svetleModra);
+        border-color: var(--svetleModra);
+    }
+
+        .login-page .btn:hover {
+            background-color: var(--tmaveModra); /* Barva pøi hoveru */
+        }
+
+    .login-page .text-custom {
+        color: var(--tmaveModra);
+        text-decoration: none; /* Pokud chceš, aby nebyl podtržený */
+    }
+
+        .login-page .text-custom:hover {
+            text-decoration: underline; /* Pøidá podtržení pøi najetí myší */
+        }
+
+/* --Konec loginu--*/
+
+/* --Registrace-- */
+.register-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Výška stránky */
+}
+
+.register-page h2 {
+    color: var(--fialova);
+    margin-top: 0; /* Nastaví vrchní odsazení na nulu */
+    margin-bottom: 1.5rem; /* Nastaví dolní odsazení */
+}
+
+.register-page .container {
+    max-width: 300px; /* Maximální šíøka formuláøe */
     margin: auto; /* Vycentrování formuláøe */
 }
 
-.login-page .btn {
+.register-page .btn {
     font-size: 16px; /* Velikost písma pro tlaèítko */
     background-color: var(--svetleModra);
     border-color: var(--svetleModra);
 }
 
-    .login-page .btn:hover {
+    .register-page .btn:hover {
         background-color: var(--tmaveModra); /* Barva pøi hoveru */
     }
 
-.login-page .text-custom {
+.register-page .text-custom {
     color: var(--tmaveModra);
     text-decoration: none; /* Pokud chceš, aby nebyl podtržený */
 }
 
-    .login-page .text-custom:hover {
+    .register-page .text-custom:hover {
         text-decoration: underline; /* Pøidá podtržení pøi najetí myší */
     }
-
+    
+/* --konec registrace-- */
 
 .btn {
     font-size: 16px; /* Velikost písma pro tlaèítko */

@@ -1,4 +1,4 @@
-﻿<h2 class="text-center mt-4">Přihlášení</h2>
+﻿@* <h2 class="text-center mt-4">Přihlášení</h2>
 
 <div class="container login-page">
     <form asp-action="Login" method="post" class="mt-4">
@@ -16,4 +16,26 @@
         <a href="@Url.Action("Register", "Osoba")" class="text-custom">Ještě nemáte účet? Zaregistrujte se!</a>
     </div>
 
+</div> *@
+
+<div class="login-page">
+    <div class="container">
+        <h2 class="text-center mb-4">Přihlášení</h2> <!-- Změněna třída na mb-4 pro menší odsazení -->
+        <form asp-action="Login" method="post">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" name="email" class="form-control" id="email" required />
+            </div>
+            <div class="mb-3">
+                <label for="heslo" class="form-label">Heslo:</label>
+                <input type="password" name="heslo" class="form-control" id="heslo" required />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Přihlásit se</button>
+        </form>
+        <div class="text-center mt-3">
+            <a href="@Url.Action("Register", "Osoba")" class="text-custom">Ještě nemáte účet? Zaregistrujte se!</a>
+        </div>
+    </div>
 </div>
+
+
