@@ -25,7 +25,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
                     // Vrať počet záznamů s daným emailem
                     int count = Convert.ToInt32(cmd.ExecuteScalar());
-                    return count > 0; // Pokud je počet větší než 0, email existuje
+                    return count > 0; // Pokud je počet větší než 0, již email existuje
                 }
             }
         }
@@ -35,7 +35,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             using (var con = new OracleConnection(_connectionString))
             {
                 con.Open();
-                Console.WriteLine("před voláním comandu.");
                 using (var cmd = new OracleCommand("INSERT INTO OSOBY (JMENO, PRIJMENI, TELEFON, ID_OSOBA, TYP_OSOBY, EMAIL, HESLO) VALUES (:jmeno, :prijmeni, :telefon, seq_id_osoba.NEXTVAL, :typ_osoby, :email, :heslo)", con))
                 {
                     cmd.Parameters.Add(new OracleParameter("jmeno", novaOsoba.JMENO));
@@ -48,7 +47,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     // Vrátí true, pokud byl vložen alespoň jeden řádek
                     return cmd.ExecuteNonQuery() > 0;
                 }
-                Console.WriteLine("using osobaDataAccess mimo.");
+                
             }
         }
 
@@ -67,7 +66,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     {
                         if (reader.Read())
                         {
-                            return new Osoba
+                            Osoba osoba = new Osoba
                             {
                                 ID_OSOBA = reader.GetInt32(0),
                                 JMENO = reader.GetString(1),
@@ -77,6 +76,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                                 EMAIL = reader.GetString(5),
                                 HESLO = reader.GetString(6)
                             };
+                            return osoba;
                         }
                     }
                 }

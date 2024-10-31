@@ -12,7 +12,7 @@ namespace BDAS2_DvorakovaKahounova.Models
 
         [Required(ErrorMessage = "Telefon je povinný.")]
         public string TELEFON { get; set; }
-        public string TYP_OSOBY { get; set; } = "U";
+        public string TYP_OSOBY { get; set; } = "";
 
         [Required(ErrorMessage = "Email je povinný.")]
         [EmailAddress(ErrorMessage = "Zadejte platnou emailovou adresu.")]
