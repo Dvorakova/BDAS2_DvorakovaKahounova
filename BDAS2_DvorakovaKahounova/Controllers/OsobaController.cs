@@ -66,7 +66,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             if (osoba != null)
             {
                 // pokud se přihlášení povede, uživateli se zobrazí stránka (zatím home)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "PrihlasenyUzivatel");
             }
             ModelState.AddModelError("email", "Nesprávné přihlašovací údaje.");
             ViewBag.Email = email;

@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_PrihlasenyUzivatelLayout";
+    ViewBag.Title = "Vítejte přihlášenému uživateli"; // Nastavení názvu stránky
+}
+
+<div class="container">
+    <h1 class="text-center">Vítejte na stránce pro přihlášené uživatele!</h1>
+    <p>Toto je obsah, který vidí uživatel po úspěšném přihlášení.</p>
+    <p><a href="@Url.Action("Logout", "PrihlasenyUzivatel")" class="btn btn-danger">Odhlásit se</a></p>
+</div>
