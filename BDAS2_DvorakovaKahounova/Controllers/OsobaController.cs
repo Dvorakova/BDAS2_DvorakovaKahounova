@@ -46,17 +46,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 Console.WriteLine("Registrace se nezdařila.");
                 ModelState.AddModelError("", "Registrace se nezdařila.");
             }
-            else
-            {
-                // Výpis chyb
-                foreach (var entry in ModelState)
-                {
-                    foreach (var error in entry.Value.Errors)
-                    {
-                        Console.WriteLine($"Chyba: {error.ErrorMessage}");
-                    }
-                }
-            }
             return View(novaOsoba);
         }
 
@@ -65,6 +54,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         public IActionResult Login(string email)
         {
             ViewBag.Email = email;
+            ViewBag.IsLoginAttempted = false;
             return View();
         }
 
@@ -75,12 +65,15 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             var osoba = _dataAccess.LoginUser(email, heslo);
             if (osoba != null)
             {
-                // Tady by obvykle následovalo nastavení session nebo cookies
+                // pokud se přihlášení povede, uživateli se zobrazí stránka (zatím home)
                 return RedirectToAction("Index", "Home");
             }
-            ModelState.AddModelError("", "Nesprávné přihlašovací údaje.");
+            ModelState.AddModelError("email", "Nesprávné přihlašovací údaje.");
+            ViewBag.Email = email;
+            ViewBag.IsLoginAttempted = true; // Informace o pokusu o přihlášení
             return View();
         }
+
 
         public IActionResult Index()
         {

@@ -66,17 +66,16 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     {
                         if (reader.Read())
                         {
-                            Osoba osoba = new Osoba
+                            return new Osoba
                             {
-                                ID_OSOBA = reader.GetInt32(0),
-                                JMENO = reader.GetString(1),
-                                PRIJMENI = reader.GetString(2),
-                                TELEFON = reader.GetString(3),
+                                JMENO = reader.GetString(0),
+                                PRIJMENI = reader.GetString(1),
+                                TELEFON = reader.GetString(2),
+                                ID_OSOBA = reader.GetInt32(3),
                                 TYP_OSOBY = reader.GetString(4),
                                 EMAIL = reader.GetString(5),
                                 HESLO = reader.GetString(6)
                             };
-                            return osoba;
                         }
                     }
                 }
