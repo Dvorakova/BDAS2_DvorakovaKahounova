@@ -1,9 +1,15 @@
 /* BARVICKY */
 :root {
-    --fialova: #6B4E71; /* fialkova */
-    --tmaveModra: #3A4454; /* tmave modra */
-    --svetleModra: #53687E; /* svetle modra */
-    --text-color: #333; /* Barva textu */
+    /*--fialova: #6B4E71;*/ /* fialkova */
+    /*--tmaveModra: #3A4454;*/ /* tmave modra */
+    /*--svetleModra: #53687E;*/ /* svetle modra */
+    /*--text-color: #333;*/ /* Barva textu */
+
+    --cerna: #000000;
+    --fialova: #70587C;
+    --bordo: #502F4C;
+    --levandule: #a687ca;
+    --snehova: #F9F4F5;
 }
 
 html {
@@ -27,14 +33,16 @@ html {
 
 body {
     margin-bottom: 60px;
+    background-color: var(--snehova)
 }
 
 h1 {
-    color: var(--fialova);
+    color: var(--bordo);
+    font-family: 'Tahoma (sans-serif)', 'Lucida Sans Regular', 'Arial';
 }
 
 h2 {
-    color: var(--fialova); /* Barva nadpisu */
+    color: var(--bordo);
 }
 
 /* --Login--*/
@@ -47,7 +55,7 @@ h2 {
 }
 
     .login-page h2 {
-        color: var(--fialova);
+        color: var(--bordo);
         margin-top: 0; /* Nastaví vrchní odsazení na nulu */
         margin-bottom: 1.5rem; /* Nastaví dolní odsazení */
     }
@@ -57,18 +65,8 @@ h2 {
         margin: auto; /* Vycentrování formuláøe */
     }
 
-    .login-page .btn {
-        font-size: 16px; /* Velikost písma pro tlaèítko */
-        background-color: var(--svetleModra);
-        border-color: var(--svetleModra);
-    }
-
-        .login-page .btn:hover {
-            background-color: var(--tmaveModra); /* Barva pøi hoveru */
-        }
-
     .login-page .text-custom {
-        color: var(--tmaveModra);
+        color: var(--fialova);
         text-decoration: none; /* Pokud chceš, aby nebyl podtržený */
     }
 
@@ -86,53 +84,69 @@ h2 {
     height: 100vh; /* Výška stránky */
 }
 
-.register-page h2 {
-    color: var(--fialova);
-    margin-top: 0; /* Nastaví vrchní odsazení na nulu */
-    margin-bottom: 1.5rem; /* Nastaví dolní odsazení */
-}
+    .register-page h2 {
+        color: var(--fialova);
+        margin-top: 0; /* Nastaví vrchní odsazení na nulu */
+        margin-bottom: 1.5rem; /* Nastaví dolní odsazení */
+    }
 
-.register-page .container {
-    max-width: 300px; /* Maximální šíøka formuláøe */
-    margin: auto; /* Vycentrování formuláøe */
-}
+    .register-page .container {
+        max-width: 300px; /* Maximální šíøka formuláøe */
+        margin: auto; /* Vycentrování formuláøe */
+    }
 
-.register-page .btn {
-    font-size: 16px; /* Velikost písma pro tlaèítko */
-    background-color: var(--svetleModra);
-    border-color: var(--svetleModra);
-}
 
     .register-page .btn:hover {
-        background-color: var(--tmaveModra); /* Barva pøi hoveru */
+        background-color: var(--fialova); /* Barva pøi hoveru */
     }
 
-.register-page .text-custom {
-    color: var(--tmaveModra);
-    text-decoration: none; /* Pokud chceš, aby nebyl podtržený */
-}
-
-    .register-page .text-custom:hover {
-        text-decoration: underline; /* Pøidá podtržení pøi najetí myší */
+    .register-page .text-custom {
+        color: var(--fialova);
+        text-decoration: none; /* Pokud chceš, aby nebyl podtržený */
     }
-    
+
+        .register-page .text-custom:hover {
+            text-decoration: underline; /* Pøidá podtržení pøi najetí myší */
+        }
+
 /* --konec registrace-- */
 
 .btn {
     font-size: 16px; /* Velikost písma pro tlaèítko */
-    background-color: var(--svetleModra);
-    border-color: var(--svetleModra);
+    background-color: var(--levandule);
+    border-color: var(--levandule);
 }
 
     .btn:hover {
-        background-color: var(--tmaveModra); /* Barva pøi hoveru */
+        background-color: var(--fialova); /* Barva pøi hoveru */
+        border-color: var(--fialova);
     }
 
 .text-custom {
-    color: var(--tmaveModra);
+    color: var(--bordo);
     text-decoration: none; /* Pokud chceš, aby nebyl podtržený */
 }
 
     .text-custom:hover {
         text-decoration: underline; /* Pøidá podtržení pøi najetí myší */
     }
+
+/* -- index --*/
+
+.index-text {
+    text-align: left;
+    padding: 10px;
+}
+
+h1 {
+    color: var(--bordo);
+    font-family: 'Tahoma (sans-serif)', 'Lucida Sans Regular', 'Arial';
+    text-align: center;
+}
+
+.index-conteiner {
+    background-color: var(--levandule);
+    width: 60rem;
+    height: 15rem;
+    color: white;
+}
