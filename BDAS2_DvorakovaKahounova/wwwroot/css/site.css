@@ -36,14 +36,58 @@ body {
     background-color: var(--snehova)
 }
 
-h1 {
+
+/* kontakty */
+
+.h1-kontakty {
     color: var(--bordo);
     font-family: 'Tahoma (sans-serif)', 'Lucida Sans Regular', 'Arial';
+    text-align: center;
 }
 
-h2 {
+.h2-kontakty {
     color: var(--bordo);
+    text-align: center;
+    margin-top: -25px;
 }
+
+.p-kontakty{
+    text-align: left;
+    color: black;
+}
+
+.container-kontakty {
+    padding: 20px;
+    max-width: 400px;
+    max-height: 500px;
+    margin: initial; /* Vycentrování kontejneru */
+    border-radius: 10px;
+    border: 2px solid transparent; /* Umožní efekt rozplynutí na okrajích */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Jemný stín pro zvýraznìní */
+    margin-top: 20px;
+}
+
+.kontakt-mapa {
+    display: flex; /* Použití flexboxu pro zarovnání kontejnerù */
+    justify-content: space-between; /* Mezera mezi kontejnery */
+}
+
+.container-kontakty, .container-mapa {
+    padding: 20px; /* Pøidání paddingu pro vnitøní odsazení */
+}
+
+/* Zajistit, že iframe má správnou výšku a šíøku */
+.mapa {
+    width: 100%; /* Šíøka mapy */
+    height: 300px; /* Výška mapy */
+    border-radius: 10px; /* Zaoblené rohy mapy */
+    overflow: hidden; /* Skrytí pøeteèení obsahu */
+    border: 2px solid transparent; /* Umožní efekt rozplynutí na okrajích */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+
 
 /* --Login--*/
 
@@ -135,7 +179,7 @@ h2 {
 
 .index-text {
     text-align: left;
-    padding: 10px;
+    padding: 20px;
 }
 
 h1 {
@@ -144,9 +188,39 @@ h1 {
     text-align: center;
 }
 
-.index-conteiner {
+h2{
+    padding: 25px;
+    color: var(--bordo);
+}
+
+
+/* Informace o útulku */
+.info-container {
     background-color: var(--levandule);
-    width: 60rem;
-    height: 15rem;
     color: white;
+    padding: 30px;
+    width: 60%; /* Zmìnìno pro lepší zarovnání vlevo */
+    margin-left: 0; /* Zarovnání vlevo */
+    border-radius: 15px; /* Zaoblené okraje */
+    position: relative;
+    font-size: 1.1em;
+    border: 2px solid transparent; /* Umožní efekt rozplynutí na okrajích */
+    background: linear-gradient(var(--levandule), var(--levandule)) padding-box, linear-gradient(to right, rgba(255, 255, 255, 0), var(--levandule), rgba(255, 255, 255, 0)) border-box; /* Gradientový efekt */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Jemný stín pro zvýraznìní */
+    margin-top: -70px;
+}
+
+/* Kontejner pro vedlejší umístìní kontejneru a obrázku */
+.content-container {
+    display: flex;
+    align-items: center; /* Vertikální zarovnání na støed */
+    gap: 150px; /* Mezera mezi kontejnerem a obrázkem */
+}
+
+/* Styl pro obrázek */
+.logo-image {
+    width: 250px; /* Zvýšená šíøka obrázku */
+    height: auto;
+    border-radius: 10px; /* Zaoblené rohy pro vizuální harmonii s kontejnerem */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Jemný stín pro zvýraznìní */
 }
