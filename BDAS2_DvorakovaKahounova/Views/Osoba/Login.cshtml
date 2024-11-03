@@ -1,28 +1,9 @@
-﻿@* <h2 class="text-center mt-4">Přihlášení</h2>
-
-<div class="container login-page">
-    <form asp-action="Login" method="post" class="mt-4">
-        <div class="mb-3">
-            <label for="email" class="form-label">Email:</label>
-            <input type="email" name="email" class="form-control" id="email" required />
-        </div>
-        <div class="mb-3">
-            <label for="heslo" class="form-label">Heslo:</label>
-            <input type="password" name="heslo" class="form-control" id="heslo" required />
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Přihlásit se</button>
-    </form>
-    <div class="text-center mt-3">
-        <a href="@Url.Action("Register", "Osoba")" class="text-custom">Ještě nemáte účet? Zaregistrujte se!</a>
-    </div>
-
-</div> *@
-@model BDAS2_DvorakovaKahounova.Models.Osoba
+﻿@* @model BDAS2_DvorakovaKahounova.Models.Osoba
 <div class="login-page">
     <div class="container-login">
-        <h2 class="text-center mb-4">Přihlášení</h2> <!-- Změněna třída na mb-4 pro menší odsazení -->
+        <h2 class="h2-login">Přihlášení</h2> <!-- Změněna třída na mb-4 pro menší odsazení -->
         <form asp-action="Login" method="post">
-            <div class="mb-3">
+            <div class="input-container">
                 <label for="EMAIL" class="form-label">Email:</label>
                 <input asp-for="EMAIL" type="email" class="form-control" id="EMAIL" value="@ViewBag.Email" required />
                 @if (ViewBag.IsLoginAttempted)
@@ -30,16 +11,47 @@
                     <span asp-validation-for="EMAIL" class="text-danger"></span> <!-- Tady se zobrazí chyba -->
                 }
             </div>
-            <div class="mb-3">
+            <div class="input-container">
                 <label for="heslo" class="form-label">Heslo:</label>
                 <input type="password" name="heslo" class="form-control" id="heslo" required />
             </div>
             <button type="submit" class="btn btn-primary w-100">Přihlásit se</button>
         </form>
         <div class="text-center mt-3">
-            <a href="@Url.Action("Register", "Osoba")" class="text-custom">Ještě nemáte účet? Zaregistrujte se!</a>
+            <p class="p-login">Ještě nemáte účet?</p>
+            <a href="@Url.Action("Register", "Osoba")" class="text-custom">Zaregistrujte se!</a>
+        </div>
+    </div>
+</div> *@
+
+@model BDAS2_DvorakovaKahounova.Models.Osoba
+<div class="login-page">
+    <div class="container-login">
+        <h2 class="h2-login">Přihlášení</h2>
+        <form asp-action="Login" method="post">
+            <div class="input-container">
+                <input asp-for="EMAIL" type="text" id="EMAIL" required="" />
+                <label for="EMAIL" class="label">Email:</label>
+                <div class="underline"></div>
+                @if (ViewBag.IsLoginAttempted)
+                {
+                    <span asp-validation-for="EMAIL" class="text-danger"></span>
+                }
+            </div>
+            <div class="input-container">
+                <input type="password" name="heslo" id="heslo" required="" />
+                <label for="heslo" class="label">Heslo:</label>
+                <div class="underline"></div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Přihlásit se</button>
+        </form>
+        <div class="text-center mt-3">
+            <p class="p-login">Ještě nemáte účet?</p>
+            <a href="@Url.Action("Register", "Osoba")" class="text-custom">Zaregistrujte se!</a>
         </div>
     </div>
 </div>
+
+
 
 

@@ -86,37 +86,96 @@ body {
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-
-
-
 /* --Login--*/
 
 .login-page {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 70vh; /* Výška stránky */
+    height: 80vh;
+    background-color: var(--snehova);
 }
 
-    .login-page h2 {
-        color: var(--bordo);
-        margin-top: 0; /* Nastaví vrchní odsazení na nulu */
-        margin-bottom: 1.5rem; /* Nastaví dolní odsazení */
+.h2-login {
+    margin: -10px 0 10px 0;
+    color: var(--bordo);
+}
+
+.p-login {
+    margin: 0;
+}
+
+/*.container-login {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.062);
+    position: relative;
+}*/
+
+.input-container {
+    position: relative;
+    margin: 20px auto; /* Zmenšené odsazení pro menší mezeru */
+    width: 100%; /* Upravte podle potøeby */
+}
+
+    .input-container input[type="text"],
+    .input-container input[type="password"] {
+        font-size: 20px;
+        width: 100%;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        padding: 5px 0;
+        background-color: transparent;
+        outline: none;
     }
 
-    .login-page .container {
-        max-width: 300px; /* Maximální šíøka formuláøe */
-        margin: auto; /* Vycentrování formuláøe */
+    .input-container .label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: #ccc;
+        transition: all 0.3s ease;
+        pointer-events: none;
     }
 
-    .login-page .text-custom {
-        color: var(--fialova);
-        text-decoration: none; /* Pokud chceš, aby nebyl podtržený */
+    .input-container input[type="text"]:focus ~ .label,
+    .input-container input[type="text"]:valid ~ .label,
+    .input-container input[type="password"]:focus ~ .label,
+    .input-container input[type="password"]:valid ~ .label {
+        top: -20px;
+        font-size: 16px;
+        color: #333;
     }
 
-        .login-page .text-custom:hover {
-            text-decoration: underline; /* Pøidá podtržení pøi najetí myší */
-        }
+    .input-container .underline {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 2px;
+        width: 100%;
+        background-color: #333;
+        transform: scaleX(0);
+        transition: all 0.3s ease;
+    }
+
+    .input-container input[type="text"]:focus ~ .underline,
+    .input-container input[type="text"]:valid ~ .underline,
+    .input-container input[type="password"]:focus ~ .underline,
+    .input-container input[type="password"]:valid ~ .underline {
+        transform: scaleX(1);
+    }
+
+
+
+
+
+
 
 /* --Konec loginu--*/
 
