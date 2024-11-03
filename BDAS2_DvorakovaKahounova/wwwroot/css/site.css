@@ -92,20 +92,21 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    height: 100vh;
     background-color: var(--snehova);
 }
 
 .h2-login {
     margin: -10px 0 10px 0;
     color: var(--bordo);
+    text-align: center;
 }
 
 .p-login {
     margin: 0;
 }
 
-/*.container-login {
+.container-login {
     width: 300px;
     display: flex;
     flex-direction: column;
@@ -116,7 +117,7 @@ body {
     padding: 30px;
     box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.062);
     position: relative;
-}*/
+}
 
 .input-container {
     position: relative;
@@ -139,7 +140,7 @@ body {
         position: absolute;
         top: 0;
         left: 0;
-        color: #ccc;
+        color: var(--bordo);
         transition: all 0.3s ease;
         pointer-events: none;
     }
@@ -150,7 +151,7 @@ body {
     .input-container input[type="password"]:valid ~ .label {
         top: -20px;
         font-size: 16px;
-        color: #333;
+        color: var(--bordo);
     }
 
     .input-container .underline {
@@ -159,7 +160,7 @@ body {
         left: 0;
         height: 2px;
         width: 100%;
-        background-color: #333;
+        background-color: var(--bordo);
         transform: scaleX(0);
         transition: all 0.3s ease;
     }
@@ -171,48 +172,7 @@ body {
         transform: scaleX(1);
     }
 
-
-
-
-
-
-
 /* --Konec loginu--*/
-
-/* --Registrace-- */
-.register-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Výška stránky */
-}
-
-    .register-page h2 {
-        color: var(--fialova);
-        margin-top: 0; /* Nastaví vrchní odsazení na nulu */
-        margin-bottom: 1.5rem; /* Nastaví dolní odsazení */
-    }
-
-    .register-page .container {
-        max-width: 300px; /* Maximální šíøka formuláøe */
-        margin: auto; /* Vycentrování formuláøe */
-    }
-
-
-    .register-page .btn:hover {
-        background-color: var(--fialova); /* Barva pøi hoveru */
-    }
-
-    .register-page .text-custom {
-        color: var(--fialova);
-        text-decoration: none; /* Pokud chceš, aby nebyl podtržený */
-    }
-
-        .register-page .text-custom:hover {
-            text-decoration: underline; /* Pøidá podtržení pøi najetí myší */
-        }
-
-/* --konec registrace-- */
 
 .btn {
     font-size: 16px; /* Velikost písma pro tlaèítko */

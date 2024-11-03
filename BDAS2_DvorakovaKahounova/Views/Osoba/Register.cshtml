@@ -1,72 +1,54 @@
-﻿@*   @model BDAS2_DvorakovaKahounova.Models.Osoba
+﻿@model BDAS2_DvorakovaKahounova.Models.Osoba
 
-<h2 class="text-center mt-4">Registrace</h2>
+    <div class="login-page">
+        
 
-<div class="container">
-    <form asp-action="Register" method="post" class="mt-4">
-        <div class="mb-3">
-            <label for="JMENO" class="form-label">Jméno:</label>
-            <input asp-for="JMENO" class="form-control" id="JMENO" required />
+        <div class="container-login">
+        <h2 class="h2-login">Registrace</h2>
+            <form asp-action="Register" method="post">
+                <div class="input-container">
+                    <input asp-for="JMENO" type="text" id="JMENO" required />
+                    <label for="JMENO" class="label">Jméno:</label>
+                    <div class="underline"></div>
+                </div>
+
+                <div class="input-container">
+                    <input asp-for="PRIJMENI" type="text" id="PRIJMENI" required />
+                    <label for="PRIJMENI" class="label">Příjmení:</label>
+                    <div class="underline"></div>
+                </div>
+
+                <div class="input-container">
+                    <input asp-for="TELEFON" type="text" id="TELEFON" required />
+                    <label for="TELEFON" class="label">Telefon:</label>
+                    <div class="underline"></div>
+                </div>
+
+            <div class="input-container">
+                <input asp-for="EMAIL" type="text" id="EMAIL" required="" />
+                <label for="EMAIL" class="label">Email:</label>
+                <div class="underline"></div>
+            </div>
+
+                <div class="input-container">
+                    <input asp-for="HESLO" type="password" id="HESLO" required />
+                    <label for="HESLO" class="label">Heslo:</label>
+                    <div class="underline"></div>
+                </div>
+
+            <button type="submit" class="btn btn-primary w-100">Registrovat</button>
+            </form>
         </div>
-        <div class="mb-3">
-            <label for="PRIJMENI" class="form-label">Příjmení:</label>
-            <input asp-for="PRIJMENI" class="form-control" id="PRIJMENI" required />
-        </div>
-        <div class="mb-3">
-            <label for="TELEFON" class="form-label">Telefon:</label>
-            <input asp-for="TELEFON" class="form-control" id="TELEFON" required />
-        </div>
-        <div class="mb-3">
-            <label for="EMAIL" class="form-label">Email:</label>
-            <input asp-for="EMAIL" type="email" class="form-control" id="EMAIL" required />
-        </div>
-        <div class="mb-3">
-            <label for="HESLO" class="form-label">Heslo:</label>
-            <input asp-for="HESLO" type="password" class="form-control" id="HESLO" required />
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Registrovat</button>
-    </form>
-    <div class="text-center mt-3">
-        <a href="@Url.Action("Login", "Osoba")" class="text-custom">Máte již účet? Přihlaste se!</a>
     </div>
-</div> *@
 
-  @model BDAS2_DvorakovaKahounova.Models.Osoba
 
-<h2 class="text-center mt-4">Registrace</h2>
 
-<div class="register-page">
-	<div class="container">
-		<form asp-action="Register" method="post" class="mt-4">
-			<div class="mb-3">
-				<label for="JMENO" class="form-label">Jméno:</label>
-				<input asp-for="JMENO" class="form-control" id="JMENO" required />
-			</div>
-			<div class="mb-3">
-				<label for="PRIJMENI" class="form-label">Příjmení:</label>
-				<input asp-for="PRIJMENI" class="form-control" id="PRIJMENI" required />
-			</div>
-			<div class="mb-3">
-				<label for="TELEFON" class="form-label">Telefon:</label>
-				<input asp-for="TELEFON" class="form-control" id="TELEFON" required />
-			</div>
-			<div class="mb-3">
-				<label for="EMAIL" class="form-label">Email:</label>
-				<input asp-for="EMAIL" type="email" class="form-control" id="EMAIL" required />
-				<span asp-validation-for="EMAIL" class="text-danger"></span> <!-- Tady se zobrazí chyba -->
-			</div>
 
-			<div class="mb-3">
-				<label for="HESLO" class="form-label">Heslo:</label>
-				<input asp-for="HESLO" type="password" class="form-control" id="HESLO" required />
-			</div>
-			<button type="submit" class="btn btn-primary w-100">Registrovat</button>
-		</form>
-		<div class="text-center mt-3">
-			<a href="@Url.Action("Login", "Osoba")" class="text-custom">Máte již účet? Přihlaste se!</a>
-		</div>
-	</div>
-</div>
+
+
+
+
+
 @* @if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger">
