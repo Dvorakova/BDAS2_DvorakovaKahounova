@@ -103,5 +103,33 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return Convert.ToBase64String(hash) == storedHash;
         }
 
+
+        public Osoba GetUserProfile(string email)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand("SELECT JMENO, PRIJMENI, TELEFON, EMAIL FROM OSOBY WHERE EMAIL = :email", con))
+                {
+                    cmd.Parameters.Add(new OracleParameter("email", email));
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Osoba
+                            {
+                                JMENO = reader.GetString(0),
+                                PRIJMENI = reader.GetString(1),
+                                TELEFON = reader.GetString(2),
+                                EMAIL = reader.GetString(3)
+                            };
+                        }
+                    }
+                }
+            }
+            return null; // Pokud uživatel nebyl nalezen
+        }
+
     }
 }

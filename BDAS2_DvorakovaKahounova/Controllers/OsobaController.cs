@@ -1,6 +1,9 @@
 ﻿using BDAS2_DvorakovaKahounova.DataAcessLayer;
 using BDAS2_DvorakovaKahounova.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -27,7 +30,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         public IActionResult Register(Osoba novaOsoba)
         {
             novaOsoba.TYP_OSOBY = "U";
-            
+
             if (ModelState.IsValid)
             {
                 Console.WriteLine("kontrola mailu v controolleer");
@@ -62,13 +65,36 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
         // Zpracování přihlášení
         [HttpPost]
-        public IActionResult Login(string email, string heslo)
+        //public IActionResult Login(string email, string heslo)
+        public async Task<IActionResult> Login(string email, string heslo)
         {
             var osoba = _dataAccess.LoginUser(email, heslo);
             if (osoba != null)
             {
+
+                /////
+                //PRIDANO
+                // Pokud přihlášení uspěje, nastavíme identity
+                var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, osoba.JMENO),         // Uloží jméno uživatele
+                        new Claim(ClaimTypes.Email, osoba.EMAIL),        // Uloží email uživatele
+                        new Claim(ClaimTypes.Role, osoba.TYP_OSOBY),     // Uloží typ osoby jako roli
+                        new Claim("UserId", osoba.ID_OSOBA.ToString())   // ID uživatele
+                    };
+
+                // Vytvoření identity a autentizace
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                // Uložení identity do cookies pro přetrvání přihlášení
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+
+                /////
+
+
                 // pokud se přihlášení povede, uživateli se zobrazí stránka (zatím home)
-                return RedirectToAction("Index", "PrihlasenyUzivatel");
+                return RedirectToAction("Index", "Pes");
             }
             ModelState.AddModelError("email", "Nesprávné přihlašovací údaje.");
             ViewBag.Email = email;
@@ -79,7 +105,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         // Metoda pro hashování hesla
         private (string hashedPassword, string salt) HashPassword(string password)
         {
-            using (var rng = new RNGCryptoServiceProvider()) 
+            using (var rng = new RNGCryptoServiceProvider())
             {
                 // Generování salt
                 byte[] saltBytes = new byte[16];
@@ -95,6 +121,40 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             }
         }
 
+        // Metoda pro odhlášení
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            // Odhlásit uživatele
+            HttpContext.SignOutAsync(); // Zruší autentifikaci
+
+            // Přesměrovat na domovskou stránku nebo na přihlášení
+            return RedirectToAction("Login");
+        }
+
+        // Metoda pro zobrazení profilu přihlášeného uživatele
+        [HttpGet]
+        public IActionResult Profile()
+        {
+            // Získat email přihlášeného uživatele z claims
+            var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                // Pokud není přihlášený uživatel, přesměrujeme na login
+                return RedirectToAction("Login");
+            }
+
+            var osoba = _dataAccess.GetUserProfile(email);
+
+            if (osoba != null)
+            {
+                // Předat model do View
+                return View(osoba);
+            }
+
+            return RedirectToAction("Login");
+        }
 
 
 
