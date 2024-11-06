@@ -21,5 +21,7 @@ namespace BDAS2_DvorakovaKahounova.Models
         [StringLength(100, ErrorMessage = "Heslo musí mít alespoň {2} a maximálně {1} znaků.", MinimumLength = 8)]
         public string HESLO { get; set; }
 
+        public string SALT { get; set; } = string.Empty;
+
     }
 }

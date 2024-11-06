@@ -1,6 +1,7 @@
 ﻿using BDAS2_DvorakovaKahounova.DataAcessLayer;
 using BDAS2_DvorakovaKahounova.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace BDAS2_DvorakovaKahounova.Controllers
@@ -26,8 +27,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         public IActionResult Register(Osoba novaOsoba)
         {
             novaOsoba.TYP_OSOBY = "U";
-            //Console.WriteLine($"Jméno: {novaOsoba.JMENO}, Příjmení: {novaOsoba.PRIJMENI}, Typ osoby: {novaOsoba.TYP_OSOBY} Telefon: {novaOsoba.TELEFON}, Email: {novaOsoba.EMAIL}, Heslo: {novaOsoba.HESLO}");
-
+            
             if (ModelState.IsValid)
             {
                 Console.WriteLine("kontrola mailu v controolleer");
@@ -37,13 +37,15 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                     return View(novaOsoba);
                 }
 
+                var (hashedPassword, salt) = HashPassword(novaOsoba.HESLO);
+                novaOsoba.HESLO = hashedPassword;
+                novaOsoba.SALT = salt;
+
                 if (_dataAccess.RegisterUser(novaOsoba))
                 {
                     //když se registrace podaří, zobrazí se uživateli stránka s přihlášením
                     return RedirectToAction("Login", new { email = novaOsoba.EMAIL });
-                    return RedirectToAction("Login");
                 }
-                Console.WriteLine("Registrace se nezdařila.");
                 ModelState.AddModelError("", "Registrace se nezdařila.");
             }
             return View(novaOsoba);
@@ -73,6 +75,27 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             ViewBag.IsLoginAttempted = true; // Informace o pokusu o přihlášení
             return View();
         }
+
+        // Metoda pro hashování hesla
+        private (string hashedPassword, string salt) HashPassword(string password)
+        {
+            using (var rng = new RNGCryptoServiceProvider()) 
+            {
+                // Generování salt
+                byte[] saltBytes = new byte[16];
+                rng.GetBytes(saltBytes);
+                string salt = Convert.ToBase64String(saltBytes);
+
+                // Použití PBKDF2 k hashování hesla se salt
+                var pbkdf2 = new Rfc2898DeriveBytes(password, saltBytes, 10000); // 10,000 iterací
+                byte[] hash = pbkdf2.GetBytes(32); // Délka hashe
+
+                // Vrácení hashe a salt jako řetězců
+                return (Convert.ToBase64String(hash), salt);
+            }
+        }
+
+
 
 
         public IActionResult Index()

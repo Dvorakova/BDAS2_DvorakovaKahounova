@@ -48,8 +48,8 @@
 
 
 
-
-@* @if (!ViewData.ModelState.IsValid)
+@* 
+@if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger">
         @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
