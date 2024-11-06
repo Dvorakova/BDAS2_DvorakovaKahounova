@@ -25,6 +25,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Pes" asp-action="Index">Psi k adopci</a>
                         </li>
+
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("R"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Rezervace" asp-action="Index">Rezervace</a>
+                            </li>
+                        }
+
                     </ul>
                         <ul class="navbar-nav ms-auto">
 
