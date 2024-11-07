@@ -62,5 +62,35 @@
             </form>
         </div>
     </div>
+
+    @* <!-- Formulář pro úpravu údajů (zobrazuje se po úspěšném ověření hesla) -->
+    <div id="edit-profile-form" style="display:none; margin-top: 30px;">
+        <form method="post" asp-action="UpdateProfile">
+            <div class="input-container-profile">
+                <input type="text" id="name" name="name" value="@Model.JMENO" required />
+                <label for="name" class="label">Jméno:</label>
+                <div class="underline"></div>
+            </div>
+            <div class="input-container-profile">
+                <input type="text" id="surname" name="surname" value="@Model.PRIJMENI" required />
+                <label for="surname" class="label">Příjmení:</label>
+                <div class="underline"></div>
+            </div>
+            <div class="input-container-profile">
+                <input type="text" id="phone" name="phone" value="@Model.TELEFON" required />
+                <label for="phone" class="label">Telefon:</label>
+                <div class="underline"></div>
+            </div>
+            <div class="input-container-profile">
+                <input type="email" id="email" name="email" value="@Model.EMAIL" required />
+                <label for="email" class="label">Email:</label>
+                <div class="underline"></div>
+            </div>
+            <div class="button-profile">
+                <button type="submit" class="btn btn-primary">Uložit změny</button>
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('edit-profile-form').style.display='none'">Zrušit</button>
+            </div>
+        </form>
+    </div> *@
 </body>
 </html>

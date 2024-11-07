@@ -1,3 +1,17 @@
 ﻿@model List<BDAS2_DvorakovaKahounova.Models.Pes>
 
-    @* zobrazí se jen tvoji psi (majitele) *@
+@{
+    ViewData["Title"] = "MujPes";
+}
+
+<h1>Vaši psi</h1>
+<div class="container-mujpes">
+    <img src="/images/pes.jpg" alt="Fotka psa" class="img">
+    <div class="info-mujpes">
+        <h2>Jméno psa: Rex</h2>
+        <p><strong>Rasa:</strong> Německý ovčák</p>
+        <p><strong>Věk:</strong> 5 let</p>
+        <p><strong>Oblíbené aktivity:</strong> Běhání, aportování, plavání</p>
+        <p><strong>Popis:</strong> Rex je energický a přátelský pes, který miluje společnost a dlouhé procházky.</p>
+    </div>
+</div>

@@ -22,6 +22,16 @@ html {
     }
 }
 
+@media (max-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 1fr; /* Pro menší obrazovky jeden sloupec */
+    }
+
+    table {
+        width: 100%; /* Tabulka bude mít 100% šíøku */
+    }
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem;
 }
@@ -364,3 +374,27 @@ button[type="button"]:focus {
     outline: none;
 }
 
+/* --- mùj pes---*/
+.container-mujpes {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-left: -30px; /* Posune obrázek více doleva */
+}
+
+    .container-mujpes .img {
+        max-width: 350px;
+        border-radius: 10px;
+        margin-right: 80px;
+    }
+
+.info-mujpes p {
+    margin-left: 30px; /* Posune odstavce více doprava */
+}
+
+.info-mujpes {
+    max-width: 400px;
+}

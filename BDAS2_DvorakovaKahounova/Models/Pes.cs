@@ -6,5 +6,7 @@
         public string JMENO { get; set; }
         public string CISLO_CIPU { get; set; }
         public DateTime NAROZENI { get; set; }
+
+        //public int ID_OSOBA { get; set; }  // pridano KK
     }
 }
