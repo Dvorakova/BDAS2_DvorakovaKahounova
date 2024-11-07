@@ -243,3 +243,122 @@ h2{
     border-radius: 10px; /* Zaoblené rohy pro vizuální harmonii s kontejnerem */
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Jemný stín pro zvýraznìní */
 }
+
+/* -- profil --*/
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr; /* 1. sloupec má šíøku 1fr, 2. sloupec má 2fr */
+    gap: 5px; /* Mezera mezi sloupci */
+    padding: 40px;
+}
+
+.profile-image {
+    display: flex;
+    justify-content: left;
+    align-items: flex-start;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 2px solid var(--fialova);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.profile-details {
+    padding-left: 15px; /* Odstup textu od obrázku */
+}
+
+table {
+    width: 50%;
+    border-collapse: collapse;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+    table td {
+        padding: 10px;
+        text-align: left;
+    }
+
+        table td strong {
+            color: var(--bordo);
+        }
+
+    table td {
+        color: black;
+        font-size: 16px;
+    }
+
+    .button-profile{
+        margin: 10px;
+        padding: -50px;
+    }
+
+.input-container-profile {
+    position: relative;
+    margin: 10px; /* Zmenšené odsazení pro menší mezeru */
+    width: 100%; /* Upravte podle potøeby */
+}
+
+    .input-container-profile input[type="password"] {
+        font-size: 20px;
+        width: 60%;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        padding: 5px 0;
+        background-color: transparent;
+        outline: none;
+    }
+
+    .input-container-profile .label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: var(--bordo);
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+
+    .input-container-profile input[type="password"]:focus ~ .label,
+    .input-container-profile input[type="password"]:valid ~ .label {
+        top: -20px;
+        font-size: 16px;
+        color: var(--bordo);
+    }
+
+    .input-container-profile .underline {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 2px;
+        width: 60%;
+        background-color: var(--bordo);
+        transform: scaleX(0);
+        transition: all 0.3s ease;
+    }
+
+    .input-container-profile input[type="password"]:focus ~ .underline,
+    .input-container-profile input[type="password"]:valid ~ .underline {
+        transform: scaleX(1);
+    } 
+
+/* Styl pro tlaèítko po kliknutí (focus) */
+button[type="button"]:focus {
+    background-color: var(--fialova); /* pozadí */
+    border: var(--fialova);
+    outline: none; /* Odstraní modrý okraj pøi kliknutí */
+}
+
+/* Pokud chceš, aby tlaèítko po kliknutí zùstalo èerné i po ztrátì fokusu */
+button[type="button"]:active,
+button[type="button"]:hover,
+button[type="button"]:focus {
+    background-color: var(--fialova); /* Èerné pozadí pøi kliknutí */
+    color: #fff; /* Bílý text */
+    border: var(--fialova); /* Pøípadnì pøidej okraj podle potøeby */
+    outline: none;
+}
+

@@ -33,6 +33,13 @@
                             </li>
                         }
 
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("M"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pes" asp-action="MujPes">Můj pes</a>
+                            </li>
+                        }
+
                     </ul>
                         <ul class="navbar-nav ms-auto">
 

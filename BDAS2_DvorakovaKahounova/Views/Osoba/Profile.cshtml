@@ -1,6 +1,4 @@
-﻿@model BDAS2_DvorakovaKahounova.Models.Osoba
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,27 +10,56 @@
 <body>
     <div class="container">
         <h1>Můj účet</h1>
-        <div class="row">
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-4">Jméno</dt>
-                    <dd class="col-sm-8">@Model.JMENO</dd>
-
-                    <dt class="col-sm-4">Příjmení</dt>
-                    <dd class="col-sm-8">@Model.PRIJMENI</dd>
-
-                    <dt class="col-sm-4">Telefon</dt>
-                    <dd class="col-sm-8">@Model.TELEFON</dd>
-
-                    <dt class="col-sm-4">Email</dt>
-                    <dd class="col-sm-8">@Model.EMAIL</dd>
-                </dl>
+        <div class="profile-grid">
+            <!-- První kontejner s obrázkem -->
+            <div class="profile-image">
+                <img src="/images/profil.png" alt="Profilový obrázek" class="profile-img">
+            </div>
+            <!-- Druhý kontejner s textem -->
+            <div class="container">
+                <table>
+                    <tr>
+                        <td><strong>Jméno:</strong></td>
+                        <td>@Model.JMENO</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Příjmení:</strong></td>
+                        <td>@Model.PRIJMENI</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Telefon:</strong></td>
+                        <td>@Model.TELEFON</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email:</strong></td>
+                        <td>@Model.EMAIL</td>
+                    </tr>
+                </table>
             </div>
         </div>
 
-        <form method="post" asp-action="Logout">
-            <button type="submit" class="btn btn-danger">Odhlásit se</button>
-        </form>
+        <!-- Tlačítka pod informacemi -->
+        <div class="button-profile">
+            <button type="button" class="btn btn-primary me-2" onclick="document.getElementById('password-form').style.display='block'">Upravit údaje</button>
+            <form method="post" asp-action="Logout" class="d-inline">
+                <button type="submit" class="btn btn-danger">Odhlásit se</button>
+            </form>
+        </div>
+
+        <!-- Formulář pro zadání hesla (zobrazuje se po kliknutí) -->
+        <div id="password-form" style="display:none; margin-top: 30px;">
+            <form method="post" asp-action="CheckPassword">
+                <div class="input-container-profile">
+                    <!-- Vstupní pole pro heslo -->
+                    <input type="password" id="password" name="password" required />
+                    <label for="password" class="label">Zadejte své heslo:</label>
+                    <div class="underline"></div>
+                </div>
+                <div class="button-profile">
+                <button type="submit" class="btn btn-primary">Potvrdit</button>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>
