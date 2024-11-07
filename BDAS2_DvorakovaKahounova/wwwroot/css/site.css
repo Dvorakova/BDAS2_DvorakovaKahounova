@@ -23,7 +23,7 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem;
 }
 
 html {
@@ -178,6 +178,7 @@ body {
     font-size: 16px; /* Velikost písma pro tlaèítko */
     background-color: var(--levandule);
     border-color: var(--levandule);
+    outline: none;
 }
 
     .btn:hover {
@@ -274,6 +275,7 @@ h2{
 table {
     width: 50%;
     border-collapse: collapse;
+    border-color: var(--fialova);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
