@@ -39,11 +39,6 @@
                              @if (User.Identity.IsAuthenticated)
                         {
                             <!-- Možnosti pro přihlášeného uživatele -->
-
-                            @* <li class="nav-item">
-                                <!-- Stránka logout ještě neeistuje - bude to stránka? Ne, vlastně ji škrtneme a odhlášení bude v Profile, že? -->
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Osoba" asp-action="Logout">Odhlásit se</a>
-                            </li> *@
                             <li class="nav-item">
                                 <!-- Stránka Profile ještě neexistuje-->
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Osoba" asp-action="Profile">Můj účet</a> 
