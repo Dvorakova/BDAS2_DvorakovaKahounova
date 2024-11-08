@@ -43,8 +43,17 @@ html {
 
 body {
     margin-bottom: 60px;
-    background-color: var(--snehova)
+    background-color: var(--snehova);
+    justify-content: center;
 }
+
+.main-container {
+    width: 100%;
+    max-width: 1200px; /* Nastavuje maximální šíøku stránky */
+    padding: 20px;
+    margin: 0 auto;
+}
+
 
 
 /* kontakty */
@@ -124,9 +133,9 @@ body {
     justify-content: center;
     background-color: white;
     border-radius: 15px;
-    padding: 30px;
+    padding: 20px;
+    margin-top: -150px;
     box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.062);
-    position: relative;
 }
 
 .input-container {
@@ -162,6 +171,7 @@ body {
         top: -20px;
         font-size: 16px;
         color: var(--bordo);
+        background-color: transparent;
     }
 
     .input-container .underline {
@@ -183,6 +193,21 @@ body {
     }
 
 /* --Konec loginu--*/
+
+/* registrace kontejner*/
+.container-register {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: -30px;
+    box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.062);
+}
+/*konec*/
 
 .btn {
     font-size: 16px; /* Velikost písma pro tlaèítko */
@@ -259,9 +284,16 @@ h2{
 
 .profile-grid {
     display: grid;
-    grid-template-columns: 0.5fr 1fr; /* 1. sloupec má šíøku 1fr, 2. sloupec má 2fr */
+    grid-template-columns:  1fr; /* 1. sloupec má šíøku 1fr, 2. sloupec má 2fr */
     gap: 5px; /* Mezera mezi sloupci */
     padding: 40px;
+    max-width: 100%;
+}
+
+@media (min-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 0.5fr 1fr;
+    }
 }
 
 .profile-image {
@@ -283,7 +315,8 @@ h2{
 }
 
 table {
-    width: 50%;
+    width: 60%;
+    max-width: 800px;
     border-collapse: collapse;
     border-color: var(--fialova);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -377,12 +410,11 @@ button[type="button"]:focus {
 /* --- mùj pes---*/
 .container-mujpes {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: flex-start;
     padding: 20px;
     max-width: 800px;
-    margin: 0 auto;
-    margin-left: -30px; /* Posune obrázek více doleva */
 }
 
     .container-mujpes .img {
