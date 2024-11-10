@@ -12,6 +12,10 @@
         public string PLEMENO { get; set; }
         public string VLASTNOSTI { get; set; }
 
+        // Přidané vlastnosti pro přihlášené uživatele
+        public string REZERVOVANO { get; set; }
+        public DateTime? KARANTENA_DO { get; set; }
+
         //public int ID_OSOBA { get; set; }  // pridano KK
     }
 }

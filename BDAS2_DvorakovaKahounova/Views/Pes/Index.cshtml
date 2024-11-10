@@ -13,6 +13,14 @@
             <th>Barva</th>
             <th>Plemeno</th>
             <th>Vlastnosti</th>
+
+            @* Zobrazit další informace pouze pro přihlášené uživatele *@
+            @if (User.Identity.IsAuthenticated)
+            {
+                <th>Karanténa do</th>
+                <th>Rezervace</th>
+                
+            }
         </tr>
     </thead>
     <tbody>
@@ -26,6 +34,24 @@
                 <td>@pes.BARVA</td>
                 <td>@pes.PLEMENO</td>
                 <td>@pes.VLASTNOSTI</td>
+
+                @* Další sloupce pro přihlášené uživatele *@
+                @if (User.Identity.IsAuthenticated)
+                {
+                    
+                    <td>@pes.KARANTENA_DO?.ToShortDateString()</td>
+                    @* <td>@pes.REZERVOVANO</td> *@
+                    <td>
+                    @if (pes.REZERVOVANO != null)
+                    {
+                        <span>@pes.REZERVOVANO</span>  @* Zobrazí text, pokud je rezervován *@
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary">Rezervovat</button>  @* Zobrazí tlačítko, pokud není rezervován *@
+                    }
+                    </td>
+                }
             </tr>
         }
     </tbody>
