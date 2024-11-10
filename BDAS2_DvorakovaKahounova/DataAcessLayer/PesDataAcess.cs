@@ -13,6 +13,37 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             _connectionString = configuration;
         }
 
+        ////stara metoda - jen testovaci tabulka (uplne puvodni)
+        //public List<Pes> GetAllPsi()
+        //{
+        //    List<Pes> psi = new List<Pes>();
+
+        //    using (var con = new OracleConnection(_connectionString))
+        //    {
+        //        con.Open();
+        //        using (var cmd = new OracleCommand("SELECT * FROM Psi", con))
+        //        {
+        //            using (var reader = cmd.ExecuteReader())
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    Pes pes = new Pes
+        //                    {
+        //                        ID_PSA = reader.GetInt32(0),
+        //                        JMENO = reader.GetString(1),
+        //                        CISLO_CIPU = reader.GetString(2),
+        //                        NAROZENI = reader.GetDateTime(3) 
+        //                    };
+        //                    psi.Add(pes);
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    return psi;
+        //}
+
+        //pridano ND - předělávka Psi k adopci pro nepřihlášeného uživatele
         public List<Pes> GetAllPsi()
         {
             List<Pes> psi = new List<Pes>();
@@ -20,7 +51,8 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             using (var con = new OracleConnection(_connectionString))
             {
                 con.Open();
-                using (var cmd = new OracleCommand("SELECT * FROM Psi", con))
+                // Dotaz na pohled
+                using (var cmd = new OracleCommand("SELECT jmeno, datum_narozeni, barva, plemeno, vlastnosti FROM View_PsiVUtulkuBezMajitele", con))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -28,10 +60,11 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                         {
                             Pes pes = new Pes
                             {
-                                ID_PSA = reader.GetInt32(0),
-                                JMENO = reader.GetString(1),
-                                CISLO_CIPU = reader.GetString(2),
-                                NAROZENI = reader.GetDateTime(3) 
+                                JMENO = reader.GetString(0),
+                                NAROZENI = reader.GetDateTime(1),
+                                BARVA = reader.GetString(2),
+                                PLEMENO = reader.GetString(3),
+                                VLASTNOSTI = reader.IsDBNull(4) ? null : reader.GetString(4)
                             };
                             psi.Add(pes);
                         }
@@ -41,6 +74,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
             return psi;
         }
+
 
         //pridano KK
         //public List<Pes> GetPsiProOsobu(int osobaId)

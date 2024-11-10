@@ -1,24 +1,31 @@
 ﻿@model List<BDAS2_DvorakovaKahounova.Models.Pes>
 
-<h2>Seznam psů</h2>
+<h2>Seznam psů k adopci</h2>
 
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>ID</th>
+            @* <th>ID</th> *@
             <th>Jméno</th>
-            <th>Číslo čipu</th>
+            @* <th>Číslo čipu</th> *@
             <th>Datum narození</th>
+            @* pridano ND *@
+            <th>Barva</th>
+            <th>Plemeno</th>
+            <th>Vlastnosti</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var pes in Model)
         {
             <tr>
-                <td>@pes.ID_PSA</td>
+                @* <td>@pes.ID_PSA</td> *@
                 <td>@pes.JMENO</td>
-                <td>@pes.CISLO_CIPU</td>
+                @* <td>@pes.CISLO_CIPU</td> *@
                 <td>@pes.NAROZENI.ToShortDateString()</td>
+                <td>@pes.BARVA</td>
+                <td>@pes.PLEMENO</td>
+                <td>@pes.VLASTNOSTI</td>
             </tr>
         }
     </tbody>
