@@ -131,5 +131,24 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return null; // Pokud uživatel nebyl nalezen
         }
 
+        //přidáno ND pro úpravu uživatelských údajů
+        // Metoda pro aktualizaci uživatelských údajů
+        public bool UpdateUserProfile(Osoba updatedOsoba)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand("UPDATE OSOBY SET JMENO = :jmeno, PRIJMENI = :prijmeni, TELEFON = :telefon, EMAIL = :email WHERE ID_OSOBA = :id_osoba", con))
+                {
+                    cmd.Parameters.Add(new OracleParameter("jmeno", updatedOsoba.JMENO));
+                    cmd.Parameters.Add(new OracleParameter("prijmeni", updatedOsoba.PRIJMENI));
+                    cmd.Parameters.Add(new OracleParameter("telefon", updatedOsoba.TELEFON));
+                    cmd.Parameters.Add(new OracleParameter("email", updatedOsoba.EMAIL));
+                    cmd.Parameters.Add(new OracleParameter("id_osoba", updatedOsoba.ID_OSOBA));
+
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
     }
 }

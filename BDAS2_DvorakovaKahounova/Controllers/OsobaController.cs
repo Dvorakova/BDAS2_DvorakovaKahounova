@@ -149,11 +149,97 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
             if (osoba != null)
             {
+                ViewBag.InvalidPassword = false;
                 // Předat model do View
                 return View(osoba);
             }
 
             return RedirectToAction("Login");
+        }
+
+
+
+        // Pro kontrolu hesla
+        [HttpPost]
+        public IActionResult CheckPassword(string password)
+        {
+            var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var osoba = _dataAccess.LoginUser(email, password);
+            if (osoba != null)
+            {
+                ViewBag.CanEdit = true;
+                ViewBag.InvalidPassword = false;
+                return View("Profile", osoba); // Zobrazí profil s možností úprav
+            }
+
+            // Nastavíme chybovou hlášku a zůstaneme na stránce
+            ViewBag.ErrorMessage = "Nesprávné heslo. Zkuste to znovu.";
+            ViewBag.InvalidPassword = true;
+            ViewBag.CanEdit = false;
+            osoba = _dataAccess.GetUserProfile(email); // Znovu načteme data o uživateli
+            return View("Profile", osoba);
+        }
+
+        // Pro aktualizaci profilu
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(Osoba updatedOsoba)
+        {
+            var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(email)) return RedirectToAction("Login");
+
+            // Získáme ID aktuálně přihlášeného uživatele z claims
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+            if (userIdClaim != null)
+            {
+                updatedOsoba.ID_OSOBA = int.Parse(userIdClaim.Value); // Předáme ID do updatedOsoba
+            }
+            else
+            {
+                // Pokud se nepodaří najít ID, můžeme uživatele přesměrovat zpět na login
+                return RedirectToAction("Login");
+            }
+
+            // Načteme uživatelský profil podle emailu
+            var currentUser = _dataAccess.GetUserProfile(email);
+            if (currentUser != null)
+            {
+                // Pokud uživatel existuje, nastavíme jeho stávající heslo do updatedOsoba
+                updatedOsoba.HESLO = currentUser.HESLO; // Předáme původní heslo
+            }
+
+            if (_dataAccess.UpdateUserProfile(updatedOsoba))
+            {
+                // Pokud byla aktualizace úspěšná, nastavíme nové údaje do claims
+                var identity = (ClaimsIdentity)User.Identity;
+
+                // Odstraníme staré hodnoty z claims
+                identity.RemoveClaim(identity.FindFirst(ClaimTypes.Name));
+                identity.RemoveClaim(identity.FindFirst(ClaimTypes.Email));
+
+                // Přidáme nové hodnoty
+                identity.AddClaim(new Claim(ClaimTypes.Name, updatedOsoba.JMENO));
+                identity.AddClaim(new Claim(ClaimTypes.Email, updatedOsoba.EMAIL));
+
+                // Vytvoříme nový ClaimsPrincipal s aktuálními claims
+                var principal = new ClaimsPrincipal(identity);
+
+                // Uložíme nový ClaimsPrincipal do cookies pro autentizaci
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+
+
+                TempData["SuccessMessage"] = "Profil úspěšně aktualizován.";
+                return RedirectToAction("Profile");
+            }
+
+            ModelState.AddModelError("", "Aktualizace se nezdařila.");
+            ViewBag.CanEdit = true;
+            return View("Profile", updatedOsoba);
         }
 
 
