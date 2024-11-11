@@ -17,7 +17,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         }
         public IActionResult Index()
         {
-            //int osobaId = GetLoggedInUserId();  //pridano KK
             List<Pes> psi = _dataAccess.GetAllPsi();
 
             // Předání seznamu psů do pohledu (view)
@@ -26,15 +25,27 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
         public IActionResult MujPes()
         {
-            return View();
+            int osobaId = GetLoggedInUserId();
+            if (osobaId == 0)
+            {
+                return RedirectToAction("Login");
+            }
+                List<Pes> psi = _dataAccess.GetPsiProOsobu(osobaId);
+            return View(psi);
         }
 
         //pridano KK
-        //private int GetLoggedInUserId()
-        //{
-        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);  // získá ID uživatele z Claims
-        //    return int.Parse(userId);
-        //}
+        private int GetLoggedInUserId()
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+            if (userIdClaim != null)
+            {
+                return int.Parse(userIdClaim.Value);
+            }
+            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);  // získá ID uživatele z Claims
+            //return int.Parse(userId);
+            return 0;
+        }
     }
 }
 
