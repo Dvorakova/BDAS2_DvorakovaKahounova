@@ -138,15 +138,41 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             using (var con = new OracleConnection(_connectionString))
             {
                 con.Open();
-                using (var cmd = new OracleCommand("UPDATE OSOBY SET JMENO = :jmeno, PRIJMENI = :prijmeni, TELEFON = :telefon, EMAIL = :email WHERE ID_OSOBA = :id_osoba", con))
-                {
-                    cmd.Parameters.Add(new OracleParameter("jmeno", updatedOsoba.JMENO));
-                    cmd.Parameters.Add(new OracleParameter("prijmeni", updatedOsoba.PRIJMENI));
-                    cmd.Parameters.Add(new OracleParameter("telefon", updatedOsoba.TELEFON));
-                    cmd.Parameters.Add(new OracleParameter("email", updatedOsoba.EMAIL));
-                    cmd.Parameters.Add(new OracleParameter("id_osoba", updatedOsoba.ID_OSOBA));
+                //oprava - použití procedury
 
-                    return cmd.ExecuteNonQuery() > 0;
+                using (var cmd = new OracleCommand("UpdateOsoba", con))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                    // Parametry uložené procedury
+                    cmd.Parameters.Add(new OracleParameter("p_id_osoba", updatedOsoba.ID_OSOBA));
+                    cmd.Parameters.Add(new OracleParameter("p_jmeno", updatedOsoba.JMENO));
+                    cmd.Parameters.Add(new OracleParameter("p_prijmeni", updatedOsoba.PRIJMENI));
+                    cmd.Parameters.Add(new OracleParameter("p_telefon", updatedOsoba.TELEFON));
+                    cmd.Parameters.Add(new OracleParameter("p_email", updatedOsoba.EMAIL));
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                    catch (OracleException ex)
+                    {
+                        // Zpracování Oracle chyb podle chybových kódů z uložené procedury
+                        switch (ex.Number)
+                        {
+                            case 20001:
+                                Console.WriteLine("Chyba: Záznam s daným ID nebyl nalezen.");
+                                break;
+                            case 20002:
+                                Console.WriteLine("Chyba: Duplicitní hodnota.");
+                                break;
+                            default:
+                                Console.WriteLine($"Neočekávaná chyba: {ex.Message}");
+                                break;
+                        }
+                        return false;
+                    }
                 }
             }
         }
