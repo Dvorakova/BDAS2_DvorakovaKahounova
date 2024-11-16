@@ -365,6 +365,7 @@ table {
         color: var(--bordo);
         transition: all 0.3s ease;
         pointer-events: none;
+        border: none;
     }
 
     .input-container-profile input[type="password"]:focus ~ .label,
@@ -372,6 +373,7 @@ table {
         top: -20px;
         font-size: 16px;
         color: var(--bordo);
+        background-color: transparent;
     }
 
     .input-container-profile .underline {

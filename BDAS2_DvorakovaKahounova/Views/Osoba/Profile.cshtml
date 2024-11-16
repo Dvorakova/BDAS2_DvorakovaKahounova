@@ -112,23 +112,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Profil</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
     <div class="container">
         <h1>Můj účet</h1>
-
-        
-
         <div class="profile-grid">
             <!-- První kontejner s obrázkem -->
             <div class="profile-image">
                 <img src="/images/profil.png" alt="Profilový obrázek" class="profile-img">
             </div>
-
             <!-- Zobrazení informací nebo editačního formuláře -->
-            <div class="container">
+            <div class="input-container-profie">
                 @if (ViewBag.CanEdit == true)
                 {
                     <!-- Editační formulář -->
@@ -199,7 +195,6 @@
             <form method="post" asp-action="CheckPassword">
                 <div class="input-container-profile">
                     <input type="password" name="password" required class="form-control" placeholder="Zadejte své heslo" />
-                    <div class="underline"></div>
                     <!-- Zobrazení chybové zprávy pro špatné heslo -->
                     @if (ViewBag.InvalidPassword)
                     {
@@ -215,10 +210,6 @@
     </div>
 </body>
 </html>
-
-
-
-
 
 @if (!ViewData.ModelState.IsValid)
 {
