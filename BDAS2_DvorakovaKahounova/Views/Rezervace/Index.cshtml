@@ -5,4 +5,18 @@
 }
 
 <h1>Vaše rezervace</h1>
-<p>Tady můžete spravovat své rezervace.</p>
+
+@* @foreach (var pes in Model)
+{
+    <div class="container-mujpes">
+        <img src="/images/pes.jpg" alt="Fotka psa" class="img">
+        <div class="info-mujpes">
+            <h2><strong>Jméno psa: </strong> @pes.JMENO</h2>
+            <p><strong>Rasa:</strong> @pes.PLEMENO</p>
+            <p><strong>Věk:</strong> @(DateTime.Now.Year - pes.NAROZENI.Year) let</p>
+            <p><strong>Číslo čipu:</strong> @pes.CISLO_CIPU</p>
+            <p><strong>Oblíbené aktivity:</strong> Běhání, aportování, plavání</p>
+            <p><strong>Popis:</strong> Rex je energický a přátelský pes, který miluje společnost a dlouhé procházky.</p>
+        </div>
+    </div>
+} *@
