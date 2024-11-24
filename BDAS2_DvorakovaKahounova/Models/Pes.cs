@@ -16,6 +16,9 @@
         public string REZERVOVANO { get; set; }
         public DateTime? KARANTENA_DO { get; set; }
 
+        // Přidání pro fotografii
+        public int? ID_FOTOGRAFIE { get; set; }
+
         //public int ID_OSOBA { get; set; }  // pridano KK
     }
 }

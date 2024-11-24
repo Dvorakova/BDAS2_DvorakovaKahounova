@@ -1,5 +1,6 @@
 ﻿using BDAS2_DvorakovaKahounova.Models;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 {
@@ -76,6 +77,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
         //}
 
         //pridano ND pro upravu i rpo prihlasene uživatele
+        //metoda pro stránku Psi k adopci
         public List<Pes> GetAllPsi()
         {
             List<Pes> psi = new List<Pes>();
@@ -121,7 +123,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             {
                 con.Open();
                 using (var cmd = new OracleCommand(
-                    "SELECT ID_PSA, JMENO, CISLO_CIPU, NAROZENI, MAJITEL_ID_OSOBA FROM Psi WHERE MAJITEL_ID_OSOBA = :osobaId", con))
+                    "SELECT ID_PSA, JMENO, CISLO_CIPU, NAROZENI, MAJITEL_ID_OSOBA, ID_FOTOGRAFIE FROM Psi WHERE MAJITEL_ID_OSOBA = :osobaId", con))
                 {
                     cmd.Parameters.Add(new OracleParameter("osobaId", osobaId));
 
@@ -136,6 +138,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                                 CISLO_CIPU = reader.GetString(2),
                                 NAROZENI = reader.GetDateTime(3),
                                 //ID_OSOBA = reader.GetInt32(4)
+                                ID_FOTOGRAFIE = reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5) // Ošetření null hodnot
                             };
                             psi.Add(pes);
                         }
@@ -145,6 +148,82 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
             return psi;
         }
+
+        //pridano ND pro uložení fotografie
+        public int SaveFotografie(Fotografie fotografie)
+        {
+            int newId = 0;
+
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand(
+                    @"INSERT INTO Fotografie (nazev_souboru, typ_souboru, pripona_souboru, datum_nahrani, nahrano_id_osoba, obsah_souboru) 
+              VALUES (:nazev, :typ, :pripona, :datum, :osobaId, :obsah)
+              RETURNING id_fotografie INTO :newId", con))
+                {
+                    cmd.Parameters.Add(new OracleParameter("nazev", fotografie.nazev_souboru));
+                    cmd.Parameters.Add(new OracleParameter("typ", fotografie.typ_souboru));
+                    cmd.Parameters.Add(new OracleParameter("pripona", fotografie.pripona_souboru));
+                    cmd.Parameters.Add(new OracleParameter("datum", fotografie.datum_nahrani));
+                    cmd.Parameters.Add(new OracleParameter("osobaId", fotografie.nahrano_id_osoba));
+                    cmd.Parameters.Add(new OracleParameter("obsah", fotografie.obsah_souboru));
+                    cmd.Parameters.Add(new OracleParameter("newId", OracleDbType.Int32, ParameterDirection.Output));
+
+                    cmd.ExecuteNonQuery();
+                    newId = Convert.ToInt32(cmd.Parameters["newId"].Value.ToString());
+                }
+            }
+
+            return newId;
+        }
+
+        public void UpdatePesFotografie(int pesId, int fotografieId)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand(
+                    "UPDATE Psi SET ID_FOTOGRAFIE = :fotografieId WHERE ID_PSA = :pesId", con))
+                {
+                    cmd.Parameters.Add(new OracleParameter("fotografieId", fotografieId));
+                    cmd.Parameters.Add(new OracleParameter("pesId", pesId));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public Fotografie GetFotografieById(int id)
+        {
+            Fotografie fotografie = null;
+
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand(
+                    "SELECT id_fotografie, nazev_souboru, typ_souboru, obsah_souboru FROM Fotografie WHERE id_fotografie = :id", con))
+                {
+                    cmd.Parameters.Add(new OracleParameter("id", id));
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            fotografie = new Fotografie
+                            {
+                                id_fotografie = reader.GetInt32(0),
+                                nazev_souboru = reader.GetString(1),
+                                typ_souboru = reader.GetString(2),
+                                obsah_souboru = reader["obsah_souboru"] as byte[]
+                            };
+                        }
+                    }
+                }
+            }
+
+            return fotografie;
+        }
+
 
     }
 }
