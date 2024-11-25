@@ -36,7 +36,8 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             using (var con = new OracleConnection(_connectionString))
             {
                 con.Open();
-                using (var cmd = new OracleCommand("INSERT INTO OSOBY (JMENO, PRIJMENI, TELEFON, ID_OSOBA, TYP_OSOBY, EMAIL, HESLO, SALT) VALUES (:jmeno, :prijmeni, :telefon, seq_id_osoba.NEXTVAL, :typ_osoby, :email, :heslo, :salt)", con))
+                using (var cmd = new OracleCommand("INSERT INTO OSOBY (JMENO, PRIJMENI, TELEFON, TYP_OSOBY, EMAIL, HESLO, SALT) " +
+                    "VALUES (:jmeno, :prijmeni, :telefon, :typ_osoby, :email, :heslo, :salt)", con))
                 {
                     cmd.Parameters.Add(new OracleParameter("jmeno", novaOsoba.JMENO));
                     cmd.Parameters.Add(new OracleParameter("prijmeni", novaOsoba.PRIJMENI));
@@ -44,7 +45,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     cmd.Parameters.Add(new OracleParameter("typ_osoby", novaOsoba.TYP_OSOBY));
                     cmd.Parameters.Add(new OracleParameter("email", novaOsoba.EMAIL));
                     cmd.Parameters.Add(new OracleParameter("heslo", novaOsoba.HESLO));
-                    cmd.Parameters.Add(new OracleParameter("salt", novaOsoba.SALT)); //
+                    cmd.Parameters.Add(new OracleParameter("salt", novaOsoba.SALT)); 
 
                     // Vrátí true, pokud byl vložen alespoň jeden řádek
                     return cmd.ExecuteNonQuery() > 0;
