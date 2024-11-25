@@ -18,6 +18,11 @@
             @* Zobrazit další informace pouze pro přihlášené uživatele *@
             @if (User.Identity.IsAuthenticated)
             {
+                //možnost pro chovatele
+                @* @if (User.IsInRole("C"))
+                {
+                    <th>Číslo čipu</th>
+                } *@
                 <th>Karanténa do</th>
                 <th>Rezervace</th>
                 
@@ -37,6 +42,7 @@
                     <img src="@imageUrl" alt="Fotka psa" style="width: 100px; height: auto;">
                 </td>
                 <td>@pes.JMENO</td>
+                
                 @* <td>@pes.CISLO_CIPU</td> *@
                 <td>@pes.NAROZENI.ToShortDateString()</td>
                 <td>@pes.BARVA</td>
@@ -46,7 +52,11 @@
                 @*Další sloupce pro přihlášené uživatele *@
                 @if (User.Identity.IsAuthenticated)
                 {
-                    
+                    @* //možnost pro chovatele, pokud to tak budeme dělat
+                    @if (User.IsInRole("C"))
+                    {
+                        <td>@pes.CISLO_CIPU</td>
+                    } *@
                     <td>@pes.KARANTENA_DO?.ToShortDateString()</td>
                     // <td>@pes.REZERVOVANO</td> 
                     <td>
