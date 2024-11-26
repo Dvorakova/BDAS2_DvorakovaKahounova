@@ -23,6 +23,14 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             return View(psi);
         }
 
+        public IActionResult PsiKAdopci()
+        {
+            List<Pes> psi = _dataAccess.GetAllPsi();
+
+            // Předání seznamu psů do pohledu (view)
+            return View(psi);
+        }
+
         public IActionResult MujPes()
         {
             int osobaId = GetLoggedInUserId();

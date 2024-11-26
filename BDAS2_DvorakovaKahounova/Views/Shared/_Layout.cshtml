@@ -22,10 +22,19 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("C"))
+                        {
+                            <li class="nav-item">
+                             <a class="nav-link text-dark" asp-area="" asp-controller="Pes" asp-action="Index">Psi k adopci</a>
+                             </li>
+                        }
+                        else
+                        {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Pes" asp-action="Index">Psi k adopci</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Pes" asp-action="PsiKAdopci">Psi k adopci</a>
                         </li>
-
+                        }
+                        
                         @if (User.Identity.IsAuthenticated && User.IsInRole("R"))
                         {
                             <li class="nav-item">
