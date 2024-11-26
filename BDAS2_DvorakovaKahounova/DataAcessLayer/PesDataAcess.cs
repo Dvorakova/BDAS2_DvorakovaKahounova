@@ -86,7 +86,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             {
                 con.Open();
                 // Dotaz na pohled s novými sloupci
-                using (var cmd = new OracleCommand("SELECT id_psa, jmeno, datum_narozeni, barva, plemeno, vlastnosti, karantena_do, rezervovano FROM View_PsiVUtulkuBezMajitele", con))
+                using (var cmd = new OracleCommand("SELECT id_psa, jmeno, datum_narozeni, pohlavi, barva, plemeno, vlastnosti, karantena_do, rezervovano FROM View_PsiVUtulkuBezMajitele", con))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -97,11 +97,12 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                                 ID_PSA = reader.GetInt32(0),
                                 JMENO = reader.GetString(1),
                                 NAROZENI = reader.GetDateTime(2),
-                                BARVA = reader.GetString(3),
-                                PLEMENO = reader.GetString(4),
-                                VLASTNOSTI = reader.IsDBNull(5) ? null : reader.GetString(5),
-                                KARANTENA_DO = reader.IsDBNull(6) ? (DateTime?)null : reader.GetDateTime(6), // Přidání kontroly pro karanténa
-                                REZERVOVANO = reader.IsDBNull(7) ? null : reader.GetString(7) // Přidání rezervace
+                                POHLAVI = reader.GetString(3),
+                                BARVA = reader.GetString(4),
+                                PLEMENO = reader.GetString(5),
+                                VLASTNOSTI = reader.IsDBNull(6) ? null : reader.GetString(6),
+                                KARANTENA_DO = reader.IsDBNull(7) ? (DateTime?)null : reader.GetDateTime(7), // Přidání kontroly pro karanténa
+                                REZERVOVANO = reader.IsDBNull(8) ? null : reader.GetString(8) // Přidání rezervace
                             };
                             psi.Add(pes);
                         }
