@@ -11,6 +11,7 @@
         public string BARVA { get; set; }
         public string PLEMENO { get; set; }
         public string VLASTNOSTI { get; set; }
+        public string POHLAVI { get; set; }
 
         // Přidané vlastnosti pro přihlášené uživatele
         public string REZERVOVANO { get; set; }

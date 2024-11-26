@@ -122,10 +122,13 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             using (var con = new OracleConnection(_connectionString))
             {
                 con.Open();
-                using (var cmd = new OracleCommand(
-                    "SELECT ID_PSA, JMENO, CISLO_CIPU, NAROZENI, MAJITEL_ID_OSOBA, ID_FOTOGRAFIE FROM Psi WHERE MAJITEL_ID_OSOBA = :osobaId", con))
+                using (var cmd = new OracleCommand("GetPsiProOsobu", con))
                 {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
                     cmd.Parameters.Add(new OracleParameter("osobaId", osobaId));
+
+                    cmd.Parameters.Add(new OracleParameter("cur", OracleDbType.RefCursor, ParameterDirection.Output));
 
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -135,10 +138,13 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                             {
                                 ID_PSA = reader.GetInt32(0),
                                 JMENO = reader.GetString(1),
-                                CISLO_CIPU = reader.GetString(2),
-                                NAROZENI = reader.GetDateTime(3),
-                                //ID_OSOBA = reader.GetInt32(4)
-                                ID_FOTOGRAFIE = reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5) // Ošetření null hodnot
+                                NAROZENI = reader.GetDateTime(2),
+                                POHLAVI = reader.GetString(3),
+                                PLEMENO = reader.GetString(4),
+                                BARVA = reader.GetString(5),
+                                VLASTNOSTI = reader.GetString(6),
+                                CISLO_CIPU = reader.GetString(7),
+                                ID_FOTOGRAFIE = reader.IsDBNull(8) ? (int?)null : reader.GetInt32(8) // Ošetření null hodnot
                             };
                             psi.Add(pes);
                         }
