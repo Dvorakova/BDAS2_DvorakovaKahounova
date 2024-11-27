@@ -37,7 +37,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                                 BARVA = reader.GetString(5),
                                 PLEMENO = reader.GetString(6),
 								VLASTNOSTI = reader.IsDBNull(7) ? null : reader.GetString(7),
-								KARANTENA_DO = reader.GetDateTime(8),
+								KARANTENA_DO = reader.IsDBNull(8) ? (DateTime?)null : reader.GetDateTime(8),
                                 DUVOD_POBYTU = reader.IsDBNull(9) ? null : reader.GetString(9),
                                 KRMNA_DAVKA =  reader.GetDecimal(10),
                                 VAHA = reader.GetDecimal(11),
