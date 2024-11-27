@@ -418,7 +418,7 @@ button[type="button"]:focus {
     align-items: center;
     justify-content: flex-start;
     padding: 20px;
-    max-width: 800px;
+    max-width: 900px;
 }
 
     .container-mujpes .img {
@@ -432,5 +432,63 @@ button[type="button"]:focus {
 }
 
 .info-mujpes {
-    max-width: 400px;
+    max-width: 500px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.karantena-info {
+    display: inline-flex;
+    align-items: center; /* Zarovná text a ikonu na støed vertikálnì */
+    gap: 10px; /* Mezera mezi textem a ikonou */
+    position: relative; /* Pro tooltip */
+}
+
+.tooltip-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--levandule); /* Barva ikony */
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px; /* Zarovnání textu vevnitø kruhu */
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+.tooltip-text {
+    display: none; /* Skryje text ve výchozím stavu */
+    position: absolute;
+    top: calc(100% + 5px); /* Umístí tooltip tìsnì pod ikonu */
+    left: 0; /* Tooltip bude zaèínat zarovnaný s ikonou */
+    background-color: var(--snehova); /* Svìtlé pozadí */
+    color: var(--bordo); /* Barva textu */
+    border: 1px solid var(--bordo); /* Rámeèek */
+    border-radius: 5px; /* Zaoblené rohy */
+    padding: 5px;
+    font-size: 12px;
+    white-space: nowrap; /* Zabrání zalomení textu */
+    z-index: 10; /* Pøedsune tooltip pøed ostatní prvky */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tooltip-icon:hover + .tooltip-text {
+    display: block; /* Zobrazí tooltip pøi hoveru na ikonu */
+}
+
+
