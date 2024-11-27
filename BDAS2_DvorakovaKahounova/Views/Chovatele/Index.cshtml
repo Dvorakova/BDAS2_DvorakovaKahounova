@@ -112,7 +112,7 @@
 					<tr>
 						<td>@pes.JMENO</td>
 						<td>@pes.CISLO_CIPU</td>
-						<td>@pes.NAROZENI</td>
+						<td>@pes.NAROZENI?</td>
 						<td>
 							@if (pes.POHLAVI == 0)
 							{
@@ -133,7 +133,14 @@
 						<td>@pes.VLASTNOSTI</td>
 						<td>@pes.DUVOD_POBYTU</td>
 						<td>@pes.KRMNA_DAVKA</td>
-						<td>@pes.MAJITEL</td>
+						<td>
+							<a href="@Url.Action("ShowOwnerProfile", "Chovatele", new { ownerId = pes.ID_MAJITEL })">
+								@pes.MAJITEL
+							</a>
+						</td>
+
+						@* <td>@pes.MAJITEL</td> *@
+						@* <td><a asp-controller="Chovatele" asp-action="Profile" asp-route-ownerId="@pes.MAJITEL">@pes.MAJITEL</a></td> *@
 						@if (@pes.KARANTENA_DO == null)
 						{
 							<td>Ukončena</td>

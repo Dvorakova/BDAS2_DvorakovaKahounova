@@ -100,7 +100,7 @@
                 <button type="button" class="btn btn-secondary" onclick="document.getElementById('edit-profile-form').style.display='none'">Zrušit</button>
             </div>
         </form>
-    </div> 
+    </div>
 </body>
 </html> *@
 
@@ -109,114 +109,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profil</title>
-    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Účet</title>
+	@* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="container">
-        <h1>Můj účet</h1>
-        <div class="profile-grid">
-            <!-- První kontejner s obrázkem -->
-            <div class="profile-image">
-                <img src="/images/profil.png" alt="Profilový obrázek" class="profile-img">
-            </div>
-            <!-- Zobrazení informací nebo editačního formuláře -->
-            <div class="input-container-profie">
-                @if (ViewBag.CanEdit == true)
-                {
-                    <!-- Editační formulář -->
-                    <form method="post" asp-action="UpdateProfile">
-                        <table>
-                            <tr>
-                                <td><strong>Jméno:</strong></td>
-                                <td><input type="text" name="JMENO" value="@Model.JMENO" class="form-control" required /></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Příjmení:</strong></td>
-                                <td><input type="text" name="PRIJMENI" value="@Model.PRIJMENI" class="form-control" required /></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Telefon:</strong></td>
-                                <td><input type="text" name="TELEFON" value="@Model.TELEFON" class="form-control" required /></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Email:</strong></td>
-                                <td><input type="email" name="EMAIL" value="@Model.EMAIL" class="form-control" required /></td>
-                            </tr>
-                        </table>
-                        <div class="button-profile mt-3">
-                            <button type="submit" class="btn btn-success">Uložit změny</button>
-                            <a href="@Url.Action("Profile")" class="btn btn-secondary">Zrušit</a>
-                        </div>
-                    </form>
-                }
-                else
-                {
-                    <!-- Zobrazení pouze údajů -->
-                    <table>
-                        <tr>
-                            <td><strong>Jméno:</strong></td>
-                            <td>@Model.JMENO</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Příjmení:</strong></td>
-                            <td>@Model.PRIJMENI</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Telefon:</strong></td>
-                            <td>@Model.TELEFON</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Email:</strong></td>
-                            <td>@Model.EMAIL</td>
-                        </tr>
-                    </table>
-                }
-            </div>
-        </div>
+	<div class="container">
+		<h1>Můj účet</h1>
+		<div class="profile-grid">
+			<!-- První kontejner s obrázkem -->
+			<div class="profile-image">
+				<img src="/images/profil.png" alt="Profilový obrázek" class="profile-img">
+			</div>
+			<!-- Zobrazení informací nebo editačního formuláře -->
+			<div class="input-container-profie">
+				@if (ViewBag.CanEdit == true)
+				{
+					<!-- Editační formulář -->
+					<form method="post" asp-action="UpdateProfile">
+						<table>
+							<tr>
+								<td><strong>Jméno:</strong></td>
+								<td><input type="text" name="JMENO" value="@Model.JMENO" class="form-control" required /></td>
+							</tr>
+							<tr>
+								<td><strong>Příjmení:</strong></td>
+								<td><input type="text" name="PRIJMENI" value="@Model.PRIJMENI" class="form-control" required /></td>
+							</tr>
+							<tr>
+								<td><strong>Telefon:</strong></td>
+								<td><input type="text" name="TELEFON" value="@Model.TELEFON" class="form-control" required /></td>
+							</tr>
+							<tr>
+								<td><strong>Email:</strong></td>
+								<td><input type="email" name="EMAIL" value="@Model.EMAIL" class="form-control" required /></td>
+							</tr>
+						</table>
+						<div class="button-profile mt-3">
+							<button type="submit" class="btn btn-success">Uložit změny</button>
+							<a href="@Url.Action("Profile")" class="btn btn-secondary">Zrušit</a>
+						</div>
+					</form>
+				}
+				else
+				{
+					<!-- Zobrazení pouze údajů -->
+					<table>
+						<tr>
+							<td><strong>Jméno:</strong></td>
+							<td>@Model.JMENO</td>
+						</tr>
+						<tr>
+							<td><strong>Příjmení:</strong></td>
+							<td>@Model.PRIJMENI</td>
+						</tr>
+						<tr>
+							<td><strong>Telefon:</strong></td>
+							<td>@Model.TELEFON</td>
+						</tr>
+						<tr>
+							<td><strong>Email:</strong></td>
+							<td>@Model.EMAIL</td>
+						</tr>
+					</table>
+				}
+			</div>
+		</div>
+		@if (ViewBag.CanEditNotChovatel)
+		{
+			<!-- Tlačítka pod informacemi -->
+			@if (ViewBag.CanEdit != true)
+			{
+				<div class="button-profile mt-3">
+					<button type="button" class="btn btn-primary me-2" onclick="document.getElementById('password-form').style.display='block'">Upravit údaje</button>
+					<form method="post" asp-action="Logout" class="d-inline">
+						<button type="submit" class="btn btn-danger">Odhlásit se</button>
+					</form>
+				</div>
+			}
 
-        <!-- Tlačítka pod informacemi -->
-        @if (ViewBag.CanEdit != true)
-        {
-            <div class="button-profile mt-3">
-                <button type="button" class="btn btn-primary me-2" onclick="document.getElementById('password-form').style.display='block'">Upravit údaje</button>
-                <form method="post" asp-action="Logout" class="d-inline">
-                    <button type="submit" class="btn btn-danger">Odhlásit se</button>
-                </form>
-            </div>
-        }
+			<!-- Formulář pro zadání hesla (zobrazuje se po kliknutí) -->
 
-        <!-- Formulář pro zadání hesla (zobrazuje se po kliknutí) -->
-        
-        <div id="password-form" style="display:none; margin-top: 30px;">
-            <form method="post" asp-action="CheckPassword">
-                <div class="input-container-profile">
-                    <input type="password" name="password" required class="form-control" placeholder="Zadejte své heslo" />
-                    <!-- Zobrazení chybové zprávy pro špatné heslo -->
-                    @if (ViewBag.InvalidPassword)
-                    {
-                        <span class="text-danger">Špatné heslo. Zkuste to znovu.</span>
-                    }
-                </div>
-                <div class="button-profile mt-3">
-                    <button type="submit" class="btn btn-primary">Potvrdit</button>
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('password-form').style.display='none'">Zrušit</button>
-                </div>
-            </form>
-        </div>        
-    </div>
+			<div id="password-form" style="display:none; margin-top: 30px;">
+				<form method="post" asp-action="CheckPassword">
+					<div class="input-container-profile">
+						<input type="password" name="password" required class="form-control" placeholder="Zadejte své heslo" />
+						<!-- Zobrazení chybové zprávy pro špatné heslo -->
+						@if (ViewBag.InvalidPassword)
+						{
+							<span class="text-danger">Špatné heslo. Zkuste to znovu.</span>
+						}
+					</div>
+					<div class="button-profile mt-3">
+						<button type="submit" class="btn btn-primary">Potvrdit</button>
+						<button type="button" class="btn btn-secondary" onclick="document.getElementById('password-form').style.display='none'">Zrušit</button>
+					</div>
+				</form>
+			</div>
+		}
+	</div>
 </body>
 </html>
 
 @if (!ViewData.ModelState.IsValid)
 {
-    <div class="alert alert-danger">
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <p>@error.ErrorMessage</p>
-        }
-    </div>
+	<div class="alert alert-danger">
+		@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+		{
+			<p>@error.ErrorMessage</p>
+		}
+	</div>
 }

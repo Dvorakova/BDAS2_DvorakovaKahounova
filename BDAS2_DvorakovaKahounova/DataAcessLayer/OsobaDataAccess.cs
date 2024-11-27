@@ -177,5 +177,33 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                 }
             }
         }
-    }
+
+		public Osoba GetUserProfileById(int userId)
+		{
+			using (var con = new OracleConnection(_connectionString))
+			{
+				con.Open();
+				using (var cmd = new OracleCommand("SELECT JMENO, PRIJMENI, TELEFON, EMAIL FROM OSOBY WHERE ID_OSOBA = :userId", con))
+				{
+					cmd.Parameters.Add(new OracleParameter("userId", userId));
+
+					using (var reader = cmd.ExecuteReader())
+					{
+						if (reader.Read())
+						{
+							return new Osoba
+							{
+								JMENO = reader.GetString(0),
+								PRIJMENI = reader.GetString(1),
+								TELEFON = reader.GetString(2),
+								EMAIL = reader.GetString(3)
+							};
+						}
+					}
+				}
+			}
+			return null; // Pokud uživatel nebyl nalezen
+		}
+
+	}
 }

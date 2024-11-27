@@ -21,7 +21,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             {
                 con.Open();
 
-                using (var cmd = new OracleCommand("SELECT id_psa, jmenoPsa, cislo_cipu, datumNarozeni, Pohlavi, Barva, Plemeno, Vlastnosti, KarantenaDo, DuvodPobytu, KrmnaDavka, Vaha, Majitel, Rezervace, Fotografie FROM ViewVypisVsechPsu", con))
+                using (var cmd = new OracleCommand("SELECT id_psa, jmenoPsa, cislo_cipu, datumNarozeni, Pohlavi, Barva, Plemeno, Vlastnosti, KarantenaDo, DuvodPobytu, KrmnaDavka, Vaha, Majitel, Rezervace, Fotografie, IdMajitel FROM ViewVypisVsechPsu", con))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -32,7 +32,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                                 ID_PSA = reader.GetInt32(0),
 								JMENO = reader.IsDBNull(1) ? null : reader.GetString(1),
 								CISLO_CIPU = reader.IsDBNull(2) ? null : reader.GetString(2),
-								NAROZENI = reader.GetDateTime(3),
+								NAROZENI = reader.IsDBNull(8) ? (DateTime?)null : reader.GetDateTime(3),
 								POHLAVI = reader.GetInt32(4),
                                 BARVA = reader.GetString(5),
                                 PLEMENO = reader.GetString(6),
@@ -43,8 +43,9 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                                 VAHA = reader.GetDecimal(11),
 								MAJITEL = reader.IsDBNull(12) ? null : reader.GetString(12),
 								REZERVOVANO = reader.IsDBNull(13) ? null : reader.GetString(13),
-								ID_FOTOGRAFIE = reader.IsDBNull(14) ? (int?)null : reader.GetInt32(14)
-                            };
+								ID_FOTOGRAFIE = reader.IsDBNull(14) ? (int?)null : reader.GetInt32(14),
+                                ID_MAJITEL = reader.IsDBNull(15) ? (int?)null : reader.GetInt32(15)
+							};
                             psi.Add(pes);
                         }
                     }

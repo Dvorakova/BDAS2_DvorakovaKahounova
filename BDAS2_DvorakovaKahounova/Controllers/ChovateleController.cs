@@ -25,5 +25,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         {
             return View();
         }
-    }
+
+
+		public IActionResult ShowOwnerProfile(int ownerId)
+		{
+			return RedirectToAction("Profile", "Osoba", new { userId = ownerId });
+		}
+	}
 }

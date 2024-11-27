@@ -94,11 +94,14 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 
                 // pokud se přihlášení povede, uživateli se zobrazí stránka (zatím home)
-                if (User.IsInRole("C"))
+                Console.WriteLine("před if is in role");
+                if (claimsPrincipal.IsInRole("C"))
                 {
+					Console.WriteLine("in if is in role");
 					return RedirectToAction("Index", "Chovatele");
 				}
-                return RedirectToAction("PsiKAdopci", "Pes");
+				Console.WriteLine("po if is in role");
+				return RedirectToAction("PsiKAdopci", "Pes");
             }
             ModelState.AddModelError("email", "Nesprávné přihlašovací údaje.");
             ViewBag.Email = email;
@@ -138,6 +141,50 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
         // Metoda pro zobrazení profilu přihlášeného uživatele
         [HttpGet]
+        public IActionResult Profile(int? userId = null)
+        {
+
+			Osoba osoba;
+
+			if (userId.HasValue)
+			{
+				// Načtení profilu na základě ID uživatele
+				osoba = _dataAccess.GetUserProfileById(userId.Value);
+				if (osoba == null)
+				{
+					return NotFound(); // Uživatelský profil nenalezen
+				}
+
+				ViewBag.CanEditNotChovatel = false; // Zakázat úpravy
+			} else { 
+
+			// Získat email přihlášeného uživatele z claims
+			var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                // Pokud není přihlášený uživatel, přesměrujeme na login
+                return RedirectToAction("Login");
+            }
+
+            osoba = _dataAccess.GetUserProfile(email);
+
+            if (osoba == null)
+            {
+					return RedirectToAction("Login");
+				}
+				ViewBag.InvalidPassword = false;
+				ViewBag.CanEditNotChovatel = true; // Umožnit úpravy
+		
+				
+			}
+            return View(osoba);
+		}
+
+		//zkopírováno pro návrat k původní metodě
+		/*
+          // Metoda pro zobrazení profilu přihlášeného uživatele
+        [HttpGet]
         public IActionResult Profile()
         {
             // Získat email přihlášeného uživatele z claims
@@ -160,11 +207,10 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
             return RedirectToAction("Login");
         }
+         */
 
-
-
-        // Pro kontrolu hesla
-        [HttpPost]
+		// Pro kontrolu hesla
+		[HttpPost]
         public IActionResult CheckPassword(string password)
         {
             var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;

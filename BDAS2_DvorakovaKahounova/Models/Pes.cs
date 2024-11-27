@@ -5,7 +5,7 @@
         public int ID_PSA { get; set; }
         public string JMENO { get; set; }
         public string CISLO_CIPU { get; set; }
-        public DateTime NAROZENI { get; set; }
+        public DateTime? NAROZENI { get; set; }
 
         //pridano ND - předělávka Psi k adopci pro nepřihlášeného uživatele
         public string BARVA { get; set; }
@@ -27,5 +27,7 @@
         public decimal KRMNA_DAVKA { get; set; }  // Krmná dávka
         public decimal VAHA { get; set; }        // Váha psa
         public string MAJITEL { get; set; }
+
+        public int? ID_MAJITEL { get; set; }
     }
 }
