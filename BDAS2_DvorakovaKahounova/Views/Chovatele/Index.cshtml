@@ -1,33 +1,24 @@
-﻿@model List<BDAS2_DvorakovaKahounova.Models.Pes>
+﻿@* @model List<BDAS2_DvorakovaKahounova.Models.Pes>
 
-<h2>Seznam psů k adopci</h2>
+<h2>Seznam psů v útulku</h2>
 
 <table class="table table-bordered">
 	<thead>
 		<tr>
-			@* <th>ID</th> *@
 			<th>Fotografie</th>
 			<th>Jméno</th>
-			@* <th>Číslo čipu</th> *@
+			<th>Číslo čipu</th>
 			<th>Datum narození</th>
 			<th>Pohlaví</th>
-			@* pridano ND *@
 			<th>Barva</th>
 			<th>Plemeno</th>
 			<th>Vlastnosti</th>
-
-			@* Zobrazit další informace pouze pro přihlášené uživatele *@
-			@if (User.Identity.IsAuthenticated)
-			{
-				//možnost pro chovatele
-				@* @if (User.IsInRole("C"))
-			{
-			<th>Číslo čipu</th>
-			} *@
-				<th>Karanténa do</th>
-				<th>Rezervace</th>
-
-			}
+			<th>Důvod pobytu</th>
+			<th>Krmná dávka</th>
+			<th>Váha (kg)</th>
+			<th>Majitel</th>
+			<th>Karanténa do</th>
+			<th>Rezervace</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -43,45 +34,134 @@
 					<img src="@imageUrl" alt="Fotka psa" style="width: 100px; height: auto;">
 				</td>
 				<td>@pes.JMENO</td>
-
-				@* <td>@pes.CISLO_CIPU</td> *@
+				<td>@pes.CISLO_CIPU</td>
 				<td>@pes.NAROZENI.ToShortDateString()</td>
-				@if (@pes.POHLAVI == 0)
-				{
-					<td>&male;</td>
-				}
-				@if (@pes.POHLAVI == 1)
-				{
-					<td>&female;</td>
-				}
+				<td>
+					@if (pes.POHLAVI == 0)
+					{
+						<span>&male;</span>
+					}
+					else if (pes.POHLAVI == 1)
+					{
+						<span>&female;</span>
+					}
+					else
+					{
+						<span>Neznámé</span>
+					}
+				</td>
 				<td>@pes.BARVA</td>
 				<td>@pes.PLEMENO</td>
 				<td>@pes.VLASTNOSTI</td>
+				<td>@pes.DUVOD_POBYTU</td>
+				<td>@pes.KRMNA_DAVKA</td>
+				<td>@pes.VAHA.ToString("F1")</td>
+				<td>@pes.MAJITEL</td>
 
-				@*Další sloupce pro přihlášené uživatele *@
-				@if (User.Identity.IsAuthenticated)
-				{
-					@* //možnost pro chovatele, pokud to tak budeme dělat
-			@if (User.IsInRole("C"))
-			{
-			<td>@pes.CISLO_CIPU</td>
-			} *@
-					<td>@pes.KARANTENA_DO?.ToShortDateString()</td>
-					// <td>@pes.REZERVOVANO</td>
-					<td>
-						@if (pes.REZERVOVANO != null)
-						{
-							<span>@pes.REZERVOVANO</span>
-							//Zobrazí text, pokud je rezervován
-						}
-						else
-						{
-							<button class="btn btn-primary">Rezervovat</button>
-							//Zobrazí tlačítko, pokud není rezervován
-						}
-					</td>
-				}
+				<td>@pes.KARANTENA_DO?.ToShortDateString()</td>
+				<td>
+					@if (!string.IsNullOrEmpty(pes.REZERVOVANO))
+					{
+						<span>@pes.REZERVOVANO</span>
+					}
+					else
+					{
+						<button class="btn btn-primary">Rezervovat</button>
+					}
+				</td>
+
 			</tr>
 		}
 	</tbody>
 </table>
+ *@
+
+
+<table class="table table-bordered">
+	@foreach (var pes in Model)
+	{
+		<tr>
+			<!-- První buňka - Fotografie -->
+			<td style="width: 150px;">
+
+				@{
+					string imageUrl = pes.ID_FOTOGRAFIE != null
+					? Url.Action("GetImage", "Pes", new { id = pes.ID_FOTOGRAFIE })
+					: Url.Action("DefaultImage", "Pes");
+				}
+				<img src="@imageUrl" alt="Fotka psa" style="width: 150px; height: auto;">
+			</td>
+
+			<!-- Druhá buňka - Nová tabulka pro informace o psu -->
+			<td>
+				<table class="table table-bordered">
+					<tr>
+						<td><strong>Jméno:</strong></td>
+						<td><strong>Číslo čipu:</strong></td>
+						<td><strong>Datum narození:</strong></td>
+						<td><strong>Pohlaví:</strong></td>
+						<td><strong>Barva:</strong></td>
+						<td><strong>Plemeno:</strong></td>
+						<td><strong>Váha (kg):</strong></td>
+						<td><strong>Vlastnosti:</strong></td>
+						<td><strong>Důvod pobytu:</strong></td>
+						<td><strong>Krmná dávka:</strong></td>
+						<td><strong>Majitel:</strong></td>
+						<td><strong>Karanténa do:</strong></td>
+					</tr>
+					<tr>
+						<td>@pes.JMENO</td>
+						<td>@pes.CISLO_CIPU</td>
+						<td>@pes.NAROZENI</td>
+						<td>
+							@if (pes.POHLAVI == 0)
+							{
+								<span>&male;</span>
+							}
+							else if (pes.POHLAVI == 1)
+							{
+								<span>&female;</span>
+							}
+							else
+							{
+								<span>Neznámé</span>
+							}
+						</td>
+						<td>@pes.BARVA</td>
+						<td>@pes.PLEMENO</td>
+						<td>@pes.VAHA.ToString("F1")</td>
+						<td>@pes.VLASTNOSTI</td>
+						<td>@pes.DUVOD_POBYTU</td>
+						<td>@pes.KRMNA_DAVKA</td>
+						<td>@pes.MAJITEL</td>
+						<td>@pes.KARANTENA_DO?.ToShortDateString()</td>
+
+					<tr>
+
+						<td colspan="2">
+							@if (!string.IsNullOrEmpty(pes.REZERVOVANO))
+							{
+								<span>@pes.REZERVOVANO</span>
+							}
+							else
+							{
+								<button class="btn btn-primary">Vyřídit rezervaci</button>
+							}
+						</td>
+						<td colspan="2"><button class="btn btn-primary">Vyřídit Adopci</button></td>
+						<td colspan="2"><button class="btn btn-primary">Upravit vlastnosti</button></td>
+						<td colspan="2"><button class="btn btn-primary">Upravit fotografii</button></td>
+						<td colspan ="2"><button class="btn btn-primary">Přidat záznam o odčervení</button></td>
+						<td colspan="2"><button class="btn btn-primary">Přidat záznam o očkování</button></td>
+					</tr>
+
+				</table>
+			</td>
+		</tr>
+	}
+</table>
+ 
+
+
+	
+

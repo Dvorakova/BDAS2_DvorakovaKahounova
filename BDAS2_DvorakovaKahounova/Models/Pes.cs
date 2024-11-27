@@ -24,7 +24,7 @@
 
         //přidáno pro chovatele
         public string DUVOD_POBYTU { get; set; } // Důvod pobytu
-        public string KRMNA_DAVKA { get; set; }  // Krmná dávka
+        public decimal KRMNA_DAVKA { get; set; }  // Krmná dávka
         public decimal VAHA { get; set; }        // Váha psa
         public string MAJITEL { get; set; }
     }
