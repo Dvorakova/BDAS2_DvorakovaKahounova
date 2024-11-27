@@ -164,7 +164,32 @@
 						</td>
 						<td colspan="2"><button class="btn btn-primary">Vyřídit Adopci</button></td>
 						<td colspan="2"><button class="btn btn-primary">Upravit vlastnosti</button></td>
-						<td colspan="2"><button class="btn btn-primary">Upravit fotografii</button></td>
+						<td>
+						<!-- Formulář pro nahrání nebo změnu fotografie -->
+
+							<form asp-action="UploadImage" method="post" enctype="multipart/form-data">
+								<input type="hidden" name="pesId" value="@pes.ID_PSA" />
+
+								<!-- Skrytý input pro výběr souboru -->
+								<input type="file" name="imageFile" accept="image/*" id="fileInput_@pes.ID_PSA" style="display: none;" @(pes.ID_FOTOGRAFIE != null ? "" : "required") />
+
+								<!-- Tlačítko pro otevření dialogu pro výběr souboru -->
+								<button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput_@pes.ID_PSA').click();">
+										@(pes.ID_FOTOGRAFIE != null ? "Upravit fotografii" : "Přidat fotografii")
+								</button>
+
+								<!-- Skript pro automatické odeslání formuláře po výběru souboru -->
+								<script>
+									document.getElementById('fileInput_@pes.ID_PSA').addEventListener('change', function () {
+										if (this.files.length > 0) {
+											this.form.submit(); // Po výběru souboru automaticky odeslat formulář
+										}
+									});
+								</script>
+							</form>
+
+
+						</td>
 						<td colspan ="2"><button class="btn btn-primary">Přidat záznam o odčervení</button></td>
 						<td colspan="2"><button class="btn btn-primary">Přidat záznam o očkování</button></td>
 					</tr>

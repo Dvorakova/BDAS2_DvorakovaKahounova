@@ -156,49 +156,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return psi;
         }
 
-        //pridano ND pro uložení fotografie
-        public int SaveFotografie(Fotografie fotografie)
-        {
-            int newId = 0;
-
-            using (var con = new OracleConnection(_connectionString))
-            {
-                con.Open();
-                using (var cmd = new OracleCommand(
-                    @"INSERT INTO Fotografie (nazev_souboru, typ_souboru, pripona_souboru, datum_nahrani, nahrano_id_osoba, obsah_souboru) 
-              VALUES (:nazev, :typ, :pripona, :datum, :osobaId, :obsah)
-              RETURNING id_fotografie INTO :newId", con))
-                {
-                    cmd.Parameters.Add(new OracleParameter("nazev", fotografie.nazev_souboru));
-                    cmd.Parameters.Add(new OracleParameter("typ", fotografie.typ_souboru));
-                    cmd.Parameters.Add(new OracleParameter("pripona", fotografie.pripona_souboru));
-                    cmd.Parameters.Add(new OracleParameter("datum", fotografie.datum_nahrani));
-                    cmd.Parameters.Add(new OracleParameter("osobaId", fotografie.nahrano_id_osoba));
-                    cmd.Parameters.Add(new OracleParameter("obsah", fotografie.obsah_souboru));
-                    cmd.Parameters.Add(new OracleParameter("newId", OracleDbType.Int32, ParameterDirection.Output));
-
-                    cmd.ExecuteNonQuery();
-                    newId = Convert.ToInt32(cmd.Parameters["newId"].Value.ToString());
-                }
-            }
-
-            return newId;
-        }
-
-        public void UpdatePesFotografie(int pesId, int fotografieId)
-        {
-            using (var con = new OracleConnection(_connectionString))
-            {
-                con.Open();
-                using (var cmd = new OracleCommand(
-                    "UPDATE Psi SET ID_FOTOGRAFIE = :fotografieId WHERE ID_PSA = :pesId", con))
-                {
-                    cmd.Parameters.Add(new OracleParameter("fotografieId", fotografieId));
-                    cmd.Parameters.Add(new OracleParameter("pesId", pesId));
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
 
         public Fotografie GetFotografieById(int id)
         {

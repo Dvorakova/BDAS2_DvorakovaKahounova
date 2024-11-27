@@ -31,5 +31,57 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		{
 			return RedirectToAction("Profile", "Osoba", new { userId = ownerId });
 		}
+
+		//Fotografie
+		public IActionResult UploadImage(int pesId, IFormFile imageFile)
+		{
+			if (imageFile != null && imageFile.Length > 0)
+			{
+				using (var stream = new MemoryStream())
+				{
+					imageFile.CopyTo(stream);
+					var fotografie = new Fotografie
+					{
+						nazev_souboru = imageFile.FileName,
+						typ_souboru = imageFile.ContentType,
+						pripona_souboru = Path.GetExtension(imageFile.FileName),
+						datum_nahrani = DateTime.Now,
+						nahrano_id_osoba = GetLoggedInUserId(), // metoda pro získání ID přihlášeného uživatele
+						obsah_souboru = stream.ToArray()
+					};
+
+					// Získání existující fotografie pro psa
+					var existujiciFotografie = _dataAccess.GetFotografieByPesId(pesId);
+
+					if (existujiciFotografie == null)
+					{
+						// Pokud pes ještě nemá fotografii, přidáme novou
+						int fotografieId = _dataAccess.SaveFotografie(fotografie);
+						_dataAccess.UpdatePesFotografie(pesId, fotografieId);
+					}
+					else
+					{
+						// Pokud pes již má fotografii, aktualizujeme stávající
+						fotografie.id_fotografie = existujiciFotografie.id_fotografie;
+
+						// Aktualizace existující fotografie v databázi
+						_dataAccess.UpdateFotografie(fotografie);
+					}
+				}
+			}
+
+			return RedirectToAction("Index"); // Po nahrání nebo úpravě fotografie se vrátíme na seznam psů
+		}
+
+		private int GetLoggedInUserId()
+		{
+			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+			if (userIdClaim != null)
+			{
+				return int.Parse(userIdClaim.Value);
+			}
+			return 0;
+		}
+
 	}
 }

@@ -8,9 +8,7 @@
 @foreach (var pes in Model)
 {
     <div class="container-mujpes">
-        @* <img src="/images/pes.jpg" alt="Fotka psa" class="img"> *@
         <div>
-        @* <img src="@Url.Action(pes.ID_FOTOGRAFIE == null ? "DefaultImage" : "GetImage", "Pes", new { id = pes.ID_FOTOGRAFIE })" alt="Fotka psa" class="img"> *@
             @{
                 string imageUrl = pes.ID_FOTOGRAFIE != null
                 ? Url.Action("GetImage", "Pes", new { id = pes.ID_FOTOGRAFIE })
@@ -19,12 +17,6 @@
 
             <img src="@imageUrl" alt="Fotka psa" class="img">
 
-
-        <form asp-action="UploadImage" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="pesId" value="@pes.ID_PSA" />
-            <input type="file" name="imageFile" accept="image/*" required />
-            <button type="submit">Přidat obrázek</button>
-        </form>
         </div>
         <div class="info-mujpes">
             <h2><strong>Jméno psa: </strong> @pes.JMENO</h2>
