@@ -6,49 +6,65 @@
         <div class="container-register">
         <h2 class="h2-login">Registrace</h2>
             <form asp-action="Register" method="post">
-                <div class="input-container">
-                    <input asp-for="JMENO" type="text" id="JMENO" required />
-                    <label for="JMENO" class="label">Jméno:</label>
-                    <div class="underline"></div>
-                </div>
+                @* <div class="input-container">
+                <input asp-for="JMENO" type="text" id="JMENO" required />
+                <label for="JMENO" class="label">Jméno:</label>
+                <div class="underline"></div>
+                <span asp-validation-for="JMENO" class="text-danger"></span> <!-- Zobrazení chybové zprávy pro jméno -->
+                </div> *@
+            <div class="input-container">
+                <input asp-for="JMENO" type="text" id="JMENO" required />
+                <label for="JMENO" class="label">Jméno:</label>
+                <div class="underline"></div>
+                <span asp-validation-for="JMENO" class="text-danger"></span>
+            </div>
 
                 <div class="input-container">
                     <input asp-for="PRIJMENI" type="text" id="PRIJMENI" required />
                     <label for="PRIJMENI" class="label">Příjmení:</label>
                     <div class="underline"></div>
+                <span asp-validation-for="PRIJMENI" class="text-danger"></span>
                 </div>
 
                 <div class="input-container">
                     <input asp-for="TELEFON" type="text" id="TELEFON" required />
                     <label for="TELEFON" class="label">Telefon:</label>
                     <div class="underline"></div>
+                <span asp-validation-for="TELEFON" class="text-danger"></span>
                 </div>
 
             <div class="input-container">
                 <input asp-for="EMAIL" type="text" id="EMAIL" required="" />
                 <label for="EMAIL" class="label">Email:</label>
                 <div class="underline"></div>
+                <span asp-validation-for="EMAIL" class="text-danger"></span>
             </div>
 
-                <div class="input-container">
+                @* <div class="input-container">
                     <input asp-for="HESLO" type="password" id="HESLO" required />
                     <label for="HESLO" class="label">Heslo:</label>
                     <div class="underline"></div>
-                </div>
+                </div> *@
+
+            <div class="input-container">
+                <input asp-for="HESLO" type="password" id="HESLO" required />
+                <label for="HESLO" class="label">Heslo:</label>
+                <div class="underline"></div>
+                <span asp-validation-for="HESLO" class="text-danger"></span>
+            </div>
+
 
             <button type="submit" class="btn btn-primary w-100">Registrovat</button>
             </form>
+        <div class="text-center mt-3">
+            <p class="p-login">Máte již účet?</p>
+            <a href="@Url.Action("Login", "Osoba")" class="text-custom">Přihlaste se!</a>
+        </div>
         </div>
     </div>
 
 
-
-
-
-
-
-
-
+@* 
 @if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger">
@@ -58,3 +74,4 @@
         }
     </div>
 }
+ *@
