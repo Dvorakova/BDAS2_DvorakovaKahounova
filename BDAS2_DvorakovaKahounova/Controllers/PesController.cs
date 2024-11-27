@@ -59,9 +59,9 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         //pokud pes nemá v databázi vlastní obrázek, je mu přiřazen defaultní obrázek (na stránce MujPes)
         public IActionResult DefaultImage()
         {
-            var defaultImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/pes.jpg");
+            var defaultImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/ObrazekDefault.png");
             var imageFileStream = System.IO.File.OpenRead(defaultImagePath);
-            return File(imageFileStream, "image/jpeg");
+            return File(imageFileStream, "image/png");
         }
 
         [HttpPost]
