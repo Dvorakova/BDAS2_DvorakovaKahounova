@@ -22,11 +22,11 @@
         <div class="info-mujpes">
             <h2><strong>Jméno psa: </strong> @pes.JMENO</h2>
             <p><strong>Věk:</strong> @(DateTime.Now.Year - pes.NAROZENI.Year) let</p>
-            @if (@pes.POHLAVI == "PES")
+            @if (@pes.POHLAVI == 0)
             {
                 <p><strong>Pohlaví: &male;</strong></p>
             }
-            @if (@pes.POHLAVI == "FENA")
+            @if (@pes.POHLAVI == 1)
             {
                 <p><strong>Pohlaví: &female;</strong></p>
             }

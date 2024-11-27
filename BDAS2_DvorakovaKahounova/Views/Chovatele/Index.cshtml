@@ -46,11 +46,11 @@
 
 				@* <td>@pes.CISLO_CIPU</td> *@
 				<td>@pes.NAROZENI.ToShortDateString()</td>
-				@if (@pes.POHLAVI == "PES")
+				@if (@pes.POHLAVI == 0)
 				{
 					<td>&male;</td>
 				}
-				@if (@pes.POHLAVI == "FENA")
+				@if (@pes.POHLAVI == 1)
 				{
 					<td>&female;</td>
 				}
