@@ -35,11 +35,14 @@
 
             @if (User.Identity.IsAuthenticated)
             {
+                @if (pes.KARANTENA_DO.HasValue)
+                {
                 <p class="karantena-info">
                     <strong>Karanténa do:</strong> @pes.KARANTENA_DO?.ToShortDateString()
                     <span class="tooltip-icon">?</span>
                     <span class="tooltip-text">Datum, do kterého musí být pes v karanténě z důvodu ochrany zdraví ostatních zvířat a lidí.</span>
                 </p>
+                }
                 <p>
                     @if (pes.REZERVOVANO != null)
                     {
