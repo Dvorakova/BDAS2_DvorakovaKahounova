@@ -1,4 +1,5 @@
 ﻿using BDAS2_DvorakovaKahounova.DataAcessLayer;
+using BDAS2_DvorakovaKahounova.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BDAS2_DvorakovaKahounova.Controllers
@@ -14,6 +15,12 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             _dataAccess = new ChovateleDataAccess(connectionString);
         }
 
+        public IActionResult Index()
+        {
+            List<Pes> psi = _dataAccess.GetAllPsiProChovatele();
+            return View(psi);
+            
+        }
         public IActionResult PridatPsa()
         {
             return View();

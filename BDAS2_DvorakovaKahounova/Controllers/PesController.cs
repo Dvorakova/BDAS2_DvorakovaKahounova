@@ -15,13 +15,15 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             string connectionString = configuration.GetConnectionString("OracleConnection");
             _dataAccess = new PesDataAcess(connectionString);
         }
-        public IActionResult Index()
-        {
-            List<Pes> psi = _dataAccess.GetAllPsi();
 
-            // Předání seznamu psů do pohledu (view)
-            return View(psi);
-        }
+        //index přesunut do chovatele a využit pro chovatele
+        //public IActionResult Index()
+        //{
+        //    List<Pes> psi = _dataAccess.GetAllPsi();
+
+        //    // Předání seznamu psů do pohledu (view)
+        //    return View(psi);
+        //}
 
         public IActionResult PsiKAdopci()
         {
