@@ -28,26 +28,28 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     {
                         while (reader.Read())
                         {
-                            Pes pes = new Pes
-                            {
-                                ID_PSA = reader.GetInt32(0),
+							Pes pes = new Pes
+							{
+								ID_PSA = reader.GetInt32(0),
 								JMENO = reader.IsDBNull(1) ? null : reader.GetString(1),
 								CISLO_CIPU = reader.IsDBNull(2) ? null : reader.GetString(2),
-								NAROZENI = reader.IsDBNull(8) ? (DateTime?)null : reader.GetDateTime(3),
+								NAROZENI = reader.IsDBNull(3) ? (DateTime?)null : reader.GetDateTime(3),
 								POHLAVI = reader.GetInt32(4),
-                                BARVA = reader.GetString(5),
-                                PLEMENO = reader.GetString(6),
+								BARVA = reader.GetString(5),
+								PLEMENO = reader.GetString(6),
 								VLASTNOSTI = reader.IsDBNull(7) ? null : reader.GetString(7),
 								KARANTENA_DO = reader.IsDBNull(8) ? (DateTime?)null : reader.GetDateTime(8),
-                                DUVOD_POBYTU = reader.IsDBNull(9) ? null : reader.GetString(9),
-                                KRMNA_DAVKA =  reader.GetDecimal(10),
-                                VAHA = reader.GetDecimal(11),
+								DUVOD_POBYTU = reader.IsDBNull(9) ? null : reader.GetString(9),
+								KRMNA_DAVKA = reader.GetDecimal(10),
+								VAHA = reader.GetDecimal(11),
 								MAJITEL = reader.IsDBNull(12) ? null : reader.GetString(12),
 								REZERVOVANO = reader.IsDBNull(13) ? null : reader.GetString(13),
 								ID_FOTOGRAFIE = reader.IsDBNull(14) ? (int?)null : reader.GetInt32(14),
-                                ID_MAJITEL = reader.IsDBNull(15) ? (int?)null : reader.GetInt32(15)
+								ID_MAJITEL = reader.IsDBNull(15) ? (int?)null : reader.GetInt32(15)
+								
 							};
-                            psi.Add(pes);
+
+							psi.Add(pes);
                         }
                     }
                 }
