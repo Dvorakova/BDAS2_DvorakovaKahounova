@@ -1,6 +1,7 @@
 ﻿using BDAS2_DvorakovaKahounova.DataAcessLayer;
 using BDAS2_DvorakovaKahounova.Models;
 using Microsoft.AspNetCore.Mvc;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BDAS2_DvorakovaKahounova.Controllers
 {
@@ -25,6 +26,27 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         {
             return View();
         }
+
+		[HttpPost]
+		public IActionResult PridatOdcerveniAkce(int pesId, DateTime datumOdcerveni)
+		{
+			// Zavolání metody PridatOdcerveni, která přidá odčervení pro konkrétního psa
+			_dataAccess.PridatOdcerveni(pesId, datumOdcerveni);
+
+			// Po dokončení akce přesměrujeme na nějakou stránku nebo zobrazíme zprávu
+			return RedirectToAction("Index"); // nebo nějaký jiný pohled
+		}
+
+		[HttpPost]
+		public IActionResult PridatOckovaniAkce(int pesId, DateTime datumOckovani)
+		{
+			// Zavolání metody PridatOdcerveni, která přidá odčervení pro konkrétního psa
+			_dataAccess.PridatOckovani(pesId, datumOckovani);
+
+			// Po dokončení akce přesměrujeme na nějakou stránku nebo zobrazíme zprávu
+			return RedirectToAction("Index"); // nebo nějaký jiný pohled
+		}
+
 
 
 		public IActionResult ShowOwnerProfile(int ownerId)
@@ -82,6 +104,9 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			}
 			return 0;
 		}
+
+		
+
 
 	}
 }

@@ -6,12 +6,6 @@
         <div class="container-register">
         <h2 class="h2-login">Registrace</h2>
             <form asp-action="Register" method="post">
-                @* <div class="input-container">
-                <input asp-for="JMENO" type="text" id="JMENO" required />
-                <label for="JMENO" class="label">Jméno:</label>
-                <div class="underline"></div>
-                <span asp-validation-for="JMENO" class="text-danger"></span> <!-- Zobrazení chybové zprávy pro jméno -->
-                </div> *@
             <div class="input-container">
                 <input asp-for="JMENO" type="text" id="JMENO" required />
                 <label for="JMENO" class="label">Jméno:</label>
@@ -40,12 +34,6 @@
                 <span asp-validation-for="EMAIL" class="text-danger"></span>
             </div>
 
-                @* <div class="input-container">
-                    <input asp-for="HESLO" type="password" id="HESLO" required />
-                    <label for="HESLO" class="label">Heslo:</label>
-                    <div class="underline"></div>
-                </div> *@
-
             <div class="input-container">
                 <input asp-for="HESLO" type="password" id="HESLO" required />
                 <label for="HESLO" class="label">Heslo:</label>
@@ -63,15 +51,3 @@
         </div>
     </div>
 
-
-@* 
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <p>@error.ErrorMessage</p>
-        }
-    </div>
-}
- *@

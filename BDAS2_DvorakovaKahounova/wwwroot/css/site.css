@@ -54,6 +54,10 @@ body {
     margin: 0 auto;
 }
 
+.text-custom-danger {
+}
+
+
 
 
 /* kontakty */
@@ -106,8 +110,8 @@ body {
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* --Login--*/
 
+/* --Login--*/
 .login-page {
     display: flex;
     justify-content: center;
@@ -193,6 +197,7 @@ body {
         transform: scaleX(1);
     }
 
+
 /* --Konec loginu--*/
 
 /* registrace kontejner*/
@@ -218,6 +223,11 @@ body {
 }
 
     .btn:hover {
+        background-color: var(--fialova); /* Barva pøi hoveru */
+        border-color: var(--fialova);
+    }
+
+    .btn:focus {
         background-color: var(--fialova); /* Barva pøi hoveru */
         border-color: var(--fialova);
     }
@@ -441,6 +451,14 @@ button[type="button"]:focus {
 
 
 
+
+
+/*.text-danger {
+    color: var(--bordo);*/ /* nebo jiná barva, napøíklad #ff0000 */
+    /*font-size: 16px;*/ /* nebo jakákoli velikost */
+    /*padding-top: 10px;*/
+    /*margin-top: 10px;*/
+/*}*/
 
 
 

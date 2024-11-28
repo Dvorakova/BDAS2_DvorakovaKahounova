@@ -154,7 +154,90 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			return fotografie;
 		}
 
+		//public void PridatOdcerveni(int pesId, DateTime datumOdcerveni)
+		//{
+		//	using (var con = new OracleConnection(_connectionString))
+		//	{
+		//		con.Open();
+		//		using (var cmd = new OracleCommand(
+		//			@"INSERT INTO Deworming (ID_PSA, DATUM_ODCERVENI)
+		//            VALUES (:pesId, :datumOdcerveni)", con))
+		//		{
+		//			cmd.Parameters.Add(new OracleParameter("pesId", pesId));
+		//			cmd.Parameters.Add(new OracleParameter("datumOdcerveni", datumOdcerveni));
+		//			cmd.ExecuteNonQuery();
+		//		}
+		//	}
+		//}
 
+
+		public void PridatOdcerveni(int pesId, DateTime datumOdcerveni)
+		{
+			using (var con = new OracleConnection(_connectionString))
+			{
+				con.Open();
+				using (var cmd = new OracleCommand("PRIDAT_ODCERVENI", con))
+				{
+					cmd.CommandType = CommandType.StoredProcedure;
+
+					// Parametry procedury
+					cmd.Parameters.Add(new OracleParameter("v_id_psa", OracleDbType.Int32)).Value = pesId;
+					cmd.Parameters.Add(new OracleParameter("v_datum", OracleDbType.Date)).Value = datumOdcerveni;
+
+					try
+					{
+						// Spuštění procedury
+						cmd.ExecuteNonQuery();
+					}
+					catch (OracleException ex)
+					{
+						// Zpracování chyb
+						if (ex.Number == 20001)
+						{
+							throw new Exception("Nebyl nalezen žádný neukončený pobyt pro tohoto psa.");
+						}
+						else
+						{
+							throw new Exception($"Nastala neočekávaná chyba: {ex.Message}");
+						}
+					}
+				}
+			}
+		}
+
+		public void PridatOckovani(int pesId, DateTime datumOckovani)
+		{
+			using (var con = new OracleConnection(_connectionString))
+			{
+				con.Open();
+				using (var cmd = new OracleCommand("PRIDAT_OCKOVANI", con))
+				{
+					cmd.CommandType = CommandType.StoredProcedure;
+
+					// Parametry procedury
+					cmd.Parameters.Add(new OracleParameter("v_id_psa", OracleDbType.Int32)).Value = pesId;
+					cmd.Parameters.Add(new OracleParameter("v_datum", OracleDbType.Date)).Value = datumOckovani;
+
+					try
+					{
+						// Spuštění procedury
+						cmd.ExecuteNonQuery();
+					}
+					catch (OracleException ex)
+					{
+						// Zpracování chyb
+						if (ex.Number == 20001)
+						{
+							throw new Exception("Nebyl nalezen žádný neukončený pobyt pro tohoto psa.");
+						}
+						else
+						{
+							throw new Exception($"Nastala neočekávaná chyba: {ex.Message}");
+						}
+					}
+				}
+			}
+		}
 
 	}
 

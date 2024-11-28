@@ -163,7 +163,7 @@
 							}
 						</td>
 						<td colspan="2"><button class="btn btn-primary">Vyřídit Adopci</button></td>
-						<td colspan="2"><button class="btn btn-primary">Upravit vlastnosti</button></td>
+						
 						<td colspan="2">
 						<!-- Formulář pro nahrání nebo změnu fotografie -->
 
@@ -190,8 +190,55 @@
 
 
 						</td>
-						<td colspan ="2"><button class="btn btn-primary">Přidat záznam o odčervení</button></td>
-						<td colspan="2"><button class="btn btn-primary">Přidat záznam o očkování</button></td>
+
+						<td colspan="2"><button class="btn btn-primary">Upravit vlastnosti</button></td>
+						@* <td colspan ="2"><button class="btn btn-primary">Přidat záznam o odčervení</button></td> *@
+
+						<td colspan="2">
+							<button class="btn btn-primary" onclick="showDewormingForm(@pes.ID_PSA)">Přidat záznam o odčervení</button>
+						</td>
+						<td colspan="2">
+							<button class="btn btn-primary" onclick="showVaccinationForm(@pes.ID_PSA)">Přidat záznam o očkování</button>
+						</td>
+						@* <td colspan="2"><button class="btn btn-primary">Přidat záznam o očkování</button></td> *@
+					</tr>
+					<tr>
+						<td colspan="8"></td>
+						<td colspan="2">
+							@* <div id="dewormingForm_@pes.ID_PSA" style="display: none; margin-top: 10px;">
+								<form asp-action="AddDewormingRecord" method="post">
+									<input type="hidden" name="pesId" value="@pes.ID_PSA" />
+									<label for="dewormingDate_@pes.ID_PSA">Datum odčervení:</label>
+									<input type="date" id="dewormingDate_@pes.ID_PSA" name="dewormingDate" required class="form-control" />
+									<button type ="submit" class="btn btn-success" style="margin-top: 10px;">Uložit</button>
+									<button type="button" class="btn btn-secondary" style="margin-top: 10px;" onclick="hideDewormingForm(@pes.ID_PSA)">Zrušit</button>
+								</form>
+							</div> *@
+
+							<div id="dewormingForm_@pes.ID_PSA" style="display: none; margin-top: 10px;">
+								<form asp-action="PridatOdcerveniAkce" method="post">
+									<input type="hidden" name="pesId" value="@pes.ID_PSA" />
+									<label for="datumOdcerveni_@pes.ID_PSA">Datum odčervení:</label>
+									<input type="date" id="datumOdcerveni_@pes.ID_PSA" name="datumOdcerveni" required class="form-control" />
+									<button type="submit" class="btn btn-success" style="margin-top: 10px;">Uložit</button>
+									<button type="button" class="btn btn-secondary" style="margin-top: 10px;" onclick="hideDewormingForm(@pes.ID_PSA)">Zrušit</button>
+								</form>
+							</div>
+
+
+						</td>
+						<td colspan="2">
+
+							<div id="vaccinationForm_@pes.ID_PSA" style="display: none; margin-top: 10px;">
+								<form asp-action="PridatOckovaniAkce" method="post">
+									<input type="hidden" name="pesId" value="@pes.ID_PSA" />
+									<label for="datumOckovani_@pes.ID_PSA">Datum očkování:</label>
+									<input type="date" id="datumOckovani_@pes.ID_PSA" name="datumOckovani" required class="form-control" />
+									<button type="submit" class="btn btn-success" style="margin-top: 10px;">Uložit</button>
+									<button type="button" class="btn btn-secondary" style="margin-top: 10px;" onclick="hideVaccinationForm(@pes.ID_PSA)">Zrušit</button>
+								</form>
+							</div>
+						</td>
 					</tr>
 
 				</table>
@@ -200,6 +247,34 @@
 	}
 </table>
  
+@* <script>
+	function showDewormingForm(pesId) {
+		document.getElementById(`dewormingForm_${pesId}`).style.display = 'block';
+	}
+
+	function hideDewormingForm(pesId) {
+		document.getElementById(`dewormingForm_${pesId}`).style.display = 'none';
+	}
+</script> *@
+
+<script>
+	function showDewormingForm(pesId) {
+		document.getElementById(`dewormingForm_${pesId}`).style.display = 'block';
+	}
+
+	function hideDewormingForm(pesId) {
+		document.getElementById(`dewormingForm_${pesId}`).style.display = 'none';
+	}
+
+	function showVaccinationForm(pesId) {
+		document.getElementById(`vaccinationForm_${pesId}`).style.display = 'block';
+	}
+
+	function hideVaccinationForm(pesId) {
+		document.getElementById(`vaccinationForm_${pesId}`).style.display = 'none';
+	}
+</script>
+
 
 
 	
