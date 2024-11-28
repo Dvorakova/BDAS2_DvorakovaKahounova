@@ -155,6 +155,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 					return NotFound(); // Uživatelský profil nenalezen
 				}
 
+				// **Začátek změny: přidání ViewBag.IsOwner
+				var currentUserId = GetLoggedInUserId();
+				ViewBag.IsOwner = currentUserId == userId.Value; // Kontrola, zda jde o vlastní účet
+				
+
 				ViewBag.CanEditNotChovatel = false; // Zakázat úpravy
 			} else { 
 
@@ -175,11 +180,21 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 				}
 				ViewBag.InvalidPassword = false;
 				ViewBag.CanEditNotChovatel = true; // Umožnit úpravy
-		
+
+				// **Začátek změny: nastavení ViewBag.IsOwner pro vlastní účet**
+				var currentUserId = GetLoggedInUserId();
+				ViewBag.IsOwner = true; // Když uživatel načítá svůj vlastní účet, vždy je owner
 				
 			}
-            return View(osoba);
+			return View(osoba);
 		}
+
+		private int GetLoggedInUserId()
+		{
+			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+			return userIdClaim != null ? int.Parse(userIdClaim) : 0;
+		}
+
 
 		//zkopírováno pro návrat k původní metodě
 		/*

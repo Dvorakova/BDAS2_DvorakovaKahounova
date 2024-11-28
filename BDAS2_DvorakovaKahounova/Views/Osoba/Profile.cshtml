@@ -117,7 +117,18 @@
 </head>
 <body>
 	<div class="container">
-		<h1>Můj účet</h1>
+
+		<h1>
+			@if (ViewBag.IsOwner == true)
+			{
+				@:Můj účet
+			}
+			else
+			{
+				@:Účet majitele psa
+			}
+		</h1>
+
 		<div class="profile-grid">
 			<!-- První kontejner s obrázkem -->
 			<div class="profile-image">
