@@ -147,6 +147,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                     ViewData["Barvy"] = _dataAccess.GetBarvy();// Získání všech barev
                     ViewData["Plemena"] = _dataAccess.GetPlemene();// Získání všech plemen
                     ViewData["Duvody"] = _dataAccess.GetDuvodyPobytu(); // Získání důvodů pobytu
+                    ViewData["Vlastnosti"] = _dataAccess.GetVlastnosti(); // Získání všech vlastností
                 }
 
                 ViewBag.ShowForm = !idPsa.HasValue;
@@ -160,6 +161,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 ViewData["Barvy"] = _dataAccess.GetBarvy();
                 ViewData["Plemena"] = _dataAccess.GetPlemene();
                 ViewData["Duvody"] = _dataAccess.GetDuvodyPobytu();
+                ViewData["Vlastnosti"] = _dataAccess.GetVlastnosti(); // Získání všech vlastností
                 ViewBag.ShowForm = true;
                 ViewBag.Message = null;
 
@@ -169,7 +171,27 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
         }
 
-		
+        //zkouška odeslání dat z formuláře pro přidání nového psa:
+        //[HttpPost]
+        //public IActionResult PridatPsa(Pes model, List<int> vlastnosti)
+        //{
+        //    // Debug: Zobrazení ID zaškrtnutých vlastností
+        //    Console.WriteLine("Zaškrtnuté vlastnosti: " + string.Join(", ", vlastnosti));
+
+        //    // Logika pro uložení psa a jeho vlastností
+        //    //int idPsa = _dataAccess.PridatPsa(model); // Předpokládáme, že tato metoda vrací ID psa
+
+        //    // Uložení zaškrtnutých vlastností k danému psovi
+        //    //foreach (var idVlastnost in vlastnosti)
+        //    //{
+        //    //    //_dataAccess.PridatVlastnostKPsovi(idPsa, idVlastnost);
+        //    //}
+
+        //    // Přesměrování nebo potvrzení akce
+        //    //return RedirectToAction("DetailPsa", new { id = idPsa });
+        //    return View();
+        //}
+
 
 
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 
 namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 {
@@ -335,6 +336,27 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                 }
 
                 return duvody;
+            }
+        }
+
+        public List<Vlastnost> GetVlastnosti()
+        {
+            // Předpokládám, že máte třídu Vlastnost s ID a názvem.
+            using (var connection = new OracleConnection(_connectionString))
+            {
+                connection.Open();
+                var command = new OracleCommand("SELECT id_vlastnost, nazev FROM Vlastnosti", connection);
+                var reader = command.ExecuteReader();
+                var vlastnosti = new List<Vlastnost>();
+                while (reader.Read())
+                {
+                    vlastnosti.Add(new Vlastnost
+                    {
+                        Id = Convert.ToInt32(reader["id_vlastnost"]),
+                        Nazev = reader["nazev"].ToString()
+                    });
+                }
+                return vlastnosti;
             }
         }
 

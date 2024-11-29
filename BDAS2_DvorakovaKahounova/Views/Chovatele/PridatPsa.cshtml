@@ -37,7 +37,11 @@
         <label for="jmeno">Jméno psa:</label>
             <input type="text" id="jmeno" name="jmeno" value="@Model.Pes?.JMENO ?? " Neznámé"" />
     </div>
-
+        <!-- Datum narození -->
+        <div>
+            <label for="datumNarozeni">Datum narození:</label>
+            <input type="date" id="datumNarozeni" name="datumNarozeni" />
+        </div>
     <!-- Combobox pro barvu -->
     <div>
         <label for="barva">Barva:</label>
@@ -110,6 +114,28 @@
         <label for="vaha">Váha (kg):</label>
         <input type="number" id="vaha" name="vaha" required />
     </div>
+
+        <!-- Vlastnosti -->
+        <div>
+            <label>Vlastnosti:</label>
+            <div>
+                @if (ViewData["Vlastnosti"] is List<Vlastnost> vlastnosti && vlastnosti.Any())
+                {
+                    foreach (var vlastnost in vlastnosti)
+                    {
+                        <div>
+                            <input type="checkbox" id="vlastnost_@vlastnost.Id" name="vlastnosti[]" value="@vlastnost.Id" />
+                            <label for="vlastnost_@vlastnost.Id">@vlastnost.Nazev</label>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>Žádné vlastnosti nejsou k dispozici.</p>
+                }
+            </div>
+        </div>
+
 
     <!-- Tlačítko pro přidání fotografie -->
     <div>
