@@ -1,6 +1,8 @@
 ﻿using BDAS2_DvorakovaKahounova.Models;
+using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Reflection.Metadata;
 
 namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 {
@@ -156,22 +158,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			return fotografie;
 		}
 
-		//public void PridatOdcerveni(int pesId, DateTime datumOdcerveni)
-		//{
-		//	using (var con = new OracleConnection(_connectionString))
-		//	{
-		//		con.Open();
-		//		using (var cmd = new OracleCommand(
-		//			@"INSERT INTO Deworming (ID_PSA, DATUM_ODCERVENI)
-		//            VALUES (:pesId, :datumOdcerveni)", con))
-		//		{
-		//			cmd.Parameters.Add(new OracleParameter("pesId", pesId));
-		//			cmd.Parameters.Add(new OracleParameter("datumOdcerveni", datumOdcerveni));
-		//			cmd.ExecuteNonQuery();
-		//		}
-		//	}
-		//}
-
 
 		public void PridatOdcerveni(int pesId, DateTime datumOdcerveni)
 		{
@@ -241,7 +227,50 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			}
 		}
 
-	}
+        //Metody pro Pridat psa:
+
+        public int? GetPesIdByCisloCipu(string cisloCipu)
+        {
+            try
+            {
+                using (var connection = new OracleConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    // PL/SQL blok pro volání funkce s REF CURSOR
+                    string query = "BEGIN :cursor := GETPESIDBYCISLOCIPU(:cisloCipu); END;";
+
+                    using (var command = new OracleCommand(query, connection))
+                    {
+                        // Přidání parametru pro výstupní SYS_REFCURSOR
+                        command.Parameters.Add(new OracleParameter("cursor", OracleDbType.RefCursor, ParameterDirection.Output));
+                        // Parametr pro číslo čipu
+                        command.Parameters.Add(new OracleParameter("cisloCipu", cisloCipu));
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            // Pokud je v REF CURSOR nějaký výsledek (tzn. pes byl nalezen)
+                            if (reader.HasRows && reader.Read())
+                            {
+                                return Convert.ToInt32(reader["id_psa"]); // Vrátíme id_psa
+                            }
+                            else
+                            {
+                                // Pokud není řádek v cursoru, vracíme NULL
+                                Console.WriteLine("Pes nenalezen.");
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Chyba při volání funkce: {ex.Message}");
+                throw;
+            }
+        }
 
 
+    }
 }

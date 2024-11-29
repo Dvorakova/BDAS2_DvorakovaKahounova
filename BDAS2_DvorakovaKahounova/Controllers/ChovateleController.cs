@@ -2,6 +2,7 @@
 using BDAS2_DvorakovaKahounova.Models;
 using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace BDAS2_DvorakovaKahounova.Controllers
 {
@@ -22,10 +23,10 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             return View(psi);
             
         }
-        public IActionResult PridatPsa()
-        {
-            return View();
-        }
+		public IActionResult PridatPsa()
+		{
+			return View();
+		}
 
 		[HttpPost]
 		public IActionResult PridatOdcerveniAkce(int pesId, DateTime datumOdcerveni)
@@ -105,8 +106,34 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			return 0;
 		}
 
+		//Metody rpo Pridat psa:
 		
 
+		[HttpPost]
+		public IActionResult PridatPsa(string cisloCipu)
+		{
+			Console.WriteLine(cisloCipu);
+			var idPsa = _dataAccess.GetPesIdByCisloCipu(cisloCipu);
+			Console.WriteLine("Id psa v controlleru po volání dataAccess" + idPsa);
+			if (idPsa.HasValue)
+			{
+				// Pokud je pes nalezen, pokračujeme k dalším akcím
+				// Zde můžeme zavolat další metody, které vrátí informace o psovi
+				ViewBag.Message = $"Pes nalezen. ID: {idPsa.Value}";
+				Console.WriteLine("jsme v if controller");
+				// Můžeme také přidat další ViewData pro detaily o psovi, pokud je potřeba
+			}
+			else
+			{
+				// Pokud pes nenalezen
+				Console.WriteLine("jsme v else controoler");
+				ViewBag.Message = "Pes nenalezen.";
+			}
 
-	}
+			return View();
+		}
+
+
+
+    }
 }

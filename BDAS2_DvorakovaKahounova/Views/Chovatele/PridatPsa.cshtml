@@ -3,5 +3,19 @@
 @{
     ViewData["Title"] = "PridatPsa";
 }
+<h1>Přidat psa</h1>
 
-<h1>Přidání psa</h1>
+<form method="post">
+    <div>
+        <label for="cisloCipu">Číslo čipu:</label>
+        <input type="text" id="cisloCipu" name="cisloCipu" required />
+    </div>
+    <button type="submit">Vyhledat</button>
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <div>
+        <p>@ViewBag.Message</p>
+    </div>
+}
