@@ -196,34 +196,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		}
 
 
-		//zkopírováno pro návrat k původní metodě
-		/*
-          // Metoda pro zobrazení profilu přihlášeného uživatele
-        [HttpGet]
-        public IActionResult Profile()
-        {
-            // Získat email přihlášeného uživatele z claims
-            var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-
-            if (string.IsNullOrEmpty(email))
-            {
-                // Pokud není přihlášený uživatel, přesměrujeme na login
-                return RedirectToAction("Login");
-            }
-
-            var osoba = _dataAccess.GetUserProfile(email);
-
-            if (osoba != null)
-            {
-                ViewBag.InvalidPassword = false;
-                // Předat model do View
-                return View(osoba);
-            }
-
-            return RedirectToAction("Login");
-        }
-         */
-
 		// Pro kontrolu hesla
 		[HttpPost]
         public IActionResult CheckPassword(string password)

@@ -112,43 +112,64 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			return 0;
 		}
 
-		//Metody rpo Pridat psa:
-		
+        //Metody rpo Pridat psa:
 
-		[HttpPost]
-		public IActionResult PridatPsa(string cisloCipu)
-		{
-            ViewBag.CisloCipu = cisloCipu;
-			var idPsa = _dataAccess.GetPesIdByCisloCipu(cisloCipu);
-			Console.WriteLine("Id psa v controlleru po volání dataAccess" + idPsa);
-			Pes pes = new Pes();
-			if (idPsa.HasValue)
-			{
-				// Pokud je pes nalezen, pokračujeme k dalším akcím
-				// Zde můžeme zavolat další metody, které vrátí informace o psovi
-				ViewBag.Message = $"Pes nalezen. ID: {idPsa.Value}";
-				Console.WriteLine("jsme v if controller");
-				// Můžeme také přidat další ViewData pro detaily o psovi, pokud je potřeba
-			}
-			else
-			{
-                // Pokud pes neexistuje, zobrazíme formulář pro přidání nového psa
-                ViewBag.Message = "Pes nenalezen. Ujistěte se, že máte správně zadané číslo čipu. Pokud ano, zadejte údaje pro nového psa.";
 
-                // Načítáme hodnoty pro comboboxy
-                //ViewBag.Barvy = _dataAccess.GetBarvy(); // Získání všech barev
+        [HttpPost]
+        public IActionResult PridatPsa(string cisloCipu, string action)
+        {
+            if(action == "search")
+            {
+                ViewBag.CisloCipu = cisloCipu;
+                Console.WriteLine("cislo cipu v controlleru" + cisloCipu);
+                var idPsa = _dataAccess.GetPesIdByCisloCipu(cisloCipu);
+                //Pes pes = new Pes();
+                PesMajitelModel viewModel = new PesMajitelModel();
+                if (idPsa.HasValue)
+                {
+                    // Pokud je pes nalezen
+                    var pes = _dataAccess.ZobrazInfoOPsovi(idPsa.Value) ?? new Pes();
+                    var majitel = pes.ID_MAJITEL.HasValue
+                        ? _dataAccess.GetUserProfileById(pes.ID_MAJITEL)
+                        : new Osoba();
+
+                    viewModel.Pes = pes;
+                    viewModel.Majitel = majitel;
+
+                    ViewData["Duvody"] = _dataAccess.GetDuvodyPobytu(); // Získání důvodů pobytu
+                }
+                else
+                {
+                    // Pokud pes neexistuje, zobrazíme formulář pro přidání nového psa
+                    ViewBag.Message = "Pes nenalezen. Ujistěte se, že máte správně zadané číslo čipu. Pokud ano, zadejte údaje pro nového psa.";
+
+                    // Načítáme hodnoty pro comboboxy
+                    ViewData["Barvy"] = _dataAccess.GetBarvy();// Získání všech barev
+                    ViewData["Plemena"] = _dataAccess.GetPlemene();// Získání všech plemen
+                    ViewData["Duvody"] = _dataAccess.GetDuvodyPobytu(); // Získání důvodů pobytu
+                }
+
+                ViewBag.ShowForm = !idPsa.HasValue;
+
+                //return View(pes);
+                return View(viewModel);
+            }
+            else if (action == "nochip")
+            {
+                // Logika pro "Pes bez čipu"
                 ViewData["Barvy"] = _dataAccess.GetBarvy();
-                //ViewBag.Plemene = _dataAccess.GetPlemene(); // Získání všech plemen
                 ViewData["Plemena"] = _dataAccess.GetPlemene();
                 ViewData["Duvody"] = _dataAccess.GetDuvodyPobytu();
-               // ViewBag.Duvody = _dataAccess.GetDuvodyPobytu(); // Získání důvodů pobytu
+                ViewBag.ShowForm = true;
+                ViewBag.Message = null;
+
+                return View(new PesMajitelModel());
             }
+            return View();
 
-            ViewBag.ShowForm = !idPsa.HasValue;
+        }
 
-            return View(pes);
-		}
-
+		
 
 
     }

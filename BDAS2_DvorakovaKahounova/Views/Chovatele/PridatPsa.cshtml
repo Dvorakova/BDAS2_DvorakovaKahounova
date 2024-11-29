@@ -1,4 +1,4 @@
-﻿@model BDAS2_DvorakovaKahounova.Models.Pes
+﻿@model BDAS2_DvorakovaKahounova.Models.PesMajitelModel
 @{
     var barvyList = ViewData["Barvy"] as List<BDAS2_DvorakovaKahounova.Models.Barva>;
     var plemenaList = ViewData["Plemena"] as List<BDAS2_DvorakovaKahounova.Models.Plemeno>;
@@ -13,11 +13,13 @@
 <form method="post">
     <div>
         <label for="cisloCipu">Číslo čipu:</label>
-        @* <input type="text" id="cisloCipu" name="cisloCipu" required /> *@
-       @*  <input type="text" id="cisloCipu" name="cisloCipu" value="@Request.Form["cisloCipu"]" required /> *@
         <input type="text" id="cisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" required />
     </div>
-    <button type="submit">Vyhledat</button>
+    <button type="submit" name="action" value="search">Vyhledat</button>
+</form>
+
+<form method="post">
+    <button type="submit" name="action" value="nochip">Pes bez čipu</button>
 </form>
 
 @if (ViewBag.Message != null)
@@ -27,12 +29,13 @@
     </div>
 }
 
+
 @if (ViewBag.ShowForm == true)  
 {
 <form method="post" enctype="multipart/form-data">
     <div>
         <label for="jmeno">Jméno psa:</label>
-        <input type="text" id="jmeno" name="jmeno" value="@Model?.JMENO ?? " Neznámé"" />
+            <input type="text" id="jmeno" name="jmeno" value="@Model.Pes?.JMENO ?? " Neznámé"" />
     </div>
 
     <!-- Combobox pro barvu -->
@@ -74,8 +77,8 @@
     <div>
         <label for="pohlavi">Pohlaví:</label>
         <select id="pohlavi" name="pohlavi">
-            <option value="M">Samec</option>
-            <option value="F">Samice</option>
+            <option value="M">Pes</option>
+            <option value="F">Fena</option>
         </select>
     </div>
     <!-- Combobox pro důvod pobytu -->
@@ -115,5 +118,99 @@
     </div>
 
     <button type="submit">Přidat psa</button>
-</form>
+    </form>
+}
+
+@if (ViewBag.ShowForm == false)
+{
+    <div class="container-mujpes">
+        <div>
+            @{
+                string imageUrl = @Model.Pes.ID_FOTOGRAFIE != null
+                ? Url.Action("GetImage", "Pes", new { id = @Model.Pes.ID_FOTOGRAFIE })
+                : Url.Action("DefaultImage", "Pes");
+            }
+
+            <img src="@imageUrl" alt="Fotka psa" class="img">
+
+        </div>
+        <div class="info-mujpes">
+            <h2><strong>Jméno psa: </strong> @Model.Pes.JMENO</h2>
+            @* třeba opravit pro možnost, že neznáme narození psa *@
+            <p><strong>Věk:</strong> @(DateTime.Now.Year - @Model.Pes.NAROZENI?.Year) let</p>
+            @if (@Model.Pes.POHLAVI == 0)
+            {
+                <p><strong>Pohlaví:  &male;</strong></p>
+            }
+            @if (@Model.Pes.POHLAVI == 1)
+            {
+                <p><strong>Pohlaví: &female;</strong></p>
+            }
+
+            <p><strong>Plemeno:</strong> @Model.Pes.PLEMENO</p>
+            <p><strong>Barva:</strong> @Model.Pes.BARVA</p>
+            <p><strong>Vlastnosti:</strong> @Model.Pes.VLASTNOSTI</p>
+            <p><strong>Číslo čipu:</strong> @Model.Pes.CISLO_CIPU</p>
+
+            <button onclick="processReservation()">Vyřídit rezervaci</button>
+        </div>
+
+
+        @if (@Model.Majitel.EMAIL != null)
+        {
+            <table>
+                <tr>
+                    <td><strong>Jméno:</strong></td>
+                    <td>@Model.Majitel.JMENO</td>
+                </tr>
+                <tr>
+                    <td><strong>Příjmení:</strong></td>
+                    <td>@Model.Majitel.PRIJMENI</td>
+                </tr>
+                <tr>
+                    <td><strong>Telefon:</strong></td>
+                    <td>@Model.Majitel.TELEFON</td>
+                </tr>
+                <tr>
+                    <td><strong>Email:</strong></td>
+                    <td>@Model.Majitel.EMAIL</td>
+                </tr>
+            </table>
+        }
+        
+
+
+
+        <!-- Combobox pro důvod pobytu -->
+        <div>
+            <label for="duvodPobytu">Důvod pobytu:</label>
+            <select id="duvodPobytu" name="duvodPobytu">
+                @if (duvodyList != null && duvodyList.Any())
+                {
+                    @foreach (var duvod in duvodyList)
+                    {
+                        <option value="@duvod.Id">@duvod.Nazev</option>
+                    }
+                }
+                else
+                {
+                    <option disabled>Žádné důvody pobytu k dispozici</option>
+                }
+            </select>
+        </div>
+
+        <!-- Datum začátku pobytu -->
+        <div>
+            <label for="zacatekPobytu">Začátek pobytu:</label>
+            <input type="date" id="zacatekPobytu" name="zacatekPobytu" required />
+        </div>
+
+        <!-- Váha -->
+        <div>
+            <label for="vaha">Váha (kg):</label>
+            <input type="number" id="vaha" name="vaha" required />
+        </div>
+
+
+    </div>
 }

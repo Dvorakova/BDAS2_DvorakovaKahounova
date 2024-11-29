@@ -73,26 +73,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             }
         }
 
-        //public void ZobrazInfoOPsovi(int pesId)
-        //{
-        //    using (var con = new OracleConnection(_connectionString))
-        //    {
-        //        con.Open();
-
-        //        string query = "BEGIN ZobrazInfoOPsovi(:pIdPsa); END;";
-
-        //        using (var cmd = new OracleCommand(query, con))
-        //        {
-        //            cmd.Parameters.Add(new OracleParameter("cursor", OracleDbType.RefCursor, ParameterDirection.Output));
-        //            // Přidání parametru pro ID psa
-        //            cmd.Parameters.Add(new OracleParameter("pIdPsa", pesId));
-
-        //            // Spuštění procedury
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
-
+       
         public Pes ZobrazInfoOPsovi(int pesId)
         {
             using (var con = new OracleConnection(_connectionString))
@@ -128,7 +109,8 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             }
 
             return null;
-        }
+        } 
+
 
     }
 }
