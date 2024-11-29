@@ -8,9 +8,9 @@
 <div class="container-rezervace">
     <form method="post" action="/Rezervace/VyriditRezervaci">
         <div class="input-container-rezervace">
-            <input type="text" id="reservationCode" name="rezervaceKod" placeholder="Zadejte kód rezervace" class="input-container-rezervace">
+            <input type="text" id="reservationCode" name="rezervaceKod" placeholder="Zadejte kód rezervace">
+            <button type="submit" class="btn-rezervace">Vyhledat psa</button>
         </div>
-        <button type="submit" class="btn btn-rezervace">Vyhledat psa</button>
     </form>
 
     <!-- Zobrazení výsledku -->
@@ -26,7 +26,7 @@
             }
             else
             {
-            <div class="container-mujpes">
+                <div class="container-mujpes">
                 <div>
                     @{
                         string imageUrl = Model.ID_FOTOGRAFIE != null
@@ -39,7 +39,6 @@
                 </div>
                 <div class="info-mujpes">
                     <h2><strong>Jméno psa: </strong> @Model.JMENO</h2>
-                    @* třeba opravit pro možnost, že neznáme narození psa *@
                     <p><strong>Věk:</strong> @(DateTime.Now.Year - Model.NAROZENI?.Year) let</p>
                     @if (@Model.POHLAVI == 0)
                     {
@@ -49,13 +48,12 @@
                     {
                         <p><strong>Pohlaví: &female;</strong></p>
                     }
-
                     <p><strong>Plemeno:</strong> @Model.PLEMENO</p>
                     <p><strong>Barva:</strong> @Model.BARVA</p>
                     <p><strong>Vlastnosti:</strong> @Model.VLASTNOSTI</p>
                     <p><strong>Číslo čipu:</strong> @Model.CISLO_CIPU</p>
 
-                    <button onclick="processReservation()">Vyřídit rezervaci</button>
+                        <button class="btn-rezervace2" onclick="processReservation()">Vyřídit rezervaci</button>
                 </div>
             </div>
             }

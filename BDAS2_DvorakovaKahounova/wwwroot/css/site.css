@@ -489,56 +489,63 @@ button[type="button"]:focus {
 
 /* -- Vyøídit rezervaci*/
 
+/* Input pole */
 .container-rezervace {
     width: 100%;
-    max-width: 600px;
+    margin-bottom: 20px;
+}
+
+.input-container-rezervace {
+    position: center;
+    margin: 20px auto; /* Zmenšené odsazení pro menší mezeru */
     padding: 20px;
-    margin: 0 auto;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-    margin-top: 30px;
+    width: 30%; /* Upravte podle potøeby */
+    text-align: center;
 }
 
 .btn-rezervace {
-    font-size: 16px;
+    font-size: 16px; /* Velikost písma pro tlaèítko */
     background-color: var(--levandule);
     border-color: var(--levandule);
     color: white;
-    outline: none;
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px auto;
+    padding: 5px;
 }
 
-    .btn-rezervace:hover {
-        background-color: var(--fialova);
-        border-color: var(--fialova);
-        color: white;
-    }
-
-    .btn-rezervace:focus {
-        background-color: var(--fialova);
-        border-color: var(--fialova);
-        color: white;
-    }
-
-.input-container-rezervace {
-    position: relative;
-    margin: 15px 0;
-    width: 100%;
-}
-
-    .input-container-rezervace input[type="text"]
-    {
-        font-size: 16px;
+    .input-container-rezervace input[type="text"] {
+        font-size: 20px;
         width: 100%;
-        padding: 10px;
-        border: 2px solid #ccc;
-        border-radius: 8px;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        padding: 5px 0;
         background-color: transparent;
         outline: none;
+        text-align: center;
     }
 
-        .input-container-rezervace input[type="text"]:focus {
-            border: 2px solid #ccc;
-        }
+    .input-container-rezervace .underline {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 2px;
+        width: 20%;
+        background-color: var(--bordo);
+        transform: scaleX(0);
+        transition: all 0.3s ease;
+    }
+
+    .input-container-rezervace input[type="text"]:focus ~ .underline,
+    .input-container-rezervace input[type="text"]:valid ~ .underline {
+        transform: scaleX(1);
+    }
+
+.btn-rezervace2 {
+    font-size: 16px; /* Velikost písma pro tlaèítko */
+    background-color: var(--levandule);
+    border-color: var(--levandule);
+    color: white;
+    border-radius: 5px;
+    margin-left: 27px;
+    padding: 10px;
+}
