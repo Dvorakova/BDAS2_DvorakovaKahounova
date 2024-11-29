@@ -1,4 +1,6 @@
-﻿using Oracle.ManagedDataAccess.Client;
+﻿using BDAS2_DvorakovaKahounova.Models;
+using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 using System.Data;
 
 namespace BDAS2_DvorakovaKahounova.DataAcessLayer
@@ -69,6 +71,63 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     }
                 }
             }
+        }
+
+        //public void ZobrazInfoOPsovi(int pesId)
+        //{
+        //    using (var con = new OracleConnection(_connectionString))
+        //    {
+        //        con.Open();
+
+        //        string query = "BEGIN ZobrazInfoOPsovi(:pIdPsa); END;";
+
+        //        using (var cmd = new OracleCommand(query, con))
+        //        {
+        //            cmd.Parameters.Add(new OracleParameter("cursor", OracleDbType.RefCursor, ParameterDirection.Output));
+        //            // Přidání parametru pro ID psa
+        //            cmd.Parameters.Add(new OracleParameter("pIdPsa", pesId));
+
+        //            // Spuštění procedury
+        //            cmd.ExecuteNonQuery();
+        //        }
+        //    }
+        //}
+
+        public Pes ZobrazInfoOPsovi(int pesId)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand("ZobrazInfoOPsovi", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add(new OracleParameter("pesId", pesId));
+
+                    cmd.Parameters.Add(new OracleParameter("cur", OracleDbType.RefCursor, ParameterDirection.Output));
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Pes
+                            {
+                                ID_PSA = pesId,
+                                JMENO = reader.GetString(0),
+                                NAROZENI = reader.GetDateTime(1),
+                                POHLAVI = reader.GetInt32(2),
+                                PLEMENO = reader.GetString(3),
+                                BARVA = reader.GetString(4),
+                                VLASTNOSTI = reader.GetString(5),
+                                CISLO_CIPU = reader.GetString(6),
+                                ID_FOTOGRAFIE = reader.IsDBNull(7) ? (int?)null : reader.GetInt32(7) // Ošetření null hodnot
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
     }

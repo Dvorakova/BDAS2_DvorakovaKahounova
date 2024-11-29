@@ -1,24 +1,4 @@
-﻿@* @model List<BDAS2_DvorakovaKahounova.Models.Rezervace>
-
-@{
-	ViewData["Title"] = "VyriditRezervaci";
-}
-
-<div class="container">
-    <h1>Vyhledání rezervace psa</h1>
-    <div class="form-group">
-        <input type="text" id="reservationCode" placeholder="Zadejte kód rezervace">
-        <button onclick="findDog()">Vyhledat psa</button>
-    </div>
-    <div id="result" class="result" style="display: none;">
-        <p><strong>Informace o psovi:</strong></p>
-        <p id="dogInfo">--</p>
-        <button onclick="processReservation()">Vyřídit rezervaci</button>
-    </div>
-</div>
- *@
-
- @model List<BDAS2_DvorakovaKahounova.Models.Rezervace>
+﻿ @model BDAS2_DvorakovaKahounova.Models.Pes
 
 @{
     ViewData["Title"] = "VyriditRezervaci";
@@ -34,18 +14,56 @@
     </form>
 
     <!-- Zobrazení výsledku -->
-    @if (ViewBag.Message != null)
-    {
+    
         <div id="result" class="result">
-            <p><strong>Informace o psovi:</strong></p>
-            <p>@ViewBag.Message</p>
-            @if (!ViewBag.Message.Contains("Pes nebyl nalezen.") && !ViewBag.Message.Contains("Rezervační kód je prázdný."))
+        @if (ViewBag.Message != null)
+        {
+            @if (ViewBag.Message.Contains("Pes nebyl nalezen.") || ViewBag.Message.Contains("Zadejte kód rezervace."))
             {
-                <button onclick="processReservation()">Vyřídit rezervaci</button>
+                <div>
+                    <p>@ViewBag.Message</p>
+                </div>
             }
+            else
+            {
+            <div class="container-mujpes">
+                <div>
+                    @{
+                        string imageUrl = Model.ID_FOTOGRAFIE != null
+                        ? Url.Action("GetImage", "Pes", new { id = Model.ID_FOTOGRAFIE })
+                        : Url.Action("DefaultImage", "Pes");
+                    }
+
+                    <img src="@imageUrl" alt="Fotka psa" class="img">
+
+                </div>
+                <div class="info-mujpes">
+                    <h2><strong>Jméno psa: </strong> @Model.JMENO</h2>
+                    @* třeba opravit pro možnost, že neznáme narození psa *@
+                    <p><strong>Věk:</strong> @(DateTime.Now.Year - Model.NAROZENI?.Year) let</p>
+                    @if (@Model.POHLAVI == 0)
+                    {
+                        <p><strong>Pohlaví:  &male;</strong></p>
+                    }
+                    @if (@Model.POHLAVI == 1)
+                    {
+                        <p><strong>Pohlaví: &female;</strong></p>
+                    }
+
+                    <p><strong>Plemeno:</strong> @Model.PLEMENO</p>
+                    <p><strong>Barva:</strong> @Model.BARVA</p>
+                    <p><strong>Vlastnosti:</strong> @Model.VLASTNOSTI</p>
+                    <p><strong>Číslo čipu:</strong> @Model.CISLO_CIPU</p>
+
+                    <button onclick="processReservation()">Vyřídit rezervaci</button>
+                </div>
+            </div>
+            }
+
+        }
         </div>
-    }
 </div>
+
 
 <script>
     function processReservation() {
