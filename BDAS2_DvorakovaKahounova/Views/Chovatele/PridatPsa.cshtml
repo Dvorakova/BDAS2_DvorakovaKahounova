@@ -1,14 +1,21 @@
-﻿@model List<BDAS2_DvorakovaKahounova.Models.Pes>
+﻿@model BDAS2_DvorakovaKahounova.Models.Pes
+@{
+    var barvyList = ViewData["Barvy"] as List<BDAS2_DvorakovaKahounova.Models.Barva>;
+    var plemenaList = ViewData["Plemena"] as List<BDAS2_DvorakovaKahounova.Models.Plemeno>;
+    var duvodyList = ViewData["Duvody"] as List<BDAS2_DvorakovaKahounova.Models.DuvodPobytu>;
+}
 
 @{
     ViewData["Title"] = "PridatPsa";
 }
 <h1>Přidat psa</h1>
-
+    
 <form method="post">
     <div>
         <label for="cisloCipu">Číslo čipu:</label>
-        <input type="text" id="cisloCipu" name="cisloCipu" required />
+        @* <input type="text" id="cisloCipu" name="cisloCipu" required /> *@
+       @*  <input type="text" id="cisloCipu" name="cisloCipu" value="@Request.Form["cisloCipu"]" required /> *@
+        <input type="text" id="cisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" required />
     </div>
     <button type="submit">Vyhledat</button>
 </form>
@@ -18,4 +25,95 @@
     <div>
         <p>@ViewBag.Message</p>
     </div>
+}
+
+@if (ViewBag.ShowForm == true)  
+{
+<form method="post" enctype="multipart/form-data">
+    <div>
+        <label for="jmeno">Jméno psa:</label>
+        <input type="text" id="jmeno" name="jmeno" value="@Model?.JMENO ?? " Neznámé"" />
+    </div>
+
+    <!-- Combobox pro barvu -->
+    <div>
+        <label for="barva">Barva:</label>
+        <select id="barva" name="barva">
+            @if (barvyList != null && barvyList.Any())
+            {
+                @foreach (var barva in barvyList)
+                {
+                    <option value="@barva.Id">@barva.Nazev</option>
+                }
+            }
+            else
+            {
+                <p>Žádné barvy k dispozici.</p>
+            }
+        </select>
+    </div>
+
+    <!-- Combobox pro plemeno -->
+    <div>
+        <label for="plemeno">Plemeno:</label>
+        <select id="plemeno" name="plemeno">
+            @if (plemenaList != null && plemenaList.Any())
+            {
+                @foreach (var plemeno in plemenaList)
+                {
+                    <option value="@plemeno.Id">@plemeno.Nazev</option>
+                }
+            }
+            else
+            {
+                <option disabled>Žádná plemena k dispozici</option>
+            }
+        </select>
+    </div>
+    <!-- Combobox pro pohlaví -->
+    <div>
+        <label for="pohlavi">Pohlaví:</label>
+        <select id="pohlavi" name="pohlavi">
+            <option value="M">Samec</option>
+            <option value="F">Samice</option>
+        </select>
+    </div>
+    <!-- Combobox pro důvod pobytu -->
+    <div>
+        <label for="duvodPobytu">Důvod pobytu:</label>
+        <select id="duvodPobytu" name="duvodPobytu">
+            @if (duvodyList != null && duvodyList.Any())
+            {
+                @foreach (var duvod in duvodyList)
+                {
+                    <option value="@duvod.Id">@duvod.Nazev</option>
+                }
+            }
+            else
+            {
+                <option disabled>Žádné důvody pobytu k dispozici</option>
+            }
+        </select>
+    </div>
+
+    <!-- Datum začátku pobytu -->
+    <div>
+        <label for="zacatekPobytu">Začátek pobytu:</label>
+        <input type="date" id="zacatekPobytu" name="zacatekPobytu" required />
+    </div>
+
+    <!-- Váha -->
+    <div>
+        <label for="vaha">Váha (kg):</label>
+        <input type="number" id="vaha" name="vaha" required />
+    </div>
+
+    <!-- Tlačítko pro přidání fotografie -->
+    <div>
+        <label for="fotografie">Fotografie:</label>
+        <input type="file" id="fotografie" name="fotografie" />
+    </div>
+
+    <button type="submit">Přidat psa</button>
+</form>
 }

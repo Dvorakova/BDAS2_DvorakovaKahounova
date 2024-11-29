@@ -29,5 +29,10 @@
         public string MAJITEL { get; set; }
 
         public int? ID_MAJITEL { get; set; }
+
+        //přidáno pro PřidatPsa
+        public int ID_BARVA { get; set; }  // ID barvy
+        public int ID_PLEMENO { get; set; }  // ID plemene
+        public int ID_DUVOD_POBYTU { get; set; }  // ID důvodu pobytu
     }
 }

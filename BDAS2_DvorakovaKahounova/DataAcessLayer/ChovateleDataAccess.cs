@@ -271,6 +271,73 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             }
         }
 
+        //meotdy pro načítání do comboboxů:
+        public List<Barva> GetBarvy()
+        {
+            using (var connection = new OracleConnection(_connectionString))
+            {
+                connection.Open();
+                var command = new OracleCommand("SELECT id_barva, nazev FROM barvy", connection);
+                var reader = command.ExecuteReader();
+                var barvy = new List<Barva>();
+
+                while (reader.Read())
+                {
+                    barvy.Add(new Barva
+                    {
+                        Id = Convert.ToInt32(reader["id_barva"]),
+                        Nazev = reader["nazev"].ToString()
+                    });
+                }
+                Console.WriteLine($"Počet načtených barev: {barvy.Count}");
+                return barvy;
+            }
+        }
+
+        public List<Plemeno> GetPlemene()
+        {
+            using (var connection = new OracleConnection(_connectionString))
+            {
+                connection.Open();
+                var command = new OracleCommand("SELECT id_plemeno, nazev FROM plemena", connection);
+                var reader = command.ExecuteReader();
+                var plemena = new List<Plemeno>();
+
+                while (reader.Read())
+                {
+                    plemena.Add(new Plemeno
+                    {
+                        Id = Convert.ToInt32(reader["id_plemeno"]),
+                        Nazev = reader["nazev"].ToString()
+                    });
+                }
+
+                return plemena;
+            }
+        }
+
+        public List<DuvodPobytu> GetDuvodyPobytu()
+        {
+            using (var connection = new OracleConnection(_connectionString))
+            {
+                connection.Open();
+                var command = new OracleCommand("SELECT id_duvod, duvod FROM duvody_pobytu", connection);
+                var reader = command.ExecuteReader();
+                var duvody = new List<DuvodPobytu>();
+
+                while (reader.Read())
+                {
+                    duvody.Add(new DuvodPobytu
+                    {
+                        Id = Convert.ToInt32(reader["id_duvod"]),
+                        Nazev = reader["duvod"].ToString()
+                    });
+                }
+
+                return duvody;
+            }
+        }
+
 
     }
 }

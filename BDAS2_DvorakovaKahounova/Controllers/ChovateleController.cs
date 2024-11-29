@@ -25,8 +25,14 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         }
 		public IActionResult PridatPsa()
 		{
-			return View();
-		}
+            if (User.Identity.IsAuthenticated && User.IsInRole("C"))
+            {
+                return View(); // Zobrazí stránku rezervací
+            }
+
+            // Pokud podmínky nejsou splněny, přesměruj na přihlášení nebo jinou stránku
+            return RedirectToAction("Login", "Osoba");
+        }
 
 		[HttpPost]
 		public IActionResult PridatOdcerveniAkce(int pesId, DateTime datumOdcerveni)
@@ -112,9 +118,10 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		[HttpPost]
 		public IActionResult PridatPsa(string cisloCipu)
 		{
-			Console.WriteLine(cisloCipu);
+            ViewBag.CisloCipu = cisloCipu;
 			var idPsa = _dataAccess.GetPesIdByCisloCipu(cisloCipu);
 			Console.WriteLine("Id psa v controlleru po volání dataAccess" + idPsa);
+			Pes pes = new Pes();
 			if (idPsa.HasValue)
 			{
 				// Pokud je pes nalezen, pokračujeme k dalším akcím
@@ -125,12 +132,21 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			}
 			else
 			{
-				// Pokud pes nenalezen
-				Console.WriteLine("jsme v else controoler");
-				ViewBag.Message = "Pes nenalezen.";
-			}
+                // Pokud pes neexistuje, zobrazíme formulář pro přidání nového psa
+                ViewBag.Message = "Pes nenalezen. Ujistěte se, že máte správně zadané číslo čipu. Pokud ano, zadejte údaje pro nového psa.";
 
-			return View();
+                // Načítáme hodnoty pro comboboxy
+                //ViewBag.Barvy = _dataAccess.GetBarvy(); // Získání všech barev
+                ViewData["Barvy"] = _dataAccess.GetBarvy();
+                //ViewBag.Plemene = _dataAccess.GetPlemene(); // Získání všech plemen
+                ViewData["Plemena"] = _dataAccess.GetPlemene();
+                ViewData["Duvody"] = _dataAccess.GetDuvodyPobytu();
+               // ViewBag.Duvody = _dataAccess.GetDuvodyPobytu(); // Získání důvodů pobytu
+            }
+
+            ViewBag.ShowForm = !idPsa.HasValue;
+
+            return View(pes);
 		}
 
 
