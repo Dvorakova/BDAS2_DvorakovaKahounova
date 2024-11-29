@@ -1,0 +1,56 @@
+﻿@* @model List<BDAS2_DvorakovaKahounova.Models.Rezervace>
+
+@{
+	ViewData["Title"] = "VyriditRezervaci";
+}
+
+<div class="container">
+    <h1>Vyhledání rezervace psa</h1>
+    <div class="form-group">
+        <input type="text" id="reservationCode" placeholder="Zadejte kód rezervace">
+        <button onclick="findDog()">Vyhledat psa</button>
+    </div>
+    <div id="result" class="result" style="display: none;">
+        <p><strong>Informace o psovi:</strong></p>
+        <p id="dogInfo">--</p>
+        <button onclick="processReservation()">Vyřídit rezervaci</button>
+    </div>
+</div>
+ *@
+
+ @model List<BDAS2_DvorakovaKahounova.Models.Rezervace>
+
+@{
+    ViewData["Title"] = "VyriditRezervaci";
+}
+
+<h1>Vyhledání rezervace psa</h1>
+<div class="container-rezervace">
+    <form method="post" action="/Rezervace/VyriditRezervaci">
+        <div class="input-container-rezervace">
+            <input type="text" id="reservationCode" name="rezervaceKod" placeholder="Zadejte kód rezervace" class="input-container-rezervace">
+        </div>
+        <button type="submit" class="btn btn-rezervace">Vyhledat psa</button>
+    </form>
+
+    <!-- Zobrazení výsledku -->
+    @if (ViewBag.Message != null)
+    {
+        <div id="result" class="result">
+            <p><strong>Informace o psovi:</strong></p>
+            <p>@ViewBag.Message</p>
+            @if (!ViewBag.Message.Contains("Pes nebyl nalezen.") && !ViewBag.Message.Contains("Rezervační kód je prázdný."))
+            {
+                <button onclick="processReservation()">Vyřídit rezervaci</button>
+            }
+        </div>
+    }
+</div>
+
+<script>
+    function processReservation() {
+        // Můžete přidat logiku pro vyřízení rezervace, např. potvrzení
+        alert("Rezervace byla vyřízena.");
+    }
+</script>
+

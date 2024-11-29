@@ -1,4 +1,5 @@
 ﻿using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 {
@@ -32,6 +33,40 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
                     // Spuštění procedury
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
+        public int? ZiskejIdPsa(string rezervaceKod)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+
+                //using (var cmd = new OracleCommand("ziskej_id_psa", con))
+                //{
+                string query = "BEGIN :cursor := ziskej_id_psa(:rezervaceKod); END;";
+
+                using (var cmd = new OracleCommand(query, con))
+                {
+                    cmd.Parameters.Add(new OracleParameter("cursor", OracleDbType.RefCursor, ParameterDirection.Output));
+
+                    cmd.Parameters.Add(new OracleParameter("rezervaceKod", rezervaceKod));
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        // Pokud je v REF CURSOR nějaký výsledek (tzn. pes byl nalezen)
+                        if (reader.HasRows && reader.Read())
+                        {
+                            return Convert.ToInt32(reader["id_psa"]); // Vrátíme id_psa
+                        }
+                        else
+                        {
+                            // Pokud není řádek v cursoru, vracíme NULL
+                            return null;
+                        }
+                    }
                 }
             }
         }

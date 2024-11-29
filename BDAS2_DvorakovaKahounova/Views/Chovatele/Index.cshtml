@@ -153,7 +153,7 @@
 
 					<tr>
 
-						<td colspan="2">
+						@* <td colspan="2">
 							@if (!string.IsNullOrEmpty(pes.REZERVOVANO))
 							{
 								<span>@pes.REZERVOVANO</span>
@@ -162,7 +162,7 @@
 							{
 								<button class="btn btn-primary">Vyřídit rezervaci</button>
 							}
-						</td>
+						</td> *@
 						<td colspan="2"><button class="btn btn-primary">Vyřídit Adopci</button></td>
 						
 						<td colspan="2">
@@ -195,17 +195,17 @@
 						<td colspan="2"><button class="btn btn-primary">Upravit vlastnosti</button></td>
 						@* <td colspan ="2"><button class="btn btn-primary">Přidat záznam o odčervení</button></td> *@
 
-						<td colspan="2">
+						<td colspan="3">
 							<button class="btn btn-primary" onclick="showDewormingForm(@pes.ID_PSA)">Přidat záznam o odčervení</button>
 						</td>
-						<td colspan="2">
+						<td colspan="3">
 							<button class="btn btn-primary" onclick="showVaccinationForm(@pes.ID_PSA)">Přidat záznam o očkování</button>
 						</td>
 						@* <td colspan="2"><button class="btn btn-primary">Přidat záznam o očkování</button></td> *@
 					</tr>
 					<tr>
-						<td colspan="8"></td>
-						<td colspan="2">
+						<td colspan="6"></td>
+						<td colspan="3">
 							@* <div id="dewormingForm_@pes.ID_PSA" style="display: none; margin-top: 10px;">
 								<form asp-action="AddDewormingRecord" method="post">
 									<input type="hidden" name="pesId" value="@pes.ID_PSA" />
@@ -228,7 +228,7 @@
 
 
 						</td>
-						<td colspan="2">
+						<td colspan="3">
 
 							<div id="vaccinationForm_@pes.ID_PSA" style="display: none; margin-top: 10px;">
 								<form asp-action="PridatOckovaniAkce" method="post">
