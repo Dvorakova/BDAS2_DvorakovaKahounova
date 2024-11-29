@@ -498,7 +498,6 @@ button[type="button"]:focus {
 .input-container-rezervace {
     position: center;
     margin: 20px auto; /* Zmenšené odsazení pro menší mezeru */
-    padding: 20px;
     width: 30%; /* Upravte podle potøeby */
     text-align: center;
 }
@@ -510,7 +509,19 @@ button[type="button"]:focus {
     color: white;
     border-radius: 5px;
     margin: 5px auto;
-    padding: 5px;
+    padding: 10px;
+    border: none; /* odstraní okraj */
+    outline: none; /* odstraní obrys */
+}
+
+.btn-rezervace:hover {
+    background-color: var(--fialova); /* Barva pøi hoveru */
+    border-color: var(--fialova);
+}
+
+.btn-rezervace:focus {
+    background-color: var(--fialova); /* Barva pøi hoveru */
+    border-color: var(--fialova);
 }
 
     .input-container-rezervace input[type="text"] {
@@ -548,4 +559,16 @@ button[type="button"]:focus {
     border-radius: 5px;
     margin-left: 27px;
     padding: 10px;
+    border: none; /* odstraní okraj */
+    outline: none; /* odstraní obrys */
 }
+
+    .btn-rezervace2:hover {
+        background-color: var(--fialova); /* Barva pøi hoveru */
+        border-color: var(--fialova);
+    }
+
+    .btn-rezervace2:focus {
+        background-color: var(--fialova); /* Barva pøi hoveru */
+        border-color: var(--fialova);
+    }
