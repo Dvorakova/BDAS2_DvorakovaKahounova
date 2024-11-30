@@ -33,8 +33,8 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                             Pes pes = new Pes
                             {
                                 ID_PSA = reader.GetInt32(0),
-                                JMENO = reader.GetString(1),
-                                NAROZENI = reader.GetDateTime(2),
+                                JMENO = reader.IsDBNull(1) ? null : reader.GetString(1),
+                                NAROZENI = reader.IsDBNull(2) ? (DateTime?)null : reader.GetDateTime(2),
                                 POHLAVI = reader.GetInt32(3),
                                 BARVA = reader.GetString(4),
                                 PLEMENO = reader.GetString(5),
