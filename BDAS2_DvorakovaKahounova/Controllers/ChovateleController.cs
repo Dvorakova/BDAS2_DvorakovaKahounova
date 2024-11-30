@@ -20,12 +20,24 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
         public IActionResult Index()
         {
+            int uzivatelID = GetLoggedInUserId();
+            if (uzivatelID == 0)
+            {
+                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+            }
+
             List<Pes> psi = _dataAccess.GetAllPsiProChovatele();
             return View(psi);
             
         }
 		public IActionResult PridatPsa()
 		{
+            int uzivatelID = GetLoggedInUserId();
+            if (uzivatelID == 0)
+            {
+                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+            }
+
             if (User.Identity.IsAuthenticated && User.IsInRole("C"))
             {
                 return View(); // Zobrazí stránku rezervací
@@ -38,8 +50,14 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		[HttpPost]
 		public IActionResult PridatOdcerveniAkce(int pesId, DateTime datumOdcerveni)
 		{
-			// Zavolání metody PridatOdcerveni, která přidá odčervení pro konkrétního psa
-			_dataAccess.PridatOdcerveni(pesId, datumOdcerveni);
+            int uzivatelID = GetLoggedInUserId();
+            if (uzivatelID == 0)
+            {
+                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+            }
+
+            // Zavolání metody PridatOdcerveni, která přidá odčervení pro konkrétního psa
+            _dataAccess.PridatOdcerveni(pesId, datumOdcerveni);
 
 			// Po dokončení akce přesměrujeme na nějakou stránku nebo zobrazíme zprávu
 			return RedirectToAction("Index"); // nebo nějaký jiný pohled
@@ -48,8 +66,14 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		[HttpPost]
 		public IActionResult PridatOckovaniAkce(int pesId, DateTime datumOckovani)
 		{
-			// Zavolání metody PridatOdcerveni, která přidá odčervení pro konkrétního psa
-			_dataAccess.PridatOckovani(pesId, datumOckovani);
+            int uzivatelID = GetLoggedInUserId();
+            if (uzivatelID == 0)
+            {
+                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+            }
+
+            // Zavolání metody PridatOdcerveni, která přidá odčervení pro konkrétního psa
+            _dataAccess.PridatOckovani(pesId, datumOckovani);
 
 			// Po dokončení akce přesměrujeme na nějakou stránku nebo zobrazíme zprávu
 			return RedirectToAction("Index"); // nebo nějaký jiný pohled
@@ -119,7 +143,13 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         [HttpPost]
         public IActionResult PridatPsa(string cisloCipu, string action)
         {
-            if(action == "search")
+            int uzivatelID = GetLoggedInUserId();
+            if (uzivatelID == 0)
+            {
+                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+            }
+
+            if (action == "search")
             {
                 ViewBag.CisloCipu = cisloCipu;
                 Console.WriteLine("cislo cipu v controlleru" + cisloCipu);

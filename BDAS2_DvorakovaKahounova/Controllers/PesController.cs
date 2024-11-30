@@ -43,7 +43,8 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             {
                 return RedirectToAction("Login");
             }
-                List<Pes> psi = _dataAccess.GetPsiProOsobu(osobaId);
+
+            List<Pes> psi = _dataAccess.GetPsiProOsobu(osobaId);
             return View(psi);
         }
 

@@ -20,6 +20,12 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         [Authorize(Roles = "R, P")]
         public IActionResult Index()
         {
+            int uzivatelID = GetLoggedInUserId();
+            if (uzivatelID == 0)
+            {
+                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+            }
+
             // Zkontroluj, zda je uživatel přihlášen a má typ osoby "R"
             if (User.Identity.IsAuthenticated && (User.IsInRole("R") || User.IsInRole("P")))
             {
@@ -32,8 +38,14 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 		public IActionResult VyriditRezervaci()
 		{
-			// Zkontroluj, zda je uživatel přihlášen a má typ osoby "R"
-			if (User.Identity.IsAuthenticated && User.IsInRole("C"))
+            int uzivatelID = GetLoggedInUserId();
+            if (uzivatelID == 0)
+            {
+                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+            }
+
+            // Zkontroluj, zda je uživatel přihlášen a má typ osoby "R"
+            if (User.Identity.IsAuthenticated && User.IsInRole("C"))
 			{
 				return View(); // Zobrazí stránku rezervací
 			}
@@ -78,5 +90,10 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             return RedirectToAction("Login", "Osoba");
         }
 
+        private int GetLoggedInUserId()
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            return userIdClaim != null ? int.Parse(userIdClaim) : 0;
+        }
     }
 }

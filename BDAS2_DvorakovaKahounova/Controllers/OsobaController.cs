@@ -143,8 +143,13 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         [HttpGet]
         public IActionResult Profile(int? userId = null)
         {
+            int uzivatelID = GetLoggedInUserId();
+            if (uzivatelID == 0)
+            {
+                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+            }
 
-			Osoba osoba;
+            Osoba osoba;
 
 			if (userId.HasValue)
 			{
