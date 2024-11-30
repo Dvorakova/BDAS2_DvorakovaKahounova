@@ -33,6 +33,10 @@
 @if (ViewBag.ShowForm == true)  
 {
 <form method="post" enctype="multipart/form-data">
+
+        <!-- Skryté pole pro číslo čipu -->
+        <input type="hidden" id="hiddenCisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" />
+
     <div>
         <label for="jmeno">Jméno psa:</label>
             <input type="text" id="jmeno" name="jmeno" value="@Model.Pes?.JMENO ?? " Neznámé"" />

@@ -173,6 +173,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 // Načtení hodnot z formuláře
                 var jmeno = Request.Form["jmeno"];
                 var cisloNovehoCipu = Request.Form["cisloCipu"];
+                Console.WriteLine("Číslo čipu: " + cisloNovehoCipu);
                 var datumNarozeni = string.IsNullOrEmpty(Request.Form["datumNarozeni"])
                                     ? (DateTime?)null
                                     : DateTime.Parse(Request.Form["datumNarozeni"]);
