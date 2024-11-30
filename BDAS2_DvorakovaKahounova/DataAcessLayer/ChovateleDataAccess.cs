@@ -428,5 +428,48 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return null; // Pokud uživatel nebyl nalezen
         }
 
+        //Samotná metoda přidání nového psa do tabulky psi
+        public int VlozPsa(string jmeno, string cisloCipu, DateTime? datumNarozeni, int plemenoId, int barvaId, int pohlaviId, int? fotografieId, int vaha)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+
+                // SQL dotaz pro vložení nového psa
+                var sql = @"
+            INSERT INTO Psi (JMENO, CISLO_CIPU, NAROZENI, ID_PLEMENO, ID_BARVA, ID_FOTOGRAFIE, ID_POHLAVI, VAHA)
+            VALUES (:jmeno, :cisloCipu, :datumNarozeni, :plemenoId, :barvaId, :fotografieId, :pohlaviId, :vaha)
+            RETURNING ID_PSA INTO :newId";
+
+                using (var cmd = new OracleCommand(sql, con))
+                {
+                    // Přidání parametrů
+                    cmd.Parameters.Add(new OracleParameter("jmeno", string.IsNullOrEmpty(jmeno) ? DBNull.Value : jmeno));
+                    cmd.Parameters.Add(new OracleParameter("cisloCipu", string.IsNullOrEmpty(cisloCipu) ? DBNull.Value : cisloCipu));
+                    cmd.Parameters.Add(new OracleParameter("datumNarozeni", datumNarozeni.HasValue ? (object)datumNarozeni.Value : DBNull.Value));
+                    cmd.Parameters.Add(new OracleParameter("plemenoId", plemenoId));
+                    cmd.Parameters.Add(new OracleParameter("barvaId", barvaId));
+                    cmd.Parameters.Add(new OracleParameter("fotografieId", fotografieId.HasValue ? (object)fotografieId.Value : DBNull.Value));
+                    cmd.Parameters.Add(new OracleParameter("pohlaviId", pohlaviId));
+                    cmd.Parameters.Add(new OracleParameter("vaha", vaha));
+
+
+                    // Výstupní parametr pro získání ID nově vloženého záznamu
+                    var newIdParam = new OracleParameter("newId", OracleDbType.Int32)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(newIdParam);
+
+                    // Spuštění příkazu
+                    cmd.ExecuteNonQuery();
+
+                    // Vrácení nově vygenerovaného ID
+                    return Convert.ToInt32(newIdParam.Value.ToString());
+                }
+            }
+        }
+
+
     }
 }

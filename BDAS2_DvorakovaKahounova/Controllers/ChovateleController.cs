@@ -1,5 +1,6 @@
 ﻿using BDAS2_DvorakovaKahounova.DataAcessLayer;
 using BDAS2_DvorakovaKahounova.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
@@ -167,30 +168,60 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
                 return View(new PesMajitelModel());
             }
+            else if ( action == "createDog")
+            {
+                // Načtení hodnot z formuláře
+                var jmeno = Request.Form["jmeno"];
+                var cisloNovehoCipu = Request.Form["cisloCipu"];
+                var datumNarozeni = string.IsNullOrEmpty(Request.Form["datumNarozeni"])
+                                    ? (DateTime?)null
+                                    : DateTime.Parse(Request.Form["datumNarozeni"]);
+                var barvaId = int.Parse(Request.Form["barva"]);
+                var plemenoId = int.Parse(Request.Form["plemeno"]);
+                var pohlaviId = int.Parse(Request.Form["pohlavi"]);
+                var duvodPobytuId = int.Parse(Request.Form["duvodPobytu"]);
+                var zacatekPobytu = DateTime.Parse(Request.Form["zacatekPobytu"]);
+                //var vlastnostiIds = Request.Form["vlastnosti[]"].ToString().Split(',').Select(int.Parse).ToList();
+                var vaha = int.Parse(Request.Form["vaha"]);
+                int? fotografieId = null;
+                /*
+                // Zpracování fotografie
+                var fotografie = Request.Form.Files["fotografie"];
+                int? fotografieId = null;
+                if (fotografie != null && fotografie.Length > 0)
+                {
+                    fotografieId = _dataAccess.SaveFotografie(fotografie); //??????
+                }
+                */
+
+                // 1. Vložení psa do tabulky Psi
+                var pesId = _dataAccess.VlozPsa(jmeno, cisloNovehoCipu, datumNarozeni, plemenoId, barvaId, pohlaviId, fotografieId, vaha);
+                /*
+                // 2. Vložení pobytu psa do tabulky Pobyty
+                var pobytId = _dataAccess.VlozPobyt(pesId, zacatekPobytu, duvodPobytuId);
+
+                // 3. Vložení záznamu o pobytu
+                _dataAccess.VlozZaznamOPobytu(pobytId);
+
+                // 4. Vložení vlastností do tabulky psi_vlastnosti
+                foreach (var vlastnostId in vlastnostiIds)
+                {
+                    _dataAccess.VlozVlastnostProPsa(pesId, vlastnostId);
+                }
+                */
+                // Přesměrování nebo zobrazení potvrzení
+                TempData["Message"] = "Pes byl úspěšně přidán!";
+                Console.WriteLine("Pes přidán");
+                ViewBag.Message = "Pes přidán";
+                return View();
+            }
+
+
+
             return View();
 
         }
 
-        //zkouška odeslání dat z formuláře pro přidání nového psa:
-        //[HttpPost]
-        //public IActionResult PridatPsa(Pes model, List<int> vlastnosti)
-        //{
-        //    // Debug: Zobrazení ID zaškrtnutých vlastností
-        //    Console.WriteLine("Zaškrtnuté vlastnosti: " + string.Join(", ", vlastnosti));
-
-        //    // Logika pro uložení psa a jeho vlastností
-        //    //int idPsa = _dataAccess.PridatPsa(model); // Předpokládáme, že tato metoda vrací ID psa
-
-        //    // Uložení zaškrtnutých vlastností k danému psovi
-        //    //foreach (var idVlastnost in vlastnosti)
-        //    //{
-        //    //    //_dataAccess.PridatVlastnostKPsovi(idPsa, idVlastnost);
-        //    //}
-
-        //    // Přesměrování nebo potvrzení akce
-        //    //return RedirectToAction("DetailPsa", new { id = idPsa });
-        //    return View();
-        //}
 
 
 

@@ -78,13 +78,20 @@
         </select>
     </div>
     <!-- Combobox pro pohlaví -->
-    <div>
+    @* <div>
         <label for="pohlavi">Pohlaví:</label>
         <select id="pohlavi" name="pohlavi">
             <option value="M">Pes</option>
             <option value="F">Fena</option>
         </select>
-    </div>
+    </div> *@
+        <div>
+            <label for="pohlavi">Pohlaví:</label>
+            <select id="pohlavi" name="pohlavi">
+                <option value="0">Pes</option> <!-- 0 pro psa -->
+                <option value="1">Fena</option> <!-- 1 pro fenu -->
+            </select>
+        </div>
     <!-- Combobox pro důvod pobytu -->
     <div>
         <label for="duvodPobytu">Důvod pobytu:</label>
@@ -143,7 +150,7 @@
         <input type="file" id="fotografie" name="fotografie" />
     </div>
 
-    <button type="submit">Přidat psa</button>
+        <button type="submit" name="action" value="createDog">Přidat psa</button>
     </form>
 }
 
@@ -177,8 +184,8 @@
             <p><strong>Barva:</strong> @Model.Pes.BARVA</p>
             <p><strong>Vlastnosti:</strong> @Model.Pes.VLASTNOSTI</p>
             <p><strong>Číslo čipu:</strong> @Model.Pes.CISLO_CIPU</p>
-
-            <button onclick="processReservation()">Vyřídit rezervaci</button>
+            
+            <button onclick="pridatPobyt()">Přidat pobyt</button>
         </div>
 
 
