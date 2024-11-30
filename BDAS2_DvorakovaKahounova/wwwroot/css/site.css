@@ -60,6 +60,10 @@ body {
 }
 
 
+.hidden {
+    display: none;
+}
+
 
 
 /* kontakty */
@@ -574,3 +578,19 @@ button[type="button"]:focus {
         background-color: var(--fialova); /* Barva pøi hoveru */
         border-color: var(--fialova);
     }
+
+/*-- chovatele index --*/
+
+.conteiner-chovatele {
+    margin: 12px;
+    background-color: deeppink;
+    width: 100%;
+}
+
+.table-chovatele {
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: transparent;
+    color: black;
+    max-width: 1200px;
+}
