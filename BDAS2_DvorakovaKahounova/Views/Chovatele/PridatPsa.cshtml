@@ -182,7 +182,7 @@
             <p><strong>Vlastnosti:</strong> @Model.Pes.VLASTNOSTI</p>
             <p><strong>Číslo čipu:</strong> @Model.Pes.CISLO_CIPU</p>
             
-            <button onclick="pridatPobyt()">Přidat pobyt</button>
+            @* <button onclick="pridatPobyt()">Přidat pobyt</button> *@
         </div>
 
 
@@ -207,39 +207,46 @@
                 </tr>
             </table>
         }
-        
 
 
+        <form method="post">
+            @* ChovateleController/PridatPobyt *@
+            <!-- Skryté pole pro ID psa -->
+            <input type="hidden" name="pesId" value="@Model.Pes.ID_PSA" />
 
-        <!-- Combobox pro důvod pobytu -->
-        <div>
-            <label for="duvodPobytu">Důvod pobytu:</label>
-            <select id="duvodPobytu" name="duvodPobytu">
-                @if (duvodyList != null && duvodyList.Any())
-                {
-                    @foreach (var duvod in duvodyList)
+            <!-- Combobox pro důvod pobytu -->
+            <div>
+                <label for="duvodPobytu">Důvod pobytu:</label>
+                <select id="duvodPobytu" name="idDuvod">
+                    @if (duvodyList != null && duvodyList.Any())
                     {
-                        <option value="@duvod.Id">@duvod.Nazev</option>
+                        @foreach (var duvod in duvodyList)
+                        {
+                            <option value="@duvod.Id">@duvod.Nazev</option>
+                        }
                     }
-                }
-                else
-                {
-                    <option disabled>Žádné důvody pobytu k dispozici</option>
-                }
-            </select>
-        </div>
+                    else
+                    {
+                        <option disabled>Žádné důvody pobytu k dispozici</option>
+                    }
+                </select>
+            </div>
 
-        <!-- Datum začátku pobytu -->
-        <div>
-            <label for="zacatekPobytu">Začátek pobytu:</label>
-            <input type="date" id="zacatekPobytu" name="zacatekPobytu" required />
-        </div>
+            <!-- Datum začátku pobytu -->
+            <div>
+                <label for="zacatekPobytu">Začátek pobytu:</label>
+                <input type="date" id="zacatekPobytu" name="zacatekPobytu" required />
+            </div>
 
-        <!-- Váha -->
-        <div>
-            <label for="vaha">Váha (kg):</label>
-            <input type="number" id="vaha" name="vaha" required />
-        </div>
+            <!-- Váha -->
+            <div>
+                <label for="vaha">Váha (kg):</label>
+                <input type="number" id="vaha" name="vaha" required />
+            </div>
+
+            <!-- Tlačítko pro odeslání -->
+            <button type="submit" name="action" value="addStay">Přidat pobyt</button>
+        </form>
 
 
     </div>

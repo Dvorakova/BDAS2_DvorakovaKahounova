@@ -576,6 +576,102 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             }
         }
 
+        //metody pro přidání pobytu psa, který už v útulku kdysi byl
+        public void AktualizujMajitelePsaNaNull(int pesId)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand("UPDATE psi SET majitel_id_osoba = NULL WHERE id_psa = :idPes", con))
+                {
+                    cmd.Parameters.Add(new OracleParameter("idPes", pesId));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void AktualizujVahuPsa(int pesId, double vaha)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand("UPDATE psi SET vaha = :vaha WHERE id_psa = :idPes", con))
+                {
+                    cmd.Parameters.Add(new OracleParameter("idPes", pesId));
+                    cmd.Parameters.Add(new OracleParameter("vaha", vaha));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void ZpracujMajiteleBezPsa(int osobaId)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+
+                // 1. Zjistit, zda osoba stále vlastní nějaké psy
+                using (var checkCmd = new OracleCommand("SELECT COUNT(*) FROM PSI WHERE MAJITEL_ID_OSOBA = :osobaId", con))
+                {
+                    checkCmd.Parameters.Add(new OracleParameter("osobaId", osobaId));
+
+                    int pocetPsu = Convert.ToInt32(checkCmd.ExecuteScalar());
+                    if (pocetPsu > 0)
+                    {
+                        return; // Osoba stále vlastní psy, nic neděláme
+                    }
+                }
+
+                // 2. Odebrat záznam z tabulky MAJITELE
+                using (var deleteCmd = new OracleCommand("DELETE FROM MAJITELE WHERE ID_OSOBA = :osobaId", con))
+                {
+                    deleteCmd.Parameters.Add(new OracleParameter("osobaId", osobaId));
+                    deleteCmd.ExecuteNonQuery();
+                }
+
+                // 3. Aktualizovat typ osoby
+                using (var getTypeCmd = new OracleCommand("SELECT TYP_OSOBY FROM OSOBY WHERE ID_OSOBA = :osobaId", con))
+                {
+                    getTypeCmd.Parameters.Add(new OracleParameter("osobaId", osobaId));
+
+                    var typOsoby = getTypeCmd.ExecuteScalar()?.ToString();
+                    if (!string.IsNullOrEmpty(typOsoby))
+                    {
+                        string novyTyp = typOsoby == "M" ? "U" : typOsoby == "P" ? "R" : null;
+
+                        if (novyTyp != null)
+                        {
+                            using (var updateCmd = new OracleCommand("UPDATE OSOBY SET TYP_OSOBY = :novyTyp WHERE ID_OSOBA = :osobaId", con))
+                            {
+                                updateCmd.Parameters.Add(new OracleParameter("novyTyp", novyTyp));
+                                updateCmd.Parameters.Add(new OracleParameter("osobaId", osobaId));
+                                updateCmd.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public int? GetMajitelIdByPesId(int pesId)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+
+                using (var cmd = new OracleCommand("SELECT MAJITEL_ID_OSOBA FROM PSI WHERE ID_PSA = :pesId", con))
+                {
+                    cmd.Parameters.Add(new OracleParameter("pesId", pesId));
+
+                    var result = cmd.ExecuteScalar();
+                    if (result != DBNull.Value && result != null)
+                    {
+                        return Convert.ToInt32(result);
+                    }
+                }
+            }
+            return null; // Pokud nebyl nalezen žádný majitel
+        }
 
 
     }

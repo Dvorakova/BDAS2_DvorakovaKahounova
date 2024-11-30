@@ -198,7 +198,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
                 return View(new PesMajitelModel());
             }
-            else if ( action == "createDog")
+            else if (action == "createDog")
             {
                 // Načtení hodnot z formuláře
                 var jmeno = Request.Form["jmeno"];
@@ -255,15 +255,15 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
                 // 1. Vložení psa do tabulky Psi
                 var pesId = _dataAccess.VlozPsa(jmeno, cisloNovehoCipu, datumNarozeni, plemenoId, barvaId, pohlaviId, fotografieId, vaha);
-                
+
                 // 2. Vložení pobytu psa do tabulky Pobyty
                 var pobytId = _dataAccess.VlozPobyt(pesId, zacatekPobytu, duvodPobytuId, vaha);
-                
+
                 // 3. Vložení záznamu o pobytu
                 _dataAccess.VlozZaznamOPobytu(pobytId);
 
                 // 4. Vložení vlastností do tabulky psi_vlastnosti
-               
+
                 _dataAccess.PridatVlastnostiDoDatabaze(pesId, vlastnosti);
 
                 // Přesměrování nebo zobrazení potvrzení
@@ -272,10 +272,85 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 ViewBag.Message = "Pes přidán";
                 return View();
             }
+            else if (action == "addStay")
+            {
+                var pesId = int.Parse(Request.Form["pesId"]);
+                var zacatekPobytu = DateTime.Parse(Request.Form["zacatekPobytu"]);
+                var idDuvod = int.Parse(Request.Form["idDuvod"]);
+                var vaha = double.Parse(Request.Form["vaha"]);
 
+                try
+                {
+                    // 1. Pokud je důvod pobytu "odložen majitelem", aktualizujeme psa
+                    if (idDuvod == 1)
+                    {
+                        // Aktualizace psa - nastavení majitele na null
+                        var osobaId = _dataAccess.GetMajitelIdByPesId(pesId);
+                        _dataAccess.AktualizujMajitelePsaNaNull(pesId); // Tuto metodu musíme přidat do data access                        
+                        if (osobaId != null)
+                        {
+                            _dataAccess.ZpracujMajiteleBezPsa(osobaId.Value);
+                        }
+                    }
+
+                    // 2. Aktualizace váhy psa
+                    _dataAccess.AktualizujVahuPsa(pesId, vaha); // Tato metoda bude aktualizovat váhu v tabulce psi
+
+                    // 3. Vložení nového pobytu
+                    int pobytId = _dataAccess.VlozPobyt(pesId, zacatekPobytu, idDuvod, vaha);
+
+                    // 4. Vložení záznamu o pobytu
+                    _dataAccess.VlozZaznamOPobytu(pobytId);
+
+                    //return RedirectToAction("PesDetails", new { id = pesId }); // Přesměrování na detail psa
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    // Ošetření chyby
+                    Console.WriteLine("Chyba při přdání starého psa");
+                    ViewBag.ErrorMessage = ex.Message;
+                    return View();
+                }
+            }
             return View();
 
         }
+
+
+        [HttpPost]
+        public IActionResult PridatPobyt(int pesId, DateTime zacatekPobytu, int idDuvod, double vaha)
+        {
+            try
+            {
+                // 1. Pokud je důvod pobytu "odložen majitelem", aktualizujeme psa
+                if (idDuvod == 1)
+                {
+                    // Aktualizace psa - nastavení majitele na null
+                    _dataAccess.AktualizujMajitelePsaNaNull(pesId); // Tuto metodu musíme přidat do data access
+                }
+
+                // 2. Aktualizace váhy psa
+                _dataAccess.AktualizujVahuPsa(pesId, vaha); // Tato metoda bude aktualizovat váhu v tabulce psi
+
+                // 3. Vložení nového pobytu
+                int pobytId = _dataAccess.VlozPobyt(pesId, zacatekPobytu, idDuvod, vaha);
+
+                // 4. Vložení záznamu o pobytu
+                _dataAccess.VlozZaznamOPobytu(pobytId);
+
+                //return RedirectToAction("PesDetails", new { id = pesId }); // Přesměrování na detail psa
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                // Ošetření chyby
+                Console.WriteLine("Chyba při přdání starého psa");
+                ViewBag.ErrorMessage = ex.Message;
+                return View();
+            }
+        }
+
 
     }
 }
