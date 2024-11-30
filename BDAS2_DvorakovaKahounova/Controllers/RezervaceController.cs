@@ -17,11 +17,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
         // Akce pro zobrazení stránky rezervací
         [HttpGet]
-        [Authorize(Roles = "R")]
+        [Authorize(Roles = "R, P")]
         public IActionResult Index()
         {
             // Zkontroluj, zda je uživatel přihlášen a má typ osoby "R"
-            if (User.Identity.IsAuthenticated && User.IsInRole("R"))
+            if (User.Identity.IsAuthenticated && (User.IsInRole("R") || User.IsInRole("P")))
             {
                 return View(); // Zobrazí stránku rezervací
             }

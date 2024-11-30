@@ -45,6 +45,8 @@ body {
     margin-bottom: 60px;
     background-color: var(--snehova);
     justify-content: center;
+    /*cursor: url("images/packa.png"), auto;*/
+    /*cursor: url("images/packa.png"), auto;*/
 }
 
 .main-container {

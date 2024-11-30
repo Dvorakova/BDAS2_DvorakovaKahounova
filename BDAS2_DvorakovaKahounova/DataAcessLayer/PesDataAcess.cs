@@ -14,68 +14,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             _connectionString = configuration;
         }
 
-        ////stara metoda - jen testovaci tabulka (uplne puvodni)
-        //public List<Pes> GetAllPsi()
-        //{
-        //    List<Pes> psi = new List<Pes>();
-
-        //    using (var con = new OracleConnection(_connectionString))
-        //    {
-        //        con.Open();
-        //        using (var cmd = new OracleCommand("SELECT * FROM Psi", con))
-        //        {
-        //            using (var reader = cmd.ExecuteReader())
-        //            {
-        //                while (reader.Read())
-        //                {
-        //                    Pes pes = new Pes
-        //                    {
-        //                        ID_PSA = reader.GetInt32(0),
-        //                        JMENO = reader.GetString(1),
-        //                        CISLO_CIPU = reader.GetString(2),
-        //                        NAROZENI = reader.GetDateTime(3) 
-        //                    };
-        //                    psi.Add(pes);
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return psi;
-        //}
-
-        ////pridano ND - předělávka Psi k adopci pro nepřihlášeného uživatele
-        //public List<Pes> GetAllPsi()
-        //{
-        //    List<Pes> psi = new List<Pes>();
-
-        //    using (var con = new OracleConnection(_connectionString))
-        //    {
-        //        con.Open();
-        //        // Dotaz na pohled
-        //        using (var cmd = new OracleCommand("SELECT jmeno, datum_narozeni, barva, plemeno, vlastnosti FROM View_PsiVUtulkuBezMajitele", con))
-        //        {
-        //            using (var reader = cmd.ExecuteReader())
-        //            {
-        //                while (reader.Read())
-        //                {
-        //                    Pes pes = new Pes
-        //                    {
-        //                        JMENO = reader.GetString(0),
-        //                        NAROZENI = reader.GetDateTime(1),
-        //                        BARVA = reader.GetString(2),
-        //                        PLEMENO = reader.GetString(3),
-        //                        VLASTNOSTI = reader.IsDBNull(4) ? null : reader.GetString(4)
-        //                    };
-        //                    psi.Add(pes);
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return psi;
-        //}
-
         //pridano ND pro upravu i rpo prihlasene uživatele
         //metoda pro stránku Psi k adopci
         public List<Pes> GetAllPsi()
@@ -156,7 +94,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return psi;
         }
 
-
         public Fotografie GetFotografieById(int id)
         {
             Fotografie fotografie = null;
@@ -188,6 +125,92 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return fotografie;
         }
 
+        public void VytvorRezervaci(int idPsa, int rezervatorId)
+        {
+            string rezervacniKod = CodeGenerator.GenerateRandomCode(); // Vygenerování kódu
 
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand("VlozRezervaci", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure; // Nastavení příkazu jako procedury
+
+                    // Přidání parametrů pro proceduru
+                    cmd.Parameters.Add(new OracleParameter("p_id_psa", idPsa));
+                    cmd.Parameters.Add(new OracleParameter("p_rezervator_id_osoba", rezervatorId));
+                    cmd.Parameters.Add(new OracleParameter("p_rezervace_kod", rezervacniKod));
+
+                    cmd.ExecuteNonQuery(); // Spuštění procedury
+                }
+            }
+        }
+
+        public void ZmenTypOsoby(int rezervatorId)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+
+                // Vytvoříme SQL dotaz pro aktualizaci typu osoby
+                string sql = @"
+            UPDATE osoby 
+            SET typ_osoby = 
+                CASE 
+                    WHEN typ_osoby = 'U' THEN 'R' 
+                    WHEN typ_osoby = 'M' THEN 'P'
+                END
+            WHERE id_osoba = :rezervatorId";
+
+                using (var cmd = new OracleCommand(sql, con))
+                {
+                    // Přidáme parametr pro ID osoby
+                    cmd.Parameters.Add(new OracleParameter("rezervatorId", rezervatorId));
+
+                    // Provedeme UPDATE
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void PridatDoRezervatori(int rezervatorId)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+
+                // Vytvoříme SQL dotaz pro vložení ID osoby do tabulky REZERVATORI
+                string sql = @"
+            INSERT INTO REZERVATORI (id_osoba)
+            VALUES (:rezervatorId)";
+
+                using (var cmd = new OracleCommand(sql, con))
+                {
+                    // Přidáme parametr pro ID rezervátora
+                    cmd.Parameters.Add(new OracleParameter("rezervatorId", rezervatorId));
+
+                    // Provedeme INSERT
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
+
+
+
+
+        public class CodeGenerator
+        {
+            private static readonly char[] Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+
+            public static string GenerateRandomCode(int length = 10)
+            {
+                var random = new Random();
+                return new string(Enumerable.Range(0, length)
+                    .Select(_ => Characters[random.Next(Characters.Length)])
+                    .ToArray());
+            }
+        }
     }
 }
