@@ -471,5 +471,112 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
         }
 
 
+        //vlozeni pobytu (voláno po vložení psa)
+        public int VlozPobyt(int idPes, DateTime zacatekPobytu, int idDuvod, double vaha)
+        {
+            using (var connection = new OracleConnection(_connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    using (var command = new OracleCommand("VlozPobyt", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Parametry pro proceduru
+                        command.Parameters.Add("p_id_psa", OracleDbType.Int32).Value = idPes;
+                        command.Parameters.Add("p_zacatek_pobytu", OracleDbType.Date).Value = zacatekPobytu;
+                        command.Parameters.Add("p_id_duvod", OracleDbType.Int32).Value = idDuvod;
+                        command.Parameters.Add("p_vaha", OracleDbType.Double).Value = vaha;
+
+                        // Výstupní parametr
+                        var outputParam = new OracleParameter("p_id_pobyt", OracleDbType.Int32)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(outputParam);
+
+
+
+                        // Spuštění procedury
+                        command.ExecuteNonQuery();
+
+                        // Návrat ID nově vytvořeného pobytu
+                        return Convert.ToInt32(outputParam.Value.ToString());
+                        //return Convert.ToInt32(outputParam.Value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Logování chyby
+                    Console.WriteLine($"Chyba při volání procedury VlozPobyt: {ex.Message}");
+                    throw;
+                }
+            }
+        }
+
+        //poté voláno
+        public void VlozZaznamOPobytu(int pobytId)
+        {
+            using (var connection = new OracleConnection(_connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    using (var command = new OracleCommand("VlozZaznamOPobytu", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Parametr procedury
+                        command.Parameters.Add("p_id_pobyt", OracleDbType.Int32).Value = pobytId;
+
+                        // Spuštění procedury
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Logování chyby
+                    Console.WriteLine($"Chyba při volání procedury VlozZaznamOPobytu: {ex.Message}");
+                    throw;
+                }
+            }
+        }
+
+        //metoda pro přidání vlastností do databáze pro nového psa
+        public void PridatVlastnostiDoDatabaze(int pesId, int[] vlastnostiIds)
+        {
+            // Pokud není žádná vlastnost zaškrtnutá, nic neprovádíme
+            if (vlastnostiIds == null || vlastnostiIds.Length == 0)
+                return;
+
+            // Otevření připojení k Oracle databázi
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+
+                // Pro každý ID vlastnosti zaškrtnuté v checkboxech
+                foreach (var vlastnostId in vlastnostiIds)
+                {
+                    // Vytvoření SQL dotazu pro vložení do tabulky psi_vlastnosti
+                    string query = "INSERT INTO psi_vlastnosti (id_psa, id_vlastnost) VALUES (:PesId, :VlastnostId)";
+
+                    using (var cmd = new OracleCommand(query, con))
+                    {
+                        // Přidání parametrů do dotazu
+                        cmd.Parameters.Add(new OracleParameter(":PesId", pesId));
+                        cmd.Parameters.Add(new OracleParameter(":VlastnostId", vlastnostId));
+
+                        // Provedení dotazu
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
+
     }
 }

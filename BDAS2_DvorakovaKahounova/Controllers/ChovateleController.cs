@@ -141,7 +141,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 
         [HttpPost]
-        public IActionResult PridatPsa(string cisloCipu, string action)
+        public IActionResult PridatPsa(string cisloCipu, string action, int[] vlastnosti, IFormFile fotografie)
         {
             int uzivatelID = GetLoggedInUserId();
             if (uzivatelID == 0)
@@ -214,32 +214,58 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 var zacatekPobytu = DateTime.Parse(Request.Form["zacatekPobytu"]);
                 //var vlastnostiIds = Request.Form["vlastnosti[]"].ToString().Split(',').Select(int.Parse).ToList();
                 var vaha = int.Parse(Request.Form["vaha"]);
+
+                //////////////////////
                 int? fotografieId = null;
-                /*
-                // Zpracování fotografie
-                var fotografie = Request.Form.Files["fotografie"];
-                int? fotografieId = null;
-                if (fotografie != null && fotografie.Length > 0)
+                try
                 {
-                    fotografieId = _dataAccess.SaveFotografie(fotografie); //??????
+                    // Pokud je soubor fotografie přítomen, ulož ho
+
+                    if (fotografie != null && fotografie.Length > 0)
+                    {
+                        // Převeď soubor na byte[]
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            fotografie.CopyTo(memoryStream);
+                            byte[] obsahFotografie = memoryStream.ToArray();
+
+                            // Vytvoř objekt Fotografie a nastav parametry
+                            var fotografieObj = new Fotografie
+                            {
+                                nazev_souboru = fotografie.FileName,
+                                typ_souboru = fotografie.ContentType,
+                                pripona_souboru = Path.GetExtension(fotografie.FileName),
+                                datum_nahrani = DateTime.Now,
+                                nahrano_id_osoba = GetLoggedInUserId(),  // Pokud máš ID majitele, můžeš ho použít
+                                obsah_souboru = obsahFotografie
+                            };
+
+                            // Ulož fotografii a získej ID
+                            fotografieId = _dataAccess.SaveFotografie(fotografieObj);
+                        }
+                    }
                 }
-                */
+                catch (Exception ex)
+                {
+                    // Ošetření chyby
+                    ViewBag.ErrorMessage = ex.Message;
+                    return View();
+                }
+                ////////////////////////
 
                 // 1. Vložení psa do tabulky Psi
                 var pesId = _dataAccess.VlozPsa(jmeno, cisloNovehoCipu, datumNarozeni, plemenoId, barvaId, pohlaviId, fotografieId, vaha);
-                /*
+                
                 // 2. Vložení pobytu psa do tabulky Pobyty
-                var pobytId = _dataAccess.VlozPobyt(pesId, zacatekPobytu, duvodPobytuId);
-
+                var pobytId = _dataAccess.VlozPobyt(pesId, zacatekPobytu, duvodPobytuId, vaha);
+                
                 // 3. Vložení záznamu o pobytu
                 _dataAccess.VlozZaznamOPobytu(pobytId);
 
                 // 4. Vložení vlastností do tabulky psi_vlastnosti
-                foreach (var vlastnostId in vlastnostiIds)
-                {
-                    _dataAccess.VlozVlastnostProPsa(pesId, vlastnostId);
-                }
-                */
+               
+                _dataAccess.PridatVlastnostiDoDatabaze(pesId, vlastnosti);
+
                 // Přesměrování nebo zobrazení potvrzení
                 TempData["Message"] = "Pes byl úspěšně přidán!";
                 Console.WriteLine("Pes přidán");
@@ -247,14 +273,9 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 return View();
             }
 
-
-
             return View();
 
         }
-
-
-
 
     }
 }
