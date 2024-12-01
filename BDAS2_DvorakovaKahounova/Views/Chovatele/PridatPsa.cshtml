@@ -12,44 +12,55 @@
     
 <div class="container-rezervace">
 
-<form method="post">
     <div class="input-container-rezervace">
+<form method="post">
+    
         @* <label for="cisloCipu">Číslo čipu:</label> *@
-            <input type="text" id="cisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" required placeholder="Zadejte kód rezervace" />
-        
+            <input type="text" id="cisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" required placeholder="Zadejte kód rezervace" /><p></p>
+       
     <button type="submit" class="btn-rezervace" name="action" value="search">Vyhledat</button>
 </form>
 
 <form method="post">
         <button type="submit" class="btn-rezervace" name="action" value="nochip">Pes bez čipu</button>
 </form>
-</div>
-@if (ViewBag.Message != null)
+    </div>
+
+@* @if (ViewBag.Message != null)
 {
     <div>
         <p>@ViewBag.Message</p>
     </div>
 }
+ *@
 
 </div>
+
+<!-- ----------------------------------------------------------------------------------------------------- -->
+
 @if (ViewBag.ShowForm == true)  
 {
+    
 <form method="post" enctype="multipart/form-data">
-
+        <div class="container-pridatPsa">
+            <div class="input-container-pridatPsa">
         <!-- Skryté pole pro číslo čipu -->
         <input type="hidden" id="hiddenCisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" />
-
-    <div>
         <label for="jmeno">Jméno psa:</label>
-            <input type="text" id="jmeno" name="jmeno" value="@Model.Pes?.JMENO ?? " Neznámé"" />
-    </div>
+                <input type="text" id="jmeno" name="jmeno" placeholder="Jméno psa" value="@Model.Pes?.JMENO ?? " Neznámé"" />
+            </div>
+            </div>
         <!-- Datum narození -->
-        <div>
-            <label for="datumNarozeni">Datum narození:</label>
-            <input type="date" id="datumNarozeni" name="datumNarozeni" />
+        <div class="container-pridatPsa">
+            <div class="input-container-pridatPsa">
+             <label for="datumNarozeni">Datum narození:</label>
+            <input type="date" id="datumNarozeni" name="datumNarozeni" max="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+
+            </div>
         </div>
     <!-- Combobox pro barvu -->
-    <div>
+        <div class="container-pridatPsa">
+            <div class="input-container-pridatPsa">
         <label for="barva">Barva:</label>
         <select id="barva" name="barva">
             @if (barvyList != null && barvyList.Any())
@@ -64,10 +75,12 @@
                 <p>Žádné barvy k dispozici.</p>
             }
         </select>
+        </div>
     </div>
 
     <!-- Combobox pro plemeno -->
-    <div>
+        <div class="container-pridatPsa">
+            <div class="input-container-pridatPsa">
         <label for="plemeno">Plemeno:</label>
         <select id="plemeno" name="plemeno">
             @if (plemenaList != null && plemenaList.Any())
@@ -82,17 +95,21 @@
                 <option disabled>Žádná plemena k dispozici</option>
             }
         </select>
+        </div>
     </div>
     <!-- Combobox pro pohlaví -->
-        <div>
+        <div class="container-pridatPsa">
+            <div class="input-container-pridatPsa">
             <label for="pohlavi">Pohlaví:</label>
             <select id="pohlavi" name="pohlavi">
                 <option value="0">Pes</option> <!-- 0 pro psa -->
                 <option value="1">Fena</option> <!-- 1 pro fenu -->
             </select>
         </div>
+        </div>
     <!-- Combobox pro důvod pobytu -->
-    <div>
+        <div class="container-pridatPsa">
+            <div class="input-container-pridatPsa">
         <label for="duvodPobytu">Důvod pobytu:</label>
         <select id="duvodPobytu" name="duvodPobytu">
             @if (duvodyList != null && duvodyList.Any())
@@ -108,24 +125,35 @@
             }
         </select>
     </div>
+    </div>
 
     <!-- Datum začátku pobytu -->
-    <div>
+        <div class="container-pridatPsa">
+            <div class="input-container-pridatPsa">
         <label for="zacatekPobytu">Začátek pobytu:</label>
-        <input type="date" id="zacatekPobytu" name="zacatekPobytu" required />
+            <input type="date" id="zacatekPobytu" name="zacatekPobytu"
+                   value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                   max="@DateTime.Now.ToString("yyyy-MM-dd")"
+                   required />
+    </div>
     </div>
 
     <!-- Váha -->
-    <div>
+        <div class="container-pridatPsa">
+            <div class="input-container-pridatPsa">
         <label for="vaha">Váha (kg):</label>
-        <input type="number" id="vaha" name="vaha" required />
+            <input type="number" id="vaha" name="vaha" required min="0.1" step="0.1" />
+            <span id="vahaError" style="color: red; display: none;">Váha musí být větší než 0,1 kg</span>
+    </div>
     </div>
 
         <!-- Vlastnosti -->
-        <div>
+        <div class="container-pridatPsa">
+            <div class="input-container-pridatPsa">
             <label for="vlastnostiToggle">Vlastnosti:</label>
             <button type="button" id="vlastnostiToggle" onclick="toggleVlastnosti()">Zobrazit vlastnosti</button>
-        
+        </div>
+        </div>
 
         <div id="vlastnostiContainer" style="display:none;">
                 <div class="vlastnosti-grid">
@@ -147,15 +175,28 @@
         </div>
 
     <!-- Tlačítko pro přidání fotografie -->
-    <div>
-        <label for="fotografie">Fotografie:</label>
-        <input type="file" id="fotografie" name="fotografie" />
-    </div>
+        <div class="container-pridatPsa">
+            <div class="input-container-pridatPsa">
+                <label>Fotografie:</label>
+            
+                    <label class="custom-file-label" for="fotografie">Vybrat soubor</label>
+        <input type="file" id="fotografie" name="fotografie" class="hidden-file-input" />
+        </div>
+        </div>
 
-        <button type="submit" name="action" value="createDog">Přidat psa</button>
+        <div class="container-rezervace">
+
+            <div class="input-container-rezervace">
+        <button type="submit" class="btn-rezervace" name="action" value="createDog">Přidat psa</button>
+            </div>
+        </div>
+        
+        
     </form>
+        
 }
 
+<!-- ----------------------------------------------------------------------------------------------------- -->
 @if (ViewBag.ShowForm == false)
 {
     <div class="container-mujpes">
@@ -246,13 +287,17 @@
             <!-- Váha -->
             <div>
                 <label for="vaha">Váha (kg):</label>
-                <input type="number" id="vaha" name="vaha" required />
+                <input type="number" id="vaha" name="vaha" required min="0.1" step="0.1" />
+                <span id="vahaError" style="color: red; display: none;">Váha musí být větší než 0,1 kg</span>
             </div>
 
+            <div class="container-pridatPsa">
+                <div class="input-container-pridatPsa">
             <!-- Tlačítko pro odeslání -->
             <button type="submit" name="action" value="addStay">Přidat pobyt</button>
+            </div>
+            </div>
         </form>
-
 
     </div>
 }
@@ -271,4 +316,47 @@
         button.textContent = "Zobrazit vlastnosti";
     }
 }
+</script>
+
+<script>
+    document.querySelector("form").addEventListener("submit", function (event) {
+        var vahaInput = document.getElementById("vaha");
+        var errorMessage = document.getElementById("vahaError");
+
+        // Prověření hodnoty před odesláním
+        if (parseFloat(vahaInput.value) < 0.1) {
+            event.preventDefault(); // Zastaví odeslání formuláře
+            errorMessage.style.display = "inline"; // Zobrazí chybovou zprávu
+        } else {
+            errorMessage.style.display = "none"; // Skryje chybovou zprávu, pokud je hodnota správná
+        }
+    });
+
+    // Volitelně: Můžete také přidat real-time validaci při změně hodnoty v poli
+    document.getElementById("vaha").addEventListener("input", function () {
+        var vahaInput = document.getElementById("vaha");
+        var errorMessage = document.getElementById("vahaError");
+
+        if (parseFloat(vahaInput.value) < 0.1) {
+            errorMessage.style.display = "inline";
+        } else {
+            errorMessage.style.display = "none";
+        }
+    });
+</script>
+
+<script>
+    @if (ViewBag.Message != null)
+    {
+        <text>
+                alert('@ViewBag.Message');
+        </text>
+    }
+</script>
+
+<script>
+    document.getElementById('fotografie').addEventListener('change', function() {
+    const fileName = this.files[0]?.name || "Žádný soubor nevybrán";
+    document.querySelector('.custom-file-label').textContent = fileName;
+});
 </script>

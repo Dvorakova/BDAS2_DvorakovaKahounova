@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using System.Reflection;
 
 namespace BDAS2_DvorakovaKahounova.Controllers
 {

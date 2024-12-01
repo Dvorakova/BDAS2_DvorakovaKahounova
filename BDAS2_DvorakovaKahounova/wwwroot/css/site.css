@@ -500,6 +500,7 @@ button[type="button"]:focus {
 .container-rezervace {
     width: 100%;
     margin-bottom: 20px;
+    padding: 5px;
 }
 
 .input-container-rezervace {
@@ -629,17 +630,18 @@ button[type="button"]:focus {
 
 /*-- pridat psa --*/
 #vlastnostiContainer {
-    margin-top: 10px;
-    margin-left: 20px;
     padding-left: 20px;
+    margin-left: auto; /* Automatické levé a pravé okraje pro vycentrování */
+    margin-right: auto;
     display: none; /* Zaèíná skrytı */
-    border-left: 2px solid #ccc;
 }
 
 .vlastnosti-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Dva sloupce */
+    grid-template-columns: repeat(3, 1fr); /* Dva sloupce */
     gap: 5px; /* Mezera mezi polokami */
+    margin-top: 20px;
+    margin-left: 150px;
 }
 
 .vlastnost-item {
@@ -692,4 +694,136 @@ button[type="button"]:focus {
     /* Zmìna barvy pøi najetí myší */
     .vlastnost-item input[type="checkbox"]:hover + label::before {
         border-color: var(--bordo);
+    }
+
+
+
+/*.input-container-rezervace3 {
+    position: relative;
+    margin-left: 0;
+    width: 30%;*/ /* Upravte podle potøeby */
+    /*text-align: left;
+}*/
+
+
+.container-pridatPsa {
+    max-width: 500px; /* Maximální šíøka kontejneru */
+    margin: 20px auto; /* Centrované na stránce */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+}
+
+.input-container-pridatPsa {
+    margin-bottom: 5px; /* Mezera mezi sekcemi */
+    color: var(--bordo);
+}
+
+    .input-container-pridatPsa label,
+    .container-pridatPsa label {
+        display: block; /* Kadı label bude na samostatném øádku */
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .input-container-pridatPsa input,
+    .container-rezervace input,
+    .container-rezervace select,
+    .container-rezervace button {
+        width: 100%; /* Zajišuje responzivní šíøku */
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box; /* Zohledòuje padding pøi vıpoètu šíøky */
+        font-size: 14px;
+    }
+
+.container-pridatPsa select {
+    /*background-color: #fff;
+    cursor: pointer;*/
+    background-color: #fff; /* Bílı pozadí */
+    border: 1px solid #ccc; /* Svìtle šedı okraj */
+    padding: 10px 15px; /* Vnitøní odsazení */
+    border-radius: 4px; /* Zaoblené rohy */
+    font-size: 16px; /* Velikost písma */
+    cursor: pointer; /* Ukazatel pøi najetí */
+    width: 100%; /* Vıplò na celou šíøku kontejneru */
+    transition: border-color 0.3s ease-in-out; /* Plynulı pøechod pro zmìnu okraje */
+}
+
+.container-pridatPsa button {
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px; /* Velikost písma pro tlaèítko */
+    background-color: var(--levandule);
+    outline: none;
+    color: white;
+}
+
+    .container-pridatPsa button:hover {
+        background-color: var(--fialova); /* Barva pøi hoveru */
+        border-color: var(--fialova);
+    }
+
+.container-pridatPsa button:focus {
+    background-color: var(--fialova); /* Barva pøi hoveru */
+    border-color: var(--fialova);
+}
+
+
+.hidden-file-input {
+    display: none;
+}
+
+.custom-file-label {
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px; /* Velikost písma pro tlaèítko */
+    font-weight: normal !important;
+    background-color: var(--levandule);
+    border-color: var(--levandule);
+    outline: none;
+    color: white !important;
+    width: auto;
+    display: inline-block;
+}
+
+    .custom-file-label:hover {
+        background-color: var(--fialova); /* Barva pøi hoveru */
+        border-color: var(--fialova);
+    }
+
+#file-name-display {
+    margin-left: 10px;
+    font-size: 14px;
+    color: white;
+}
+
+/* Styl pro select pøi focus */
+.container-pridatPsa select:focus {
+    border-color: var(--fialova); /* Zmìna okraje pøi aktivaci */
+    outline: none; /* Odstranìní defaultního rámeèku */
+
+}
+
+/* Styl pro monosti v dropdownu */
+.container-pridatPsa select option {
+    padding: 10px 15px; /* Vnitøní odsazení pro monost */
+    font-size: 16px; /* Velikost písma pro monosti */
+}
+
+    /* Styl pro vybranou monost */
+    .container-pridatPsa select option:checked {
+        background-color: var(--fialova); /* Barva pozadí pro vybranou monost */
+        color: white; /* Barva textu pro vybranou monost */
     }
