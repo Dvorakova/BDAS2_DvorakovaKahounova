@@ -827,3 +827,9 @@ button[type="button"]:focus {
         background-color: var(--fialova); /* Barva pozadí pro vybranou možnost */
         color: white; /* Barva textu pro vybranou možnost */
     }
+
+
+.grid-container-pridatpsa {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
