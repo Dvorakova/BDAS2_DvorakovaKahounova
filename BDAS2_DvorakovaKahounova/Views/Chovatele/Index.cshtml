@@ -183,7 +183,7 @@
 				</td>
 
 				<!-- Druhá buňka - Nová tabulka pro informace o psu -->
-				<td>
+				<td colspan="2">
 					<table class="table-chovatele-vnitrni">
 						<tr>
 							<td><strong>Jméno:</strong></td>
@@ -278,7 +278,7 @@
 					</form>
 
 				</td>
-				<td class="td-chovatele">
+				<td class="td-chovatele" colspan="2">
 					<div class="button-chovatele">
 					<button class="btn btn-primary">Vyřídit adopci</button>
 
@@ -293,7 +293,7 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td>
+				<td style="width: 50%;">
 					<div id="dewormingForm_@pes.ID_PSA" style="display: none; margin-top: 10px;">
 						<form asp-action="PridatOdcerveniAkce" method="post">
 							<input type="hidden" name="pesId" value="@pes.ID_PSA" />
@@ -304,7 +304,7 @@
 						</form>
 					</div>
 				</td>
-				<td>
+				<td style ="width: 50%;">
 					<div id="vaccinationForm_@pes.ID_PSA" style="display: none; margin-top: 10px;">
 						<form asp-action="PridatOckovaniAkce" method="post">
 							<input type="hidden" name="pesId" value="@pes.ID_PSA" />
