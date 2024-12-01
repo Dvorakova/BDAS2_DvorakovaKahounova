@@ -39,7 +39,7 @@
                 </div>
                 <div class="info-mujpes">
                     <h2><strong>Jméno psa: </strong> @Model.JMENO</h2>
-                    <p><strong>Věk:</strong> @(DateTime.Now.Year - Model.NAROZENI?.Year) let</p>
+                        <p><strong>Věk:</strong> @(Model.NAROZENI.HasValue ? (DateTime.Now.Year - Model.NAROZENI.Value.Year) + " let" : "Není znám") </p>
                     @if (@Model.POHLAVI == 0)
                     {
                         <p><strong>Pohlaví:  &male;</strong></p>

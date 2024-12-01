@@ -21,8 +21,8 @@
         </div>
         <div class="info-mujpes">
             <h2><strong>Jméno psa: </strong> @pes.JMENO</h2>
-            @* třeba ošetřit případ, dky neznáme narození psa *@
-            <p><strong>Věk:</strong> @(DateTime.Now.Year - pes.NAROZENI?.Year) let</p>
+            <p><strong>Věk:</strong> @(pes.NAROZENI.HasValue ? (DateTime.Now.Year - pes.NAROZENI.Value.Year) + " let" : "Není znám") </p>
+
             @if (@pes.POHLAVI == 0)
             {
                 <p><strong>Pohlaví: &male;</strong></p>
