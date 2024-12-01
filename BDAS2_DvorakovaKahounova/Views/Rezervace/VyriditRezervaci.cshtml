@@ -9,7 +9,7 @@
     <form method="post" action="/Rezervace/VyriditRezervaci">
         <div class="input-container-rezervace">
             <input type="text" id="reservationCode" name="rezervaceKod" placeholder="Zadejte kód rezervace">
-            <button type="submit" class="btn-rezervace">Vyhledat psa</button>
+            <button type="submit" name="action" value="vyhledatPsa" class="btn-rezervace">Vyhledat psa</button>
         </div>
     </form>
 
@@ -53,7 +53,30 @@
                     <p><strong>Vlastnosti:</strong> @Model.VLASTNOSTI</p>
                     <p><strong>Číslo čipu:</strong> @Model.CISLO_CIPU</p>
 
-                        <button class="btn-rezervace2" onclick="processReservation()">Vyřídit rezervaci</button>
+
+                        @if (ViewBag.KarantenaStatus != null)
+                        {
+                            if (ViewBag.KarantenaStatus.Contains("Karanténa ukončena"))
+                            {
+                                <form method="post">
+                                    <input type="hidden" name="idPes" value="@Model.ID_PSA" />
+                                    <input type="hidden" name="majitelIdOsoba" value="@Model.ID_MAJITEL" />
+                                    <button type="submit" name="action" value="vyresitRezervaci" class="btn-rezervace2" onclick="processReservation()">Vyřídit rezervaci</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <p>@ViewBag.KarantenaStatus</p>
+                            }
+                        }
+
+
+                        @* <form method="post">
+                            <input type="hidden" name="idPes" value="@Model.ID_PSA" />
+                            <input type="hidden" name="majitelIdOsoba" value="@Model.ID_MAJITEL" />
+                            <button type="submit" name="action" value="vyresitRezervaci" class="btn-rezervace2" onclick="processReservation()">Vyřídit rezervaci</button>
+                        </form> *@
+
                 </div>
             </div>
             }

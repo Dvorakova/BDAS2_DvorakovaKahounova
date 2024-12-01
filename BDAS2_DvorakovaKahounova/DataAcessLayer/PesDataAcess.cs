@@ -78,7 +78,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                             {
                                 ID_PSA = reader.GetInt32(0),
                                 JMENO = reader.GetString(1),
-                                NAROZENI = reader.GetDateTime(2),
+                                NAROZENI = reader.IsDBNull(2) ? (DateTime?)null : reader.GetDateTime(2),
                                 POHLAVI = reader.GetInt32(3),
                                 PLEMENO = reader.GetString(4),
                                 BARVA = reader.GetString(5),

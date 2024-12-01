@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BDAS2_DvorakovaKahounova.Models;
+using System;
+using System.Security.Cryptography;
 
 namespace BDAS2_DvorakovaKahounova.Controllers
 {
@@ -36,8 +38,8 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             return RedirectToAction("Login", "Osoba");
         }
 
-		public IActionResult VyriditRezervaci()
-		{
+        public IActionResult VyriditRezervaci()
+        {
             int uzivatelID = GetLoggedInUserId();
             if (uzivatelID == 0)
             {
@@ -46,44 +48,68 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
             // Zkontroluj, zda je uživatel přihlášen a má typ osoby "R"
             if (User.Identity.IsAuthenticated && User.IsInRole("C"))
-			{
-				return View(); // Zobrazí stránku rezervací
-			}
+            {
+                return View(); // Zobrazí stránku rezervací
+            }
 
-			// Pokud podmínky nejsou splněny, přesměruj na přihlášení nebo jinou stránku
-			return RedirectToAction("Login", "Osoba");
-		}
+            // Pokud podmínky nejsou splněny, přesměruj na přihlášení nebo jinou stránku
+            return RedirectToAction("Login", "Osoba");
+        }
 
         [HttpPost]
         [Authorize(Roles = "C")]
-        public IActionResult VyriditRezervaci(string rezervaceKod)
+        public IActionResult VyriditRezervaci(string rezervaceKod, string action, int idPes/*, int majitelIdOsoba*/)
         {
+
             // Zkontroluj, zda je uživatel přihlášen a má typ osoby "C"
             if (User.Identity.IsAuthenticated && User.IsInRole("C"))
             {
-                Pes pes = new Pes();
-                if (!string.IsNullOrEmpty(rezervaceKod))
+                if (action == "vyhledatPsa")
                 {
-                    // Zavolej metodu ZiskejIdPsa
-                    int? idPsa = _dataAccess.ZiskejIdPsa(rezervaceKod);
 
-                    if (idPsa.HasValue)
+
+                    Pes pes = new Pes();
+                    if (!string.IsNullOrEmpty(rezervaceKod))
                     {
-                        ViewBag.Message = "Pes nalezen";
-                        pes = _dataAccess.ZobrazInfoOPsovi(idPsa.Value);
+                        // Zavolej metodu ZiskejIdPsa
+                        int? idPsa = _dataAccess.ZiskejIdPsa(rezervaceKod);
 
+                        if (idPsa.HasValue)
+                        {
+                            ViewBag.Message = "Pes nalezen";
+                            pes = _dataAccess.ZobrazInfoOPsovi(idPsa.Value);
+
+                            // Zjistíme stav karantény
+                            string karantenaStatus = _dataAccess.ZjistiKarantenu(idPsa.Value);
+                            ViewBag.KarantenaStatus = karantenaStatus;
+                        }
+                        else
+                        {
+                            ViewBag.Message = "Pes nebyl nalezen.";
+                        }
                     }
                     else
                     {
-                        ViewBag.Message = "Pes nebyl nalezen.";
+                        ViewBag.Message = "Zadejte kód rezervace.";
                     }
-                }
-                else
-                {
-                    ViewBag.Message = "Zadejte kód rezervace.";
-                }
 
-                return View(pes);
+                    return View(pes);
+                }
+                else if (action == "vyresitRezervaci")
+                {
+                    int majitelIdOsoba = _dataAccess.ZiskejIdRezervatora(idPes);
+                    Console.WriteLine("id psa: ve VyriditRezervaci: " + idPes);
+                    Console.WriteLine("id osoby: ve VyriditRezervaci: " + majitelIdOsoba);
+                    //try
+                    //{
+                    // Zavolání metody z DataAccess
+                    _dataAccess.ZpracujRezervatorZmena(majitelIdOsoba, idPes);
+                    _dataAccess.PridejMajitele(majitelIdOsoba);
+                    _dataAccess.PridejAdopci(idPes, majitelIdOsoba);
+                    _dataAccess.AktualizujKonecPobytu(idPes);
+
+                    return RedirectToAction("Index", "Chovatele");
+                }
             }
 
             // Pokud podmínky nejsou splněny, přesměruj na přihlášení nebo jinou stránku
@@ -95,5 +121,8 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             return userIdClaim != null ? int.Parse(userIdClaim) : 0;
         }
+
     }
+
+
 }
