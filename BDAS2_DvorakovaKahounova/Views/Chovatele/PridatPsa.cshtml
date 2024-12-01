@@ -10,18 +10,20 @@
 }
 <h1>Přidat psa</h1>
     
+<div class="container-rezervace">
+
 <form method="post">
-    <div>
-        <label for="cisloCipu">Číslo čipu:</label>
-        <input type="text" id="cisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" required />
-    </div>
-    <button type="submit" name="action" value="search">Vyhledat</button>
+    <div class="input-container-rezervace">
+        @* <label for="cisloCipu">Číslo čipu:</label> *@
+            <input type="text" id="cisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" required placeholder="Zadejte kód rezervace" />
+        
+    <button type="submit" class="btn-rezervace" name="action" value="search">Vyhledat</button>
 </form>
 
 <form method="post">
-    <button type="submit" name="action" value="nochip">Pes bez čipu</button>
+        <button type="submit" class="btn-rezervace" name="action" value="nochip">Pes bez čipu</button>
 </form>
-
+</div>
 @if (ViewBag.Message != null)
 {
     <div>
@@ -29,7 +31,7 @@
     </div>
 }
 
-
+</div>
 @if (ViewBag.ShowForm == true)  
 {
 <form method="post" enctype="multipart/form-data">
@@ -121,25 +123,28 @@
 
         <!-- Vlastnosti -->
         <div>
-            <label>Vlastnosti:</label>
-            <div>
-                @if (ViewData["Vlastnosti"] is List<Vlastnost> vlastnosti && vlastnosti.Any())
-                {
-                    foreach (var vlastnost in vlastnosti)
-                    {
-                        <div>
-                            <input type="checkbox" id="vlastnost_@vlastnost.Id" name="vlastnosti[]" value="@vlastnost.Id" />
-                            <label for="vlastnost_@vlastnost.Id">@vlastnost.Nazev</label>
-                        </div>
-                    }
-                }
-                else
-                {
-                    <p>Žádné vlastnosti nejsou k dispozici.</p>
-                }
-            </div>
-        </div>
+            <label for="vlastnostiToggle">Vlastnosti:</label>
+            <button type="button" id="vlastnostiToggle" onclick="toggleVlastnosti()">Zobrazit vlastnosti</button>
+        
 
+        <div id="vlastnostiContainer" style="display:none;">
+                <div class="vlastnosti-grid">
+            @if (ViewData["Vlastnosti"] is List<Vlastnost> vlastnosti && vlastnosti.Any())
+            {
+                foreach (var vlastnost in vlastnosti)
+                {
+                            <div class="vlastnost-item">
+                        <input type="checkbox" id="vlastnost_@vlastnost.Id" name="vlastnosti[]" value="@vlastnost.Id" />
+                        <label for="vlastnost_@vlastnost.Id">@vlastnost.Nazev</label>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Žádné vlastnosti nejsou k dispozici.</p>
+            }
+        </div>
+        </div>
 
     <!-- Tlačítko pro přidání fotografie -->
     <div>
@@ -251,3 +256,19 @@
 
     </div>
 }
+
+<script>
+    function toggleVlastnosti() {
+    var container = document.getElementById("vlastnostiContainer");
+    var button = document.getElementById("vlastnostiToggle");
+
+    // Pokud je vlastnostiContainer skrytý, zobrazí se
+    if (container.style.display === "none") {
+        container.style.display = "block";
+        button.textContent = "Skrýt vlastnosti";
+    } else {
+        container.style.display = "none";
+        button.textContent = "Zobrazit vlastnosti";
+    }
+}
+</script>

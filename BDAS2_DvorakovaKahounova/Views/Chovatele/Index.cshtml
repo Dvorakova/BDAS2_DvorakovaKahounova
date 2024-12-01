@@ -167,7 +167,7 @@
 
 <div class="conteiner-chovatele">
 
-	<table class="table-chovatele" style="border: 3px solid #091ce9">
+	<table class="table-chovatele-vnejsi">
 		@foreach (var pes in Model)
 		{
 			<tr>
@@ -184,7 +184,7 @@
 
 				<!-- Druhá buňka - Nová tabulka pro informace o psu -->
 				<td>
-					<table class="table table-bordered">
+					<table class="table-chovatele-vnitrni">
 						<tr>
 							<td><strong>Jméno:</strong></td>
 							<td><strong>Číslo čipu:</strong></td>
@@ -278,16 +278,17 @@
 					</form>
 
 				</td>
-				<td>
+				<td class="td-chovatele">
+					<div class="button-chovatele">
 					<button class="btn btn-primary">Vyřídit adopci</button>
 
 					<button class="btn btn-primary">Upravit vlastnosti</button>
 
-					<button class="btn btn-primary" onclick="showDewormingForm(@pes.ID_PSA)">Přidat záznam<br>o odčervení</button>
+					<button class="btn btn-primary" onclick="showDewormingForm(@pes.ID_PSA)">Přidat záznam o odčervení</button>
 
 
-					<button class="btn btn-primary" onclick="showVaccinationForm(@pes.ID_PSA)">Přidat záznam<br>o očkování</button>
-					
+					<button class="btn btn-primary" onclick="showVaccinationForm(@pes.ID_PSA)">Přidat záznam o očkování</button>
+					</div>
 				</td>
 			</tr>
 			<tr>

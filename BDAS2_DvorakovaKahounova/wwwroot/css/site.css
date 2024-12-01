@@ -47,6 +47,7 @@ body {
     justify-content: center;
     /*cursor: url("images/packa.png"), auto;*/
     /*cursor: url("images/packa.png"), auto;*/
+    /*cursor: url('images/packa.png') 16 16, auto;*/
 }
 
 .main-container {
@@ -583,14 +584,112 @@ button[type="button"]:focus {
 
 .conteiner-chovatele {
     margin: 12px;
-    background-color: deeppink;
     width: 100%;
 }
 
-.table-chovatele {
+.table-chovatele-vnejsi {
     width: 100%;
-    border: 1px solid #ccc;
     background-color: transparent;
     color: black;
-    max-width: 1200px;
+    max-width: 1400px;
+    padding: 0;
 }
+
+.td-chovatele {
+    text-align: center; /* Horizontální zarovnání obsahu */
+    vertical-align: bottom; /* Vertikální zarovnání obsahu */
+    
+}
+
+.button-chovatele {
+    display: flex;
+    justify-content: center; /* Horizontální zarovnání */
+    align-items: flex-start; /* Vertikální zarovnání */
+    gap: 15px; /* Mezera mezi tlaèítky */
+    font-size: 40px;
+}
+
+.table-chovatele-vnitrni {
+    width: 100%;
+    height: 100%;
+    max-width: 1400px;
+    border-collapse: collapse;
+    border: 2px solid #ccc; /* Okraj tabulky */
+    border-radius: 10px; /* Zakulacení rohù */
+    overflow: hidden; /* Skryje obsah, který pøesahuje zakulacení */
+/*    max-height: 600px;*/
+}
+
+    .table-chovatele-vnitrni td,
+    .table-chovatele-vnitrni th {
+        border: 1px solid #ccc; /* Ohranièení jednotlivých bunìk */
+        padding: 8px; /* Mezera uvnitø bunìk */
+        text-align: left; /* Zarovnání textu */
+    }
+
+/*-- pridat psa --*/
+#vlastnostiContainer {
+    margin-top: 10px;
+    margin-left: 20px;
+    padding-left: 20px;
+    display: none; /* Zaèíná skrytý */
+    border-left: 2px solid #ccc;
+}
+
+.vlastnosti-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dva sloupce */
+    gap: 5px; /* Mezera mezi položkami */
+}
+
+.vlastnost-item {
+    display: flex;
+    align-items: center;
+}
+
+    .vlastnost-item input[type="checkbox"] {
+        display: none;
+    }
+
+    /* Vytvoøení vlastního designu checkboxu */
+    .vlastnost-item label {
+        position: relative;
+        padding-left: 30px; /* Místo pro vlastní checkbox */
+        cursor: pointer;
+        font-size: 16px;
+        margin: 0 5px;
+    }
+
+        .vlastnost-item label::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #666;
+            border-radius: 5px;
+            background-color: #fff;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+    /* Zmìna vzhledu pøi zaškrtnutí */
+    .vlastnost-item input[type="checkbox"]:checked + label::before {
+        background-color: var(--bordo); /* Zelené pozadí */
+        border-color: var(--bordo); /* Zelený rámeèek */
+    }
+
+    /* Zmìna vzhledu pøi zaškrtnutí a pøi najetí myší */
+    .vlastnost-item input[type="checkbox"]:checked + label::after {
+        content: "\2713";
+        position: absolute;
+        top: 3px;
+        left: 6px;
+        font-size: 14px;
+        color: white;
+    }
+
+    /* Zmìna barvy pøi najetí myší */
+    .vlastnost-item input[type="checkbox"]:hover + label::before {
+        border-color: var(--bordo);
+    }
