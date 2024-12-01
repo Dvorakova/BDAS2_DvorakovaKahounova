@@ -31,7 +31,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             // Zkontroluj, zda je uživatel přihlášen a má typ osoby "R"
             if (User.Identity.IsAuthenticated && (User.IsInRole("R") || User.IsInRole("P")))
             {
-                return View(); // Zobrazí stránku rezervací
+                // Získání rezervací pro přihlášeného uživatele
+                List<Rezervace> rezervaceList = _dataAccess.GetRezervace(uzivatelID);
+
+                return View(rezervaceList);  // Předáme seznam rezervací do View
+                //return View(); // Zobrazí stránku rezervací
             }
 
             // Pokud podmínky nejsou splněny, přesměruj na přihlášení nebo jinou stránku

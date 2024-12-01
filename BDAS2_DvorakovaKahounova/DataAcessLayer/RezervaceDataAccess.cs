@@ -14,31 +14,57 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             _connectionString = configuration;
         }
 
-        //pro práci s rezervacemi (s databází)
-
-        //pridano KK
-        public void VytvorRezervaci(int pesId, int osobaId, DateTime datumRezervace)
+        //metoda por zobrazení informací o rezervaci uživatele
+        public List<Rezervace> GetRezervace(int rezervatorIdOsoba)
         {
+            List<Rezervace> rezervaceList = new List<Rezervace>();
+
             using (var con = new OracleConnection(_connectionString))
             {
                 con.Open();
 
-                // Zavolání uložené procedury VYPISREZERVACE
                 using (var cmd = new OracleCommand("VYPISREZERVACE", con))
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                    // Přidání parametrů pro proceduru
-                    cmd.Parameters.Add(new OracleParameter("pPesId", pesId));
-                    cmd.Parameters.Add(new OracleParameter("pOsobaId", osobaId));
-                    cmd.Parameters.Add(new OracleParameter("pDatumRezervace", datumRezervace));
+                    // Parametr pro proceduru
+                    cmd.Parameters.Add(new OracleParameter("p_rezervator_id_osoba", rezervatorIdOsoba));
 
-                    // Spuštění procedury
-                    cmd.ExecuteNonQuery();
+                    // Parametr pro REF CURSOR (výstup)
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    {
+                        Direction = System.Data.ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(cursorParam);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var rezervace = new Rezervace
+                            {
+                                RezervaceDatum = reader.GetDateTime(reader.GetOrdinal("rezervace_datum")),
+                                RezervaceKod = reader.GetString(reader.GetOrdinal("rezervace_kod")),
+                                Pes = new Pes
+                                {
+                                    JMENO = reader.GetString(reader.GetOrdinal("pes_jmeno")),
+                                    NAROZENI = reader.IsDBNull(reader.GetOrdinal("pes_narozeni")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("pes_narozeni")),
+                                    POHLAVI = reader.GetInt32(reader.GetOrdinal("pes_pohlavi")),
+                                    BARVA = reader.GetString(reader.GetOrdinal("barva_nazev")),
+                                    PLEMENO = reader.GetString(reader.GetOrdinal("plemeno_nazev")),
+                                    ID_FOTOGRAFIE = reader.IsDBNull(reader.GetOrdinal("id_fotografie")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("id_fotografie")),
+                                    VLASTNOSTI = reader.GetString(reader.GetOrdinal("vlastnosti"))
+                                }
+                            };
+
+                            rezervaceList.Add(rezervace);
+                        }
+                    }
                 }
             }
-        }
 
+            return rezervaceList;
+        }
 
         public int? ZiskejIdPsa(string rezervaceKod)
         {
@@ -270,28 +296,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             }
         }
 
-        //public string ZjistiKarantenu(int idPes)
-        //{
-        //    Console.WriteLine("Id psa v Zjisti karantenu: "+idPes);
-        //    using (var con = new OracleConnection(_connectionString))
-        //    {
-        //        con.Open();
-        //        using (var cmd = new OracleCommand("BEGIN :result := ZjistiKarantenu(:idPes); END;", con))
-        //        {
-        //            cmd.Parameters.Add(new OracleParameter("idPes", idPes));
-        //            //var resultParam = new OracleParameter("result", OracleDbType.Varchar2, 4000);
-        //            //resultParam.Direction = ParameterDirection.Output;
-        //            var resultParam = new OracleParameter("result", OracleDbType.Clob);
-        //            resultParam.Direction = ParameterDirection.Output;
-        //            cmd.Parameters.Add(resultParam);
-
-        //            cmd.ExecuteNonQuery();
-        //            Console.WriteLine($"Výstup funkce: {resultParam.Value}");
-        //            return resultParam.Value.ToString();
-        //        }
-        //    }
-        //}
-
         public string ZjistiKarantenu(int idPes)
         {
             Console.WriteLine("Id psa v Zjisti karantenu: " + idPes);
@@ -321,9 +325,4 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                 }
             }
         }
-
-
-
-
-    }
 }

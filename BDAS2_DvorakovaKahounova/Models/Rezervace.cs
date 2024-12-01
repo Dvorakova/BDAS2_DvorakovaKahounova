@@ -2,11 +2,8 @@
 {
     public class Rezervace
     {
-        //pridano KK
-        public int IdRezervace { get; set; }
-        public int IdPsa { get; set; }
-        public DateTime Datum { get; set; }
-        public int? IdAdopce { get; set; }
-        public int RezervatorIdOsoba { get; set; }
+        public DateTime RezervaceDatum { get; set; }     // datum rezervace
+        public string RezervaceKod { get; set; }         // kód rezervace
+        public Pes Pes { get; set; }                     // objekt typu Pes, který obsahuje detaily o psu
     }
 }

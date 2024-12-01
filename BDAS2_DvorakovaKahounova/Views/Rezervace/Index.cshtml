@@ -1,4 +1,5 @@
-﻿@model BDAS2_DvorakovaKahounova.Models.Rezervace
+﻿@* @model BDAS2_DvorakovaKahounova.Models.Rezervace *@
+@model List<BDAS2_DvorakovaKahounova.Models.Rezervace>
 
 @{
     ViewData["Title"] = "Rezervace";
@@ -6,17 +7,41 @@
 
 <h1>Vaše rezervace</h1>
 
-@* @foreach (var pes in Model)
+@foreach (var rezervace in Model)
 {
     <div class="container-mujpes">
-        <img src="/images/pes.jpg" alt="Fotka psa" class="img">
+        <div>
+            @{
+                string imageUrl = rezervace.Pes.ID_FOTOGRAFIE != null
+                ? Url.Action("GetImage", "Pes", new { id = rezervace.Pes.ID_FOTOGRAFIE })
+                : Url.Action("DefaultImage", "Pes");
+            }
+
+            <img src="@imageUrl" alt="Fotka psa" class="img">
+
+        </div>
         <div class="info-mujpes">
-            <h2><strong>Jméno psa: </strong> @pes.JMENO</h2>
-            <p><strong>Rasa:</strong> @pes.PLEMENO</p>
-            <p><strong>Věk:</strong> @(DateTime.Now.Year - pes.NAROZENI.Year) let</p>
-            <p><strong>Číslo čipu:</strong> @pes.CISLO_CIPU</p>
-            <p><strong>Oblíbené aktivity:</strong> Běhání, aportování, plavání</p>
-            <p><strong>Popis:</strong> Rex je energický a přátelský pes, který miluje společnost a dlouhé procházky.</p>
+            <h2><strong>Jméno psa: </strong> @rezervace.Pes.JMENO</h2>
+            <p><strong>Věk:</strong> @(rezervace.Pes.NAROZENI.HasValue ? (DateTime.Now.Year - rezervace.Pes.NAROZENI.Value.Year) + " let" : "Není znám") </p>
+            @if (@rezervace.Pes.POHLAVI == 0)
+            {
+                <p><strong>Pohlaví:  &male;</strong></p>
+            }
+            @if (@rezervace.Pes.POHLAVI == 1)
+            {
+                <p><strong>Pohlaví: &female;</strong></p>
+            }
+
+            <p><strong>Plemeno:</strong> @rezervace.Pes.PLEMENO</p>
+            <p><strong>Barva:</strong> @rezervace.Pes.BARVA</p>
+            <p><strong>Vlastnosti:</strong> @rezervace.Pes.VLASTNOSTI</p>
+            <p><strong>Datum rezervace:</strong> @rezervace.RezervaceDatum.ToString("dd.MM.yyyy")</p>
+            <p class="karantena-info">
+                <strong>Kód rezervace:</strong> @rezervace.RezervaceKod
+                <span class="tooltip-icon">?</span>
+                <span class="tooltip-text">Tento kód nahlašte v útulku pro adopci psa</span>
+            
+            </p>
         </div>
     </div>
-} *@
+}
