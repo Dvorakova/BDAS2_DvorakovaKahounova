@@ -325,4 +325,5 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                 }
             }
         }
+    }
 }
