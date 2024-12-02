@@ -187,25 +187,25 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             }
         }
 
-        public void AktualizujKonecPobytu(int idPsa)
-        {
-            using (var con = new OracleConnection(_connectionString))
-            {
-                con.Open();
+        //public void AktualizujKonecPobytu(int idPsa)
+        //{
+        //    using (var con = new OracleConnection(_connectionString))
+        //    {
+        //        con.Open();
 
-                // Vytvoření příkazu pro volání procedury
-                using (var cmd = new OracleCommand("AktualizujKonecPobytu", con))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        //        // Vytvoření příkazu pro volání procedury
+        //        using (var cmd = new OracleCommand("AktualizujKonecPobytu", con))
+        //        {
+        //            cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                    // Přidání parametru pro proceduru
-                    cmd.Parameters.Add(new OracleParameter("p_id_psa", idPsa));
+        //            // Přidání parametru pro proceduru
+        //            cmd.Parameters.Add(new OracleParameter("p_id_psa", idPsa));
 
-                    // Spuštění příkazu
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
+        //            // Spuštění příkazu
+        //            cmd.ExecuteNonQuery();
+        //        }
+        //    }
+        //}
 
 
         public bool ExistujeRezervace(int rezervatorIdOsoba, int idPes)

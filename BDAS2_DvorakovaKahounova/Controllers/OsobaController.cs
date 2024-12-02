@@ -114,6 +114,10 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 {
 					return RedirectToAction("Index", "Chovatele");
 				}
+				if (claimsPrincipal.IsInRole("A"))
+				{
+					return RedirectToAction("Index", "Home"); //potom změnit na nějakou administrátorskou stránku
+				}
 
 				return RedirectToAction("PsiKAdopci", "Pes");
             }

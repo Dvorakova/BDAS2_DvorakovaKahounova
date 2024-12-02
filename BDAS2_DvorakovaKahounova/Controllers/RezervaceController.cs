@@ -117,7 +117,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                     _dataAccess.ZpracujRezervatorZmena(majitelIdOsoba, idPes);
                     _dataAccess.PridejMajitele(majitelIdOsoba);
                     _dataAccess.PridejAdopci(idPes, majitelIdOsoba);
-                    _dataAccess.AktualizujKonecPobytu(idPes);
 
 					return RedirectToAction("Index", "Chovatele");
                 }
