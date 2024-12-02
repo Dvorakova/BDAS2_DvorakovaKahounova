@@ -54,10 +54,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
                 if (_dataAccess.RegisterUser(novaOsoba))
                 {
-
-					var originalllRole = HttpContext.Session.GetString("OriginalRole");
-					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
-
 					//když se registrace podaří, zobrazí se uživateli stránka s přihlášením
 					return RedirectToAction("Login", new { email = novaOsoba.EMAIL });
                 }
@@ -116,15 +112,8 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 // pokud se přihlášení povede, uživateli se zobrazí stránka (zatím home)
                 if (claimsPrincipal.IsInRole("C"))
                 {
-
-					var originalllRole = HttpContext.Session.GetString("OriginalRole");
-					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
-
 					return RedirectToAction("Index", "Chovatele");
 				}
-
-				var originalRole = HttpContext.Session.GetString("OriginalRole");
-				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
 
 				return RedirectToAction("PsiKAdopci", "Pes");
             }
@@ -164,10 +153,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             // Odhlásit uživatele
             HttpContext.SignOutAsync(); // Zruší autentifikaci
 
-
-			var originallRole = HttpContext.Session.GetString("OriginalRole");
-			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
-
 			// Přesměrovat na domovskou stránku nebo na přihlášení
 			return RedirectToAction("Login");
         }
@@ -179,10 +164,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             int uzivatelID = GetLoggedInUserId();
             if (uzivatelID == 0)
             {
-
-				var originalllRole = HttpContext.Session.GetString("OriginalRole");
-				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
-
 				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
             }
 
@@ -210,10 +191,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
             if (string.IsNullOrEmpty(email))
             {
-
-					var originalllRole = HttpContext.Session.GetString("OriginalRole");
-					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
-
 					// Pokud není přihlášený uživatel, přesměrujeme na login
 					return RedirectToAction("Login");
             }
@@ -222,10 +199,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
             if (osoba == null)
             {
-
-					var originalllRole = HttpContext.Session.GetString("OriginalRole");
-					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
-
 					return RedirectToAction("Login");
 				}
 				ViewBag.InvalidPassword = false;
@@ -257,10 +230,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             if (string.IsNullOrEmpty(email))
             {
-
-				var originalllRole = HttpContext.Session.GetString("OriginalRole");
-				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
-
 				return RedirectToAction("Login");
             }
 
@@ -295,10 +264,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             if (string.IsNullOrEmpty(email))
             {
-
-				var originallRole = HttpContext.Session.GetString("OriginalRole");
-				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
-				
                 return RedirectToAction("Login");
             }
 			
@@ -312,10 +277,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             }
             else
             {
-
-				var originallRole = HttpContext.Session.GetString("OriginalRole");
-				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
-
 				// Pokud se nepodaří najít ID, můžeme uživatele přesměrovat zpět na login
 				return RedirectToAction("Login");
             }
@@ -346,11 +307,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
                 // Uložíme nový ClaimsPrincipal do cookies pro autentizaci
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-
-
-				var originallRole = HttpContext.Session.GetString("OriginalRole");
-				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
 				TempData["SuccessMessage"] = "Profil úspěšně aktualizován.";
                 return RedirectToAction("Profile");

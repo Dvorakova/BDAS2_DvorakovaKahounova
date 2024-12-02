@@ -44,7 +44,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
 
 			return View(roles);
-			//return View();
         }
 
         [HttpPost]
@@ -66,9 +65,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 UpdateUserClaims(roleCode); // Aktualizace claims na základě zkratky role
             }
 
-			var originallRole = HttpContext.Session.GetString("OriginalRole");
-			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
-
 			return RedirectToAction("Index", "Home");
         }
 
@@ -83,9 +79,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
                 UpdateUserClaims(originalRole); // Aktualizace claims zpět na původní roli
             }
-
-			var originallRole = HttpContext.Session.GetString("OriginalRole");
-			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
 			return RedirectToAction("Index", "Home");
         }

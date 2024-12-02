@@ -44,9 +44,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             int osobaId = GetLoggedInUserId();
             if (osobaId == 0)
 			{
-				var originalRole = HttpContext.Session.GetString("OriginalRole");
-				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
-
 				return RedirectToAction("Login");
             }
 
@@ -97,10 +94,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             int rezervatorId = GetLoggedInUserId();
             if (rezervatorId == 0)
             {
-
-				var originallRole = HttpContext.Session.GetString("OriginalRole");
-				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
-
 				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
             }
 
@@ -146,19 +139,10 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 return StatusCode(500, "Došlo k chybě při vytváření rezervace.");
             }
 
-
-			var originalRole = HttpContext.Session.GetString("OriginalRole");
-			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
-
 			// Přesměrování na seznam psů k adopci
 			//return RedirectToAction("PsiKAdopci");
 			return RedirectToAction("Index", "Rezervace");
         }
-
-        
-
-
-
     }
 }
 
