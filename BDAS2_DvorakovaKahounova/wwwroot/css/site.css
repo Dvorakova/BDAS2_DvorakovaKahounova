@@ -65,6 +65,22 @@ body {
     display: none;
 }
 
+a:link {
+    color: var(--levandule); /* Barva odkazu pøed návštìvou */
+}
+
+a:visited {
+    color: var(--bordo); /* Barva odkazu po návštìvì */
+}
+
+a:hover {
+    color: var(--fialova); /* Barva pøi najetí myší */
+    text-decoration: none; /* Zvýraznìní textu */
+}
+
+a:active {
+    color: orange; /* Barva pøi kliknutí */
+}
 
 
 /* kontakty */

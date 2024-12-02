@@ -8,7 +8,7 @@
 <div class="container-rezervace">
     <form method="post" action="/Rezervace/VyriditRezervaci">
         <div class="input-container-rezervace">
-            <input type="text" id="reservationCode" name="rezervaceKod" placeholder="Zadejte kód rezervace">
+            <input type="text" id="reservationCode" name="rezervaceKod" placeholder="Zadejte kód rezervace"><p></p>
             <button type="submit" name="action" value="vyhledatPsa" class="btn-rezervace">Vyhledat psa</button>
         </div>
     </form>
@@ -20,9 +20,7 @@
         {
             @if (ViewBag.Message.Contains("Pes nebyl nalezen.") || ViewBag.Message.Contains("Zadejte kód rezervace."))
             {
-                <div>
-                    <p>@ViewBag.Message</p>
-                </div>
+                
             }
             else
             {
@@ -93,3 +91,12 @@
     }
 </script>
 
+<script>
+    // Kontrola, zda existuje nějaká zpráva v ViewBag
+    @if (ViewBag.Message != null)
+    {
+        <text>
+                alert('@Html.Raw(ViewBag.Message)'.replace(/'/g, "\\'"));
+        </text>
+    }
+</script>

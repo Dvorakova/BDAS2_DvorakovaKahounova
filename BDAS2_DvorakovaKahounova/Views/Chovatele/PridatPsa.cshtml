@@ -16,8 +16,9 @@
 <form method="post">
     
         @* <label for="cisloCipu">Číslo čipu:</label> *@
-            <input type="text" id="cisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" required placeholder="Zadejte kód rezervace" /><p></p>
-       
+            <input type="text" id="cisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu"
+                   required placeholder="Zadejte číslo čipu psa" pattern="\d{15}" oninvalid="this.setCustomValidity('Číslo čipu musí obsahovat přesně 15 číslic.')"
+                   oninput="this.setCustomValidity('')" /><p></p>
     <button type="submit" class="btn-rezervace" name="action" value="search">Vyhledat</button>
 </form>
 
@@ -44,12 +45,12 @@
 <form method="post" enctype="multipart/form-data">
         <div class="container-pridatPsa">
             <div class="input-container-pridatPsa">
-        <!-- Skryté pole pro číslo čipu -->
-        <input type="hidden" id="hiddenCisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" />
-        <label for="jmeno">Jméno psa:</label>
+                <!-- Skryté pole pro číslo čipu -->
+                <input type="hidden" id="hiddenCisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" />
+                <label for="jmeno">Jméno psa:</label>
                 <input type="text" id="jmeno" name="jmeno" placeholder="Jméno psa" value="@Model.Pes?.JMENO ?? " Neznámé"" />
             </div>
-            </div>
+        </div>
         <!-- Datum narození -->
         <div class="container-pridatPsa">
             <div class="input-container-pridatPsa">
@@ -141,9 +142,9 @@
     <!-- Váha -->
         <div class="container-pridatPsa">
             <div class="input-container-pridatPsa">
-        <label for="vaha">Váha (kg):</label>
+        <label for="vaha">Hmotnost (kg):</label>
             <input type="number" id="vaha" name="vaha" required min="0.1" step="0.1" />
-            <span id="vahaError" style="color: red; display: none;">Váha musí být větší než 0,1 kg</span>
+            <span id="vahaError" style="color: red; display: none;">Hmotnost musí být větší než 0,1 kg</span>
     </div>
     </div>
 
@@ -278,9 +279,9 @@
 
             <!-- Váha -->
             <div>
-                <label for="vaha">Váha (kg):</label>
+                <label for="vaha">Hmotnost (kg):</label>
                 <input type="number" id="vaha" name="vaha" required min="0.1" step="0.1" />
-                <span id="vahaError" style="color: red; display: none;">Váha musí být větší než 0,1 kg</span>
+                <span id="vahaError" style="color: red; display: none;">Hmotnost musí být větší než 0,1 kg</span>
             </div>
 
                 <div class="container-rezervace">
@@ -343,7 +344,7 @@
     @if (ViewBag.Message != null)
     {
         <text>
-                alert('@ViewBag.Message');
+                alert('@Html.Raw(ViewBag.Message)');
         </text>
     }
 </script>
@@ -353,4 +354,36 @@
     const fileName = this.files[0]?.name || "Žádný soubor nevybrán";
     document.querySelector('.custom-file-label').textContent = fileName;
 });
+</script>
+
+@* <script>
+    document.getElementById("pesForm").addEventListener("submit", function (event) {
+        const jmenoInput = document.getElementById("jmeno");
+        if (!jmenoInput.value.trim()) {
+            jmenoInput.value = "Neznámé";
+        }
+    });
+</script> *@
+
+@* <script>
+    document.getElementById('cisloCipu').addEventListener('input', function (e) {
+        const input = e.target;
+        if (input.value.length > 15) {
+            input.value = input.value.slice(0, 15); // Omezí délku na 15 znaků
+        }
+    });
+</script> *@
+
+<script>
+    const input = document.getElementById('cisloCipu');
+    const errorMessage = document.getElementById('error-message');
+
+    input.addEventListener('blur', function () {
+        if (input.value.length !== 15) {
+            errorMessage.textContent = "Číslo čipu musí mít přesně 15 znaků.";
+            errorMessage.style.display = 'block';
+        } else {
+            errorMessage.style.display = 'none';
+        }
+    });
 </script>
