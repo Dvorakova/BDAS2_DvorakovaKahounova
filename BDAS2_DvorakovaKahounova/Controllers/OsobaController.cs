@@ -22,7 +22,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+			return View();
         }
 
         // Zpracování registrace
@@ -37,7 +41,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 if (_dataAccess.EmailExists(novaOsoba.EMAIL))
                 {
                     ModelState.AddModelError("EMAIL", "Tento email již byl použit.");
-                    return View(novaOsoba);
+
+					var originalllRole = HttpContext.Session.GetString("OriginalRole");
+					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+
+					return View(novaOsoba);
                 }
 
                 var (hashedPassword, salt) = HashPassword(novaOsoba.HESLO);
@@ -46,12 +54,20 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
                 if (_dataAccess.RegisterUser(novaOsoba))
                 {
-                    //když se registrace podaří, zobrazí se uživateli stránka s přihlášením
-                    return RedirectToAction("Login", new { email = novaOsoba.EMAIL });
+
+					var originalllRole = HttpContext.Session.GetString("OriginalRole");
+					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+
+					//když se registrace podaří, zobrazí se uživateli stránka s přihlášením
+					return RedirectToAction("Login", new { email = novaOsoba.EMAIL });
                 }
                 ModelState.AddModelError("", "Registrace se nezdařila.");
             }
-            return View(novaOsoba);
+
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+			return View(novaOsoba);
         }
 
         // Zobrazení přihlašovacího formuláře
@@ -60,7 +76,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         {
             ViewBag.Email = email;
             ViewBag.IsLoginAttempted = false;
-            return View();
+
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+			return View();
         }
 
         // Zpracování přihlášení
@@ -94,19 +114,28 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 
                 // pokud se přihlášení povede, uživateli se zobrazí stránka (zatím home)
-                Console.WriteLine("před if is in role");
                 if (claimsPrincipal.IsInRole("C"))
                 {
-					Console.WriteLine("in if is in role");
+
+					var originalllRole = HttpContext.Session.GetString("OriginalRole");
+					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+
 					return RedirectToAction("Index", "Chovatele");
 				}
-				Console.WriteLine("po if is in role");
+
+				var originalRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
+
 				return RedirectToAction("PsiKAdopci", "Pes");
             }
             ModelState.AddModelError("email", "Nesprávné přihlašovací údaje.");
             ViewBag.Email = email;
             ViewBag.IsLoginAttempted = true; // Informace o pokusu o přihlášení
-            return View();
+
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+			return View();
         }
 
         // Metoda pro hashování hesla
@@ -135,8 +164,12 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             // Odhlásit uživatele
             HttpContext.SignOutAsync(); // Zruší autentifikaci
 
-            // Přesměrovat na domovskou stránku nebo na přihlášení
-            return RedirectToAction("Login");
+
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+			// Přesměrovat na domovskou stránku nebo na přihlášení
+			return RedirectToAction("Login");
         }
 
         // Metoda pro zobrazení profilu přihlášeného uživatele
@@ -146,7 +179,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             int uzivatelID = GetLoggedInUserId();
             if (uzivatelID == 0)
             {
-                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+
+				var originalllRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+
+				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
             }
 
             Osoba osoba;
@@ -173,14 +210,22 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
             if (string.IsNullOrEmpty(email))
             {
-                // Pokud není přihlášený uživatel, přesměrujeme na login
-                return RedirectToAction("Login");
+
+					var originalllRole = HttpContext.Session.GetString("OriginalRole");
+					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+
+					// Pokud není přihlášený uživatel, přesměrujeme na login
+					return RedirectToAction("Login");
             }
 
             osoba = _dataAccess.GetUserProfile(email);
 
             if (osoba == null)
             {
+
+					var originalllRole = HttpContext.Session.GetString("OriginalRole");
+					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+
 					return RedirectToAction("Login");
 				}
 				ViewBag.InvalidPassword = false;
@@ -191,6 +236,10 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 				ViewBag.IsOwner = true; // Když uživatel načítá svůj vlastní účet, vždy je owner
 				
 			}
+
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
 			return View(osoba);
 		}
 
@@ -208,7 +257,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             if (string.IsNullOrEmpty(email))
             {
-                return RedirectToAction("Login");
+
+				var originalllRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+
+				return RedirectToAction("Login");
             }
 
             var osoba = _dataAccess.LoginUser(email, password);
@@ -216,7 +269,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             {
                 ViewBag.CanEdit = true;
                 ViewBag.InvalidPassword = false;
-                return View("Profile", osoba); // Zobrazí profil s možností úprav
+
+				var originalllRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+
+				return View("Profile", osoba); // Zobrazí profil s možností úprav
             }
 
             // Nastavíme chybovou hlášku a zůstaneme na stránce
@@ -224,7 +281,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             ViewBag.InvalidPassword = true;
             ViewBag.CanEdit = false;
             osoba = _dataAccess.GetUserProfile(email); // Znovu načteme data o uživateli
-            return View("Profile", osoba);
+
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+			return View("Profile", osoba);
         }
 
         // Pro aktualizaci profilu
@@ -232,7 +293,14 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         public async Task<IActionResult> UpdateProfile(Osoba updatedOsoba)
         {
             var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            if (string.IsNullOrEmpty(email)) return RedirectToAction("Login");
+            if (string.IsNullOrEmpty(email))
+            {
+
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+				
+                return RedirectToAction("Login");
+            }
 			
             
 			
@@ -244,8 +312,12 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             }
             else
             {
-                // Pokud se nepodaří najít ID, můžeme uživatele přesměrovat zpět na login
-                return RedirectToAction("Login");
+
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				// Pokud se nepodaří najít ID, můžeme uživatele přesměrovat zpět na login
+				return RedirectToAction("Login");
             }
 
             // Načteme uživatelský profil podle emailu
@@ -277,11 +349,17 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 
 
-                TempData["SuccessMessage"] = "Profil úspěšně aktualizován.";
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				TempData["SuccessMessage"] = "Profil úspěšně aktualizován.";
                 return RedirectToAction("Profile");
             }
 
-            ModelState.AddModelError("", "Aktualizace se nezdařila.");
+			var originalRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
+
+			ModelState.AddModelError("", "Aktualizace se nezdařila.");
             ViewBag.CanEdit = true;
             return View("Profile", updatedOsoba);
         }
@@ -290,7 +368,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
         public IActionResult Index()
         {
-            return View();
+
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+			return View();
         }
     }
 }

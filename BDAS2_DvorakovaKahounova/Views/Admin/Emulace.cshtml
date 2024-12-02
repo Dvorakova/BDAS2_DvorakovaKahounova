@@ -1,0 +1,26 @@
+﻿@model List<string>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Emulace";
+}
+
+<h1>Emulace</h1>
+
+<h2>Vyberte roli k emulaci</h2>
+
+<form asp-action="Emulovat" method="post">
+    @foreach (var role in Model)
+    {
+        <div>
+            <input type="radio" id="@role" name="selectedRole" value="@role" />
+            <label for="@role">@role</label>
+        </div>
+    }
+    <button type="submit">Emulovat</button>
+</form>
+
+<form asp-action="ResetRole" method="post">
+    <button type="submit">Zrušit emulaci</button>
+</form>

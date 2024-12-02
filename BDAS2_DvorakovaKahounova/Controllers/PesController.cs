@@ -32,19 +32,28 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         {
             List<Pes> psi = _dataAccess.GetAllPsi();
 
-            // Předání seznamu psů do pohledu (view)
-            return View(psi);
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+			// Předání seznamu psů do pohledu (view)
+			return View(psi);
         }
 
         public IActionResult MujPes()
         {
             int osobaId = GetLoggedInUserId();
             if (osobaId == 0)
-            {
-                return RedirectToAction("Login");
+			{
+				var originalRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
+
+				return RedirectToAction("Login");
             }
 
-            List<Pes> psi = _dataAccess.GetPsiProOsobu(osobaId);
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+			List<Pes> psi = _dataAccess.GetPsiProOsobu(osobaId);
             return View(psi);
         }
 
@@ -88,7 +97,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             int rezervatorId = GetLoggedInUserId();
             if (rezervatorId == 0)
             {
-                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
             }
 
             var identity = (ClaimsIdentity)User.Identity;
@@ -133,9 +146,13 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 return StatusCode(500, "Došlo k chybě při vytváření rezervace.");
             }
 
-            // Přesměrování na seznam psů k adopci
-            //return RedirectToAction("PsiKAdopci");
-            return RedirectToAction("Index", "Rezervace");
+
+			var originalRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
+
+			// Přesměrování na seznam psů k adopci
+			//return RedirectToAction("PsiKAdopci");
+			return RedirectToAction("Index", "Rezervace");
         }
 
         

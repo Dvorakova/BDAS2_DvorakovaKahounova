@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
-/////
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -17,9 +15,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true;         // Posouvání platnosti pøi aktivitì uživatele
     });
 
-/////
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Doba platnosti session
+    options.Cookie.HttpOnly = true;                // Zvýšení bezpeènosti cookies
+    options.Cookie.IsEssential = true;             // Pro zajištìní fungování i pøi omezení cookies
+});
 
 var app = builder.Build();
+
+app.UseSession(); // Povolení session middleware
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -36,7 +41,7 @@ app.UseRouting();
 // Zapnutí autentizace a autorizace v middleware pipeline
 app.UseAuthentication(); // Pøidání autentizace
 app.UseAuthorization();  // Zapnutí autorizace
-//app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",

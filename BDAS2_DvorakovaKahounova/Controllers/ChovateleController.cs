@@ -24,11 +24,19 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             int uzivatelID = GetLoggedInUserId();
             if (uzivatelID == 0)
             {
-                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+
+				var originalllRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+
+				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
             }
 
             List<Pes> psi = _dataAccess.GetAllPsiProChovatele();
-            return View(psi);
+
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+			return View(psi);
             
         }
 		public IActionResult PridatPsa()
@@ -36,16 +44,28 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             int uzivatelID = GetLoggedInUserId();
             if (uzivatelID == 0)
             {
-                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
             }
 
             if (User.Identity.IsAuthenticated && User.IsInRole("C"))
             {
-                return View(); // Zobrazí stránku rezervací
+
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				return View(); // Zobrazí stránku rezervací
             }
 
-            // Pokud podmínky nejsou splněny, přesměruj na přihlášení nebo jinou stránku
-            return RedirectToAction("Login", "Osoba");
+
+			var originalllRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+
+			// Pokud podmínky nejsou splněny, přesměruj na přihlášení nebo jinou stránku
+			return RedirectToAction("Login", "Osoba");
         }
 
 		[HttpPost]
@@ -54,11 +74,19 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             int uzivatelID = GetLoggedInUserId();
             if (uzivatelID == 0)
             {
-                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
             }
 
             // Zavolání metody PridatOdcerveni, která přidá odčervení pro konkrétního psa
             _dataAccess.PridatOdcerveni(pesId, datumOdcerveni);
+
+
+			var originalllRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
 
 			// Po dokončení akce přesměrujeme na nějakou stránku nebo zobrazíme zprávu
 			return RedirectToAction("Index"); // nebo nějaký jiný pohled
@@ -70,11 +98,19 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             int uzivatelID = GetLoggedInUserId();
             if (uzivatelID == 0)
             {
-                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+
+				var originalllRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+
+				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
             }
 
             // Zavolání metody PridatOdcerveni, která přidá odčervení pro konkrétního psa
             _dataAccess.PridatOckovani(pesId, datumOckovani);
+
+
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
 			// Po dokončení akce přesměrujeme na nějakou stránku nebo zobrazíme zprávu
 			return RedirectToAction("Index"); // nebo nějaký jiný pohled
@@ -84,6 +120,10 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 		public IActionResult ShowOwnerProfile(int ownerId)
 		{
+
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
 			return RedirectToAction("Profile", "Osoba", new { userId = ownerId });
 		}
 
@@ -125,6 +165,9 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 				}
 			}
 
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
 			return RedirectToAction("Index"); // Po nahrání nebo úpravě fotografie se vrátíme na seznam psů
 		}
 
@@ -147,7 +190,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             int uzivatelID = GetLoggedInUserId();
             if (uzivatelID == 0)
             {
-                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
             }
 
             if (action == "search")
@@ -184,8 +231,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
                 ViewBag.ShowForm = !idPsa.HasValue;
 
-                //return View(pes);
-                return View(viewModel);
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				//return View(pes);
+				return View(viewModel);
             }
             else if (action == "nochip")
             {
@@ -197,7 +247,10 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 ViewBag.ShowForm = true;
                 ViewBag.Message = null;
 
-                return View(new PesMajitelModel());
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				return View(new PesMajitelModel());
             }
             else if (action == "createDog")
             {
@@ -248,8 +301,12 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // Ošetření chyby
-                    ViewBag.ErrorMessage = ex.Message;
+
+					var originallllRole = HttpContext.Session.GetString("OriginalRole");
+					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallllRole == "A" || User.IsInRole("A")));
+
+					// Ošetření chyby
+					ViewBag.ErrorMessage = ex.Message;
                     return View();
                 }
                 ////////////////////////
@@ -271,7 +328,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 TempData["Message"] = "Pes byl úspěšně přidán!";
                 Console.WriteLine("Pes přidán");
                 ViewBag.Message = "Pes přidán";
-                return View();
+
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				return View();
             }
             else if (action == "addStay")
             {
@@ -303,18 +364,30 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                     // 4. Vložení záznamu o pobytu
                     _dataAccess.VlozZaznamOPobytu(pobytId);
 
-                    //return RedirectToAction("PesDetails", new { id = pesId }); // Přesměrování na detail psa
-                    return RedirectToAction("Index");
+
+					var originallRole = HttpContext.Session.GetString("OriginalRole");
+					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+					//return RedirectToAction("PesDetails", new { id = pesId }); // Přesměrování na detail psa
+					return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
                     // Ošetření chyby
                     Console.WriteLine("Chyba při přdání starého psa");
                     ViewBag.ErrorMessage = ex.Message;
-                    return View();
+
+					var originallRole = HttpContext.Session.GetString("OriginalRole");
+					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+					return View();
                 }
             }
-            return View();
+
+			var originalRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
+
+			return View();
 
         }
 
@@ -340,15 +413,23 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 // 4. Vložení záznamu o pobytu
                 _dataAccess.VlozZaznamOPobytu(pobytId);
 
-                //return RedirectToAction("PesDetails", new { id = pesId }); // Přesměrování na detail psa
-                return RedirectToAction("Index");
+
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				//return RedirectToAction("PesDetails", new { id = pesId }); // Přesměrování na detail psa
+				return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
                 // Ošetření chyby
                 Console.WriteLine("Chyba při přdání starého psa");
                 ViewBag.ErrorMessage = ex.Message;
-                return View();
+
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				return View();
             }
         }
 
