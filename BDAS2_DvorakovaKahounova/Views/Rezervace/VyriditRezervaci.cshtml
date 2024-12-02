@@ -8,7 +8,9 @@
 <div class="container-rezervace">
     <form method="post" action="/Rezervace/VyriditRezervaci">
         <div class="input-container-rezervace">
-            <input type="text" id="reservationCode" name="rezervaceKod" placeholder="Zadejte kód rezervace"><p></p>
+            <input type="text" id="reservationCode" name="rezervaceKod" placeholder="Zadejte kód rezervace"
+                   maxlength="10" minlength="10" pattern="[A-Z]{10}" required
+                   oninput="convertToUpperCase(this)" onblur="convertToUpperCase(this)"><p></p>
             <button type="submit" name="action" value="vyhledatPsa" class="btn-rezervace">Vyhledat psa</button>
         </div>
     </form>
@@ -99,4 +101,26 @@
                 alert('@Html.Raw(ViewBag.Message)'.replace(/'/g, "\\'"));
         </text>
     }
+</script>
+
+
+<script>
+        // Funkce pro převod malých písmen na velká při zadávání
+        function convertToUpperCase(input) {
+            input.value = input.value.toUpperCase(); // Převod na velká písmena
+        }
+
+    // Funkce pro validaci a filtrování inputu
+    function filterInput(event) {
+        const input = event.target;
+        // Zajistí, že se do inputu mohou zadávat pouze velká písmena a čísla
+        input.value = input.value.replace(/[^A-Z0-9]/g, '');
+    }
+
+    // Funkce, která bude volána při ztrátě focusu (blur) na inputu
+    document.getElementById("reservationCode").addEventListener("blur", function () {
+        // Převod malých písmen na velká písmena při opuštění inputu
+        convertToUpperCase(this);
+        // Dále můžeš přidat další logiku pro validaci, pokud je to potřeba
+    });
 </script>
