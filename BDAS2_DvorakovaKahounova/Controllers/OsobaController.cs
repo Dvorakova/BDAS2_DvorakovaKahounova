@@ -233,9 +233,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         {
             var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             if (string.IsNullOrEmpty(email)) return RedirectToAction("Login");
-
+			
+            
+			
             // Získáme ID aktuálně přihlášeného uživatele z claims
-            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
             if (userIdClaim != null)
             {
                 updatedOsoba.ID_OSOBA = int.Parse(userIdClaim.Value); // Předáme ID do updatedOsoba
