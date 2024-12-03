@@ -14,6 +14,7 @@
 
 html {
     font-size: 14px;
+    cursor: url('/images/cursor.png'), auto;
 }
 
 @media (min-width: 768px) {
@@ -45,9 +46,6 @@ body {
     margin-bottom: 60px;
     background-color: var(--snehova);
     justify-content: center;
-    /*cursor: url("images/packa.png"), auto;*/
-    /*cursor: url("images/packa.png"), auto;*/
-    /*cursor: url('images/packa.png') 16 16, auto;*/
     cursor: url('/images/cursor.png'), auto;
 }
 
@@ -887,22 +885,21 @@ button[type="button"]:focus {
 }
 
 a.btn.btn-primary {
-    color: white; /* Nastavte barvu textu odkazu na èervenou */
+    color: white;
+    cursor: url('/images/cursor.png'), auto;
 }
 
     a.btn.btn-primary:hover {
-        color: white; /* Zmìní barvu textu pøi najetí myší na modrou */
+        color: white;
+        cursor: url('/images/cursor.png'), auto;
     }
-
-
-
 
 .stats-page {
     padding: 20px;
 }
 
 .stats-table {
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -933,3 +930,50 @@ a.btn.btn-primary {
     background-color: #f1f1f1;
     cursor: pointer;
 }
+
+.log-page {
+    padding: 0; /* Odstranìní vnitøního odsazení */
+    margin: 0;
+    overflow-y: scroll;
+    direction: ltr;
+    /*max-height: 100vh;*/
+    max-height: 400px;
+    max-width: 1500px;
+    /*box-sizing: border-box;*/
+    width: 100%;
+}
+
+.log-table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 30px;
+    direction: ltr; /* Obsah zùstane ve správném smìru */
+    cursor: url('/images/cursor.png'), auto;
+    direction: ltr;
+}
+
+    .log-table th, .log-table td {
+        padding: 15px;
+        text-align: left;
+        border: 1px solid #ccc;
+        cursor: url('/images/cursor.png'), auto;
+    }
+
+    .log-table th {
+        background-color: var(--levandule);
+        color: white;
+        font-weight: bold;
+    }
+
+    .log-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .log-table tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
