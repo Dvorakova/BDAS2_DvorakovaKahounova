@@ -200,5 +200,64 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
         }
 
 
+		//Metody pro emulaci:
+        // Metoda rpo výpis všech uživatelů
+		public List<Osoba> GetAllUsers()
+		{
+			var users = new List<Osoba>();
+
+			using (var con = new OracleConnection(_connectionString))
+			{
+				con.Open();
+				using (var cmd = new OracleCommand("SELECT JMENO, PRIJMENI, EMAIL, ID_OSOBA, TYP_OSOBY FROM VIEW_ALL_USERS", con))
+				{
+					using (var reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							users.Add(new Osoba
+							{
+								JMENO = reader.GetString(0),
+								PRIJMENI = reader.GetString(1),
+								EMAIL = reader.GetString(2),
+								ID_OSOBA = reader.GetInt32(3),
+								TYP_OSOBY = reader.GetString(4)
+							});
+						}
+					}
+				}
+			}
+			return users;
+		}
+
+        public Osoba GetUserById(int userId)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand("SELECT JMENO, PRIJMENI, EMAIL, ID_OSOBA, TYP_OSOBY FROM OSOBY WHERE ID_OSOBA = :userId", con))
+                {
+                    cmd.Parameters.Add(new OracleParameter("userId", userId));
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Osoba
+                            {
+                                JMENO = reader.GetString(0),
+                                PRIJMENI = reader.GetString(1),
+                                EMAIL = reader.GetString(2),
+                                ID_OSOBA = reader.GetInt32(3),
+                                TYP_OSOBY = reader.GetString(4)
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+
     }
 }

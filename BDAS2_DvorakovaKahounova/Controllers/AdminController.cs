@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace BDAS2_DvorakovaKahounova.Controllers
 {
-	public class AdminController : Controller
+    public class AdminController : Controller
     {
         private readonly AdminDataAccess _dataAccess;
         public AdminController(IConfiguration configuration)
@@ -29,16 +29,16 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 
         public IActionResult Index()
-		{
-			var originallRole = HttpContext.Session.GetString("OriginalRole");
-			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+        {
+            var originallRole = HttpContext.Session.GetString("OriginalRole");
+            ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
-			return View();
+            return View();
         }
 
         public IActionResult Statistiky()
         {
-			decimal celkovaDavkaKg = _dataAccess.SpoctiKrmneDavky();
+            decimal celkovaDavkaKg = _dataAccess.SpoctiKrmneDavky();
             ViewData["CelkovaDavkaKg"] = celkovaDavkaKg;
 
             int pocetPsu = _dataAccess.SpoctiPocetPsuVUtulku();
@@ -63,57 +63,107 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         {
             var originallRole = HttpContext.Session.GetString("OriginalRole");
             ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
-			List<Log> logs = _dataAccess.GetLogs();
-			return View(logs);
-			//return View();
+            List<Log> logs = _dataAccess.GetLogs();
+            return View(logs);
+            //return View();
         }
         public IActionResult Emulace()
         {
             // Předání klíčů slovníku (popisů rolí) do pohledu
-            var roles = roleMap.Keys.ToList();
+            //var roles = roleMap.Keys.ToList();
 
-			var originalRole = HttpContext.Session.GetString("OriginalRole");
-			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
+            var users = _dataAccess.GetAllUsers();
 
-			return View(roles);
+            var originalRole = HttpContext.Session.GetString("OriginalRole");
+            ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
+
+            return View(users);
         }
 
+
+        //     //stará metoda
+        //     [HttpPost]
+        //     public IActionResult Emulovat(string selectedRole)
+        //     {
+        //         // Uložení původní role, pokud ještě není uložená
+        //         if (HttpContext.Session.GetString("OriginalRole") == null)
+        //         {
+        //             var originalRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        //             HttpContext.Session.SetString("OriginalRole", originalRole ?? "A"); // Defaultní původní role: Admin
+        //         }
+
+        //         // Uložení nové emulované role do session
+        //         HttpContext.Session.SetString("EmulatedRole", selectedRole);
+
+        //         // Získání zkratky role ze slovníku
+        //         if (roleMap.TryGetValue(selectedRole, out var roleCode))
+        //         {
+        //             UpdateUserClaims(roleCode); // Aktualizace claims na základě zkratky role
+        //         }
+
+        //return RedirectToAction("Index", "Home");
+        //     }
+
         [HttpPost]
-        public IActionResult Emulovat(string selectedRole)
+        public IActionResult Emulovat(int userId)
         {
-            // Uložení původní role, pokud ještě není uložená
             if (HttpContext.Session.GetString("OriginalRole") == null)
             {
                 var originalRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
                 HttpContext.Session.SetString("OriginalRole", originalRole ?? "A"); // Defaultní původní role: Admin
             }
 
-            // Uložení nové emulované role do session
-            HttpContext.Session.SetString("EmulatedRole", selectedRole);
+            // Získání dat uživatele z databáze
+            var user = _dataAccess.GetUserById(userId);
+            if (user == null) return RedirectToAction("Emulace"); // Uživatel nenalezen
 
-            // Získání zkratky role ze slovníku
-            if (roleMap.TryGetValue(selectedRole, out var roleCode))
-            {
-                UpdateUserClaims(roleCode); // Aktualizace claims na základě zkratky role
-            }
+            // Vytvoření nových claims pro emulovaného uživatele
+            var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.JMENO),
+                    new Claim(ClaimTypes.Email, user.EMAIL),
+                    new Claim(ClaimTypes.Role, user.TYP_OSOBY),
+                    new Claim("UserId", user.ID_OSOBA.ToString())
+                };
 
-			return RedirectToAction("Index", "Home");
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
+
+            return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
         public IActionResult ResetRole()
         {
-            // Obnovení původní role
             var originalRole = HttpContext.Session.GetString("OriginalRole");
             if (originalRole != null)
             {
                 HttpContext.Session.Remove("EmulatedRole");
                 HttpContext.Session.Remove("OriginalRole");
 
-                UpdateUserClaims(originalRole); // Aktualizace claims zpět na původní roli
+                UpdateUserClaims(originalRole);
             }
 
-			return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home");
         }
+
+        ////stará metoda
+        //public IActionResult ResetRole()
+        //{
+        //    // Obnovení původní role
+        //    var originalRole = HttpContext.Session.GetString("OriginalRole");
+        //    if (originalRole != null)
+        //    {
+        //        HttpContext.Session.Remove("EmulatedRole");
+        //        HttpContext.Session.Remove("OriginalRole");
+
+        //        UpdateUserClaims(originalRole); // Aktualizace claims zpět na původní roli
+        //    }
+
+        //    return RedirectToAction("Index", "Home");
+        //}
 
         //private void UpdateUserClaims(string role)
         //{

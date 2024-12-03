@@ -1,4 +1,4 @@
-﻿@model List<string>
+﻿@model List<BDAS2_DvorakovaKahounova.Models.Osoba>
 
 @{
     ViewData["Title"] = "Emulace";
@@ -6,8 +6,8 @@
 
 <h1>Emulace</h1>
 
-<h2>Vyberte roli k emulaci</h2>
-
+<h2>Vyberte uživatele k emulaci</h2>
+@* 
 <form asp-action="Emulovat" method="post">
     @foreach (var role in Model)
     {
@@ -18,6 +18,65 @@
     }
     <button type="submit">Emulovat</button>
 </form>
+
+<form asp-action="ResetRole" method="post">
+    <button type="submit">Zrušit emulaci</button>
+</form> *@
+
+<table>
+    <thead>
+        <tr>
+            <th>Jméno</th>
+            <th>Příjmení</th>
+            <th>Typ osoby</th>
+            <th>Email</th>
+            <th>Emulovat</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var osoba in Model)
+        {
+            <tr>
+                <td>@osoba.JMENO</td>
+                <td>@osoba.PRIJMENI</td>
+               @*  <td>@osoba.TYP_OSOBY</td> *@
+               <td>
+                    @switch (@osoba.TYP_OSOBY)
+                    {
+                        case "R":
+                            <text> Rezervátor</text>
+                            break;
+                        case "M":
+                            <text> Majitel</text>
+                            break;
+                        case "U":
+                            <text> Přihlášený uživatel</text>
+                            break;
+                        case "C":
+                            <text> Chovatel</text>
+                            break;
+                        case "P":
+                            <text> Rezervátor i majitel</text>
+                            break;
+                        case "A":
+                            <text> Administrátor</text>
+                            break;
+                        default:
+                            <text> Neznámý typ</text>
+                            break;
+                    }
+               </td>
+                <td>@osoba.EMAIL</td>
+                <td>
+                    <form asp-action="Emulovat" method="post">
+                        <input type="hidden" name="userId" value="@osoba.ID_OSOBA" />
+                        <button type="submit">Emulovat</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 <form asp-action="ResetRole" method="post">
     <button type="submit">Zrušit emulaci</button>
