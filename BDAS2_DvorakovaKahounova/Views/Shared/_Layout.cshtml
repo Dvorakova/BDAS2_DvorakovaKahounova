@@ -34,6 +34,12 @@
 								<a class="nav-link text-dark" asp-area="" asp-controller="Rezervace" asp-action="VyriditRezervaci">Vyřídit rezervaci</a>
 							</li>
 						}
+						@if ((User.Identity.IsAuthenticated && User.IsInRole("A")))
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Logovani">Historie úprav</a>
+							</li>
+						}
 						else if (!(User.Identity.IsAuthenticated && User.IsInRole("A")))
 						{
 							<li class="nav-item">
@@ -69,7 +75,7 @@
 						{
 							<!-- Možnosti pro přihlášeného uživatele -->
 							<li class="nav-item">
-								<!-- Stránka Profile ještě neexistuje-->
+								<!-- Stránka Profile e-->
 								<a class="nav-link text-dark" asp-area="" asp-controller="Osoba" asp-action="Profile">Můj účet</a>
 							</li>
 						}
@@ -85,7 +91,7 @@
 							</li>
 
 						}
-						<!-- Společné možnosti -->
+						<!-- Společné možnosti kromě Administrátora-->
 						@if (!(User.Identity.IsAuthenticated && User.IsInRole("A")))
 						{
 							<li class="nav-item">

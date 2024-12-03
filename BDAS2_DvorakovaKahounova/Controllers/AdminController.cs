@@ -34,7 +34,13 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 			return View();
         }
+        public IActionResult Logovani()
+        {
+            var originallRole = HttpContext.Session.GetString("OriginalRole");
+            ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
+            return View();
+        }
         public IActionResult Emulace()
         {
             // Předání klíčů slovníku (popisů rolí) do pohledu
