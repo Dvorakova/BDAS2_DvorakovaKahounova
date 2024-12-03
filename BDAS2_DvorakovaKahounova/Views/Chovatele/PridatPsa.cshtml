@@ -48,7 +48,7 @@
                 <!-- Skryté pole pro číslo čipu -->
                 <input type="hidden" id="hiddenCisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" />
                 <label for="jmeno">Jméno psa:</label>
-                <input type="text" id="jmeno" name="jmeno" placeholder="Jméno psa" value="@Model.Pes?.JMENO ?? " Neznámé"" />
+                <input type="text" id="jmeno" name="jmeno" placeholder="Jméno psa" value="@(string.IsNullOrEmpty(Model.Pes?.JMENO) ? "Neznámé" : Model.Pes.JMENO)" />
             </div>
         </div>
         <!-- Datum narození -->

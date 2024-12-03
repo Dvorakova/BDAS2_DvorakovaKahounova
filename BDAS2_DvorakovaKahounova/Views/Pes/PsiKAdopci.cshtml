@@ -20,7 +20,8 @@
 
         </div>
         <div class="info-mujpes">
-            <h2><strong>Jméno psa: </strong> @pes.JMENO</h2>
+            @* <h2><strong>Jméno psa: </strong> @pes.JMENO</h2> *@
+            <h2><strong>Jméno psa: </strong> @(string.IsNullOrEmpty(pes.JMENO) ? "Neznámé" : pes.JMENO)</h2>
             <p><strong>Věk:</strong> @(pes.NAROZENI.HasValue ? (DateTime.Now.Year - pes.NAROZENI.Value.Year) + " let" : "Není znám") </p>
 
             @if (@pes.POHLAVI == 0)
