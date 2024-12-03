@@ -1,4 +1,5 @@
 ﻿using BDAS2_DvorakovaKahounova.DataAcessLayer;
+using BDAS2_DvorakovaKahounova.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -38,8 +39,9 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         {
             var originallRole = HttpContext.Session.GetString("OriginalRole");
             ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
-
-            return View();
+			List<Log> logs = _dataAccess.GetLogs();
+			return View(logs);
+			//return View();
         }
         public IActionResult Emulace()
         {

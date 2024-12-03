@@ -1,8 +1,29 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<BDAS2_DvorakovaKahounova.Models.Log>
+
 @{
     ViewData["Title"] = "HistorieUprav";
 }
 
 <h1>Historie úprav</h1>
+
+<table class="table-chovatele-vnitrni">
+    <thead>
+        <tr>
+            <th>Název upravené tabulky</th>
+            <th>Akce</th>
+            <th>Popis akce</th>
+            <th>Čas úpravy</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model)
+        {
+            <tr>
+                <td>@log.NazevTabulky</td>
+                <td>@log.Akce</td>
+                <td>@log.PopisAkce</td>
+                <td>@log.Cas</td>
+            </tr>
+        }
+    </tbody>
+</table>
