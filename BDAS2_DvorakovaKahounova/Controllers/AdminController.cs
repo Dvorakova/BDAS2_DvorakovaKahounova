@@ -35,6 +35,30 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 			return View();
         }
+
+        public IActionResult Statistiky()
+        {
+			decimal celkovaDavkaKg = _dataAccess.SpoctiKrmneDavky();
+            ViewData["CelkovaDavkaKg"] = celkovaDavkaKg;
+
+            int pocetPsu = _dataAccess.SpoctiPocetPsuVUtulku();
+
+            // Předáme počet psů do ViewData, aby se zobrazil na stránce
+            ViewData["PocetPsuvUtulku"] = pocetPsu;
+
+            int pocetPsuVKarantene = _dataAccess.SpoctiPocetPsuVKarantene();
+            ViewData["PocetPsuVKarantene"] = pocetPsuVKarantene;
+
+            decimal prumernyPobyt = _dataAccess.SpoctiPrumernouDobuPobytu();
+            prumernyPobyt = Math.Round(prumernyPobyt, 2);
+            ViewData["PrumernyPobyt"] = prumernyPobyt;
+
+            var originallRole = HttpContext.Session.GetString("OriginalRole");
+            ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+            return View();
+        }
+
         public IActionResult Logovani()
         {
             var originallRole = HttpContext.Session.GetString("OriginalRole");

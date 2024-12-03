@@ -44,6 +44,9 @@
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Logovani">Historie úprav</a>
 							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Statistiky">Statistiky</a>
+							</li>
 						}
 						<!-- Možnosti pro všechny vyjma administrátora a chovatele (tuto stránku nepotřebují) -->
 						@if (!(User.Identity.IsAuthenticated && (User.IsInRole("A") || User.IsInRole("C"))))
