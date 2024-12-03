@@ -7,9 +7,9 @@
         public string typ_souboru { get; set; } // Typ souboru (např. image/jpeg)
         public string pripona_souboru { get; set; } // Přípona souboru (např. .jpg)
         public DateTime datum_nahrani { get; set; } // Datum nahrání
-        public DateTime? datum_zmeny { get; set; } // Datum změny (pokud je potřeba)
+        public DateTime? datum_zmeny { get; set; } // Datum změny
         public int nahrano_id_osoba { get; set; } // ID osoby, která nahrála obrázek
-        public int? zmeneno_id_osoba { get; set; } // ID osoby, která změnila obrázek (pokud je potřeba)
+        public int? zmeneno_id_osoba { get; set; } // ID osoby, která změnila obrázek
         public byte[] obsah_souboru { get; set; } // Obsah souboru (BLOB)
     }
 }

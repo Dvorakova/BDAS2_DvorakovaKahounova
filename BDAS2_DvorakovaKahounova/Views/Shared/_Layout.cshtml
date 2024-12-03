@@ -22,6 +22,7 @@
 				</button>
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 					<ul class="navbar-nav flex-grow-1">
+						<!-- Možnosti pro chovatele -->
 						@if (User.Identity.IsAuthenticated && User.IsInRole("C"))
 						{
 							<li class="nav-item">
@@ -34,26 +35,31 @@
 								<a class="nav-link text-dark" asp-area="" asp-controller="Rezervace" asp-action="VyriditRezervaci">Vyřídit rezervaci</a>
 							</li>
 						}
+						<!-- Možnosti pro administrátora -->
 						@if ((User.Identity.IsAuthenticated && User.IsInRole("A")))
 						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Práce s databází</a>
+							</li>
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Logovani">Historie úprav</a>
 							</li>
 						}
-						else if (!(User.Identity.IsAuthenticated && User.IsInRole("A")))
+						<!-- Možnosti pro všechny vyjma administrátora a chovatele (tuto stránku nepotřebují) -->
+						@if (!(User.Identity.IsAuthenticated && (User.IsInRole("A") || User.IsInRole("C"))))
 						{
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Pes" asp-action="PsiKAdopci">Psi k adopci</a>
 							</li>
 						}
-
+						<!-- Možnosti pro uživatele s rezervací -->
 						@if (User.Identity.IsAuthenticated && (User.IsInRole("R") || User.IsInRole("P")))
 						{
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Rezervace" asp-action="Index">Rezervace</a>
 							</li>
 						}
-
+						<!-- Možnosti pro majitele -->
 						@if (User.Identity.IsAuthenticated && (User.IsInRole("M") || User.IsInRole("P")))
 						{
 							<li class="nav-item">
@@ -63,6 +69,7 @@
 
 					</ul>
 					<ul class="navbar-nav ms-auto">
+						<!-- Možnost emulace pro administrátora -->
 						@* @if ((User.Identity.IsAuthenticated && User.IsInRole("A")) || (User.Identity.IsAuthenticated && HttpContext.Session.GetString("OriginalRole") == "A")) *@
 						@if ((User.Identity.IsAuthenticated && User.IsInRole("A")) || (User.Identity.IsAuthenticated && (bool?)ViewData["IsAdmin"] == true))
 						{
@@ -75,7 +82,7 @@
 						{
 							<!-- Možnosti pro přihlášeného uživatele -->
 							<li class="nav-item">
-								<!-- Stránka Profile e-->
+								<!-- Stránka Profile -->
 								<a class="nav-link text-dark" asp-area="" asp-controller="Osoba" asp-action="Profile">Můj účet</a>
 							</li>
 						}
@@ -91,7 +98,7 @@
 							</li>
 
 						}
-						<!-- Společné možnosti kromě Administrátora-->
+						<!-- Společné možnosti (kromě administrátora)-->
 						@if (!(User.Identity.IsAuthenticated && User.IsInRole("A")))
 						{
 							<li class="nav-item">
@@ -108,12 +115,6 @@
 			@RenderBody()
 		</main>
 	</div>
-
-	@* <footer class="border-top footer text-muted">
-		<div class="container">
-			&copy; 2024 - BDAS2_DvorakovaKahounova - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-		</div>
-	</footer> *@
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
