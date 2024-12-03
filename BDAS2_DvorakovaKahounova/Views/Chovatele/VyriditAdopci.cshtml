@@ -16,6 +16,7 @@
 	</form>
 </div>
 
+<div class="info-majitel">
 @* @if (Model?.Majitel?.EMAIL != null) *@
 @if (@Model?.Majitel?.EMAIL != null)
 {
@@ -31,6 +32,12 @@
 }
 else if (ViewBag.ErrorMessage != null)
 {
-	<p>Osoba nenalezena. Žadatel o adopci se musí nejprve zaregistrovat.</p>
-        <a href="@Url.Action("Register", "Osoba")" class="btn btn-primary">Registrovat se</a>
+	@* <p>Osoba nenalezena. Žadatel o adopci se musí nejprve zaregistrovat.</p>
+        <a href="@Url.Action("Register", "Osoba")" class="btn btn-primary">Registrovat se</a> *@
+		<script type="text/javascript">
+			alert('Osoba nenalezena. Žadatel o adopci se musí nejprve zaregistrovat.');
+		</script>
+		<a href="@Url.Action("Register", "Osoba")" class="btn btn-primary">Přejít k registraci</a>
 }
+
+</div>

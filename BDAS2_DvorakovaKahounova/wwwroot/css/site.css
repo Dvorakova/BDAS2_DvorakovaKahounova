@@ -861,3 +861,16 @@ button[type="button"]:focus {
     display: grid;
     grid-template-columns: auto auto auto;
 }
+
+.info-majitel {
+    padding: 5px;
+    text-align: center;
+}
+
+a.btn.btn-primary {
+    color: white; /* Nastavte barvu textu odkazu na èervenou */
+}
+
+    a.btn.btn-primary:hover {
+        color: white; /* Zmìní barvu textu pøi najetí myší na modrou */
+    }
