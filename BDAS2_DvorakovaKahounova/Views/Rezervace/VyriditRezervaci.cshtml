@@ -8,9 +8,7 @@
 <div class="container-rezervace">
     <form method="post" action="/Rezervace/VyriditRezervaci">
         <div class="input-container-rezervace">
-            <input type="text" id="reservationCode" name="rezervaceKod" placeholder="Zadejte kód rezervace"
-                   maxlength="10" minlength="10" pattern="[A-Z]{10}" required
-                   oninput="convertToUpperCase(this)" onblur="convertToUpperCase(this)"><p></p>
+            <input type="text" id="reservationCode" name="rezervaceKod" placeholder="Zadejte kód rezervace" maxlength="10"><p></p>
             <button type="submit" name="action" value="vyhledatPsa" class="btn-rezervace">Vyhledat psa</button>
         </div>
     </form>
@@ -104,7 +102,7 @@
 </script>
 
 
-<script>
+@* <script>
         // Funkce pro převod malých písmen na velká při zadávání
         function convertToUpperCase(input) {
             input.value = input.value.toUpperCase(); // Převod na velká písmena
@@ -123,4 +121,4 @@
         convertToUpperCase(this);
         // Dále můžeš přidat další logiku pro validaci, pokud je to potřeba
     });
-</script>
+</script> *@

@@ -40,21 +40,21 @@
 <!-- ----------------------------------------------------------------------------------------------------- -->
 @if (ViewBag.ShowForm == true)
 {
-
-	<form method="post" enctype="multipart/form-data">
-		<div class="container-pridatPsa">
-			<div class="input-container-pridatPsa">
-				<!-- Skryté pole pro číslo čipu -->
-				<input type="hidden" id="hiddenCisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" />
-				<label for="jmeno">Jméno psa:</label>
-				<input type="text" id="jmeno" name="jmeno" placeholder="Jméno psa" value="@Model.Pes?.JMENO ?? " Neznámé"" />
-			</div>
-		</div>
-		<!-- Datum narození -->
-		<div class="container-pridatPsa">
-			<div class="input-container-pridatPsa">
-				<label for="datumNarozeni">Datum narození:</label>
-				<input type="date" id="datumNarozeni" name="datumNarozeni" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+    
+<form method="post" enctype="multipart/form-data">
+        <div class="container-pridatPsa">
+            <div class="input-container-pridatPsa">
+                <!-- Skryté pole pro číslo čipu -->
+                <input type="hidden" id="hiddenCisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" />
+                <label for="jmeno">Jméno psa:</label>
+                <input type="text" id="jmeno" name="jmeno" placeholder="Jméno psa" value="@(string.IsNullOrEmpty(Model.Pes?.JMENO) ? "Neznámé" : Model.Pes.JMENO)" />
+            </div>
+        </div>
+        <!-- Datum narození -->
+        <div class="container-pridatPsa">
+            <div class="input-container-pridatPsa">
+             <label for="datumNarozeni">Datum narození:</label>
+            <input type="date" id="datumNarozeni" name="datumNarozeni" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
 
 			</div>
 		</div>
