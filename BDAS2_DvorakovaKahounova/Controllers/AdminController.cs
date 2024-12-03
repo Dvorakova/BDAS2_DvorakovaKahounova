@@ -80,37 +80,18 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             return View(users);
         }
 
-
-        //     //stará metoda
-        //     [HttpPost]
-        //     public IActionResult Emulovat(string selectedRole)
-        //     {
-        //         // Uložení původní role, pokud ještě není uložená
-        //         if (HttpContext.Session.GetString("OriginalRole") == null)
-        //         {
-        //             var originalRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-        //             HttpContext.Session.SetString("OriginalRole", originalRole ?? "A"); // Defaultní původní role: Admin
-        //         }
-
-        //         // Uložení nové emulované role do session
-        //         HttpContext.Session.SetString("EmulatedRole", selectedRole);
-
-        //         // Získání zkratky role ze slovníku
-        //         if (roleMap.TryGetValue(selectedRole, out var roleCode))
-        //         {
-        //             UpdateUserClaims(roleCode); // Aktualizace claims na základě zkratky role
-        //         }
-
-        //return RedirectToAction("Index", "Home");
-        //     }
-
         [HttpPost]
         public IActionResult Emulovat(int userId)
         {
+            //uložení původní role, pokud emulujeme poprvé
             if (HttpContext.Session.GetString("OriginalRole") == null)
             {
                 var originalRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
                 HttpContext.Session.SetString("OriginalRole", originalRole ?? "A"); // Defaultní původní role: Admin
+
+                var adminId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                HttpContext.Session.SetString("OriginalUserId", adminId ?? "0"); // původní id
+                Console.WriteLine("Emulace poprvé. Id: " + adminId);
             }
 
             // Získání dat uživatele z databáze
@@ -137,59 +118,33 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         [HttpPost]
         public IActionResult ResetRole()
         {
-            var originalRole = HttpContext.Session.GetString("OriginalRole");
-            if (originalRole != null)
-            {
-                HttpContext.Session.Remove("EmulatedRole");
-                HttpContext.Session.Remove("OriginalRole");
+            // Načtení původního ID administrátora ze session
+            var originalUserId = HttpContext.Session.GetString("OriginalUserId");
+            if (string.IsNullOrEmpty(originalUserId)) return RedirectToAction("Index", "Home");
 
-                UpdateUserClaims(originalRole);
-            }
+            // Načtení dat administrátora z databáze
+            var admin = _dataAccess.GetUserById(int.Parse(originalUserId));
+            if (admin == null) return RedirectToAction("Index", "Home");
 
-            return RedirectToAction("Index", "Home");
-        }
+            // Obnovení identity administrátora
+            var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, admin.JMENO),
+                    new Claim(ClaimTypes.Email, admin.EMAIL),
+                    new Claim(ClaimTypes.Role, admin.TYP_OSOBY),
+                    new Claim("UserId", admin.ID_OSOBA.ToString())
+                };
 
-        ////stará metoda
-        //public IActionResult ResetRole()
-        //{
-        //    // Obnovení původní role
-        //    var originalRole = HttpContext.Session.GetString("OriginalRole");
-        //    if (originalRole != null)
-        //    {
-        //        HttpContext.Session.Remove("EmulatedRole");
-        //        HttpContext.Session.Remove("OriginalRole");
-
-        //        UpdateUserClaims(originalRole); // Aktualizace claims zpět na původní roli
-        //    }
-
-        //    return RedirectToAction("Index", "Home");
-        //}
-
-        //private void UpdateUserClaims(string role)
-        //{
-        //    var claims = User.Claims.Where(c => c.Type != ClaimTypes.Role).ToList(); // Odebrání staré role
-        //    claims.Add(new Claim(ClaimTypes.Role, role)); // Přidání nové role
-
-        //    var identity = new ClaimsIdentity(claims, "Cookie");
-        //    var principal = new ClaimsPrincipal(identity);
-
-        //    HttpContext.SignInAsync("Cookie", principal).Wait(); // Přepis identity v cookies
-        //}
-
-        private void UpdateUserClaims(string role)
-        {
-            // Odstranění předchozí role
-            var claims = User.Claims.Where(c => c.Type != ClaimTypes.Role).ToList();
-
-            // Přidání nové role
-            claims.Add(new Claim(ClaimTypes.Role, role));
-
-            // Vytvoření nové identity s novými claims a schématem cookies
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
-            // Přiřazení nové identity uživatelskému kontextu
-            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait(); // Přepis identity v cookies
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
+
+            // Vyčištění session
+            HttpContext.Session.Remove("OriginalUserId");
+            HttpContext.Session.Remove("OriginalRole");
+
+            return RedirectToAction("Index", "Home");
         }
 
 
