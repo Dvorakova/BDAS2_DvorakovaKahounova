@@ -48,7 +48,7 @@ body {
     /*cursor: url("images/packa.png"), auto;*/
     /*cursor: url("images/packa.png"), auto;*/
     /*cursor: url('images/packa.png') 16 16, auto;*/
-    /*cursor: url('images/cursor.png'), auto;*/
+    cursor: url('/images/cursor.png'), auto;
 }
 
 .main-container {
@@ -68,6 +68,7 @@ body {
 
 a:link {
     color: var(--levandule); /* Barva odkazu pøed návštìvou */
+    cursor: url('/images/cursor.png'), pointer;
 }
 
 a:visited {
@@ -244,16 +245,19 @@ a:active {
     background-color: var(--levandule);
     border-color: var(--levandule);
     outline: none;
+    cursor: url('/images/cursor.png'), auto;
 }
 
     .btn:hover {
         background-color: var(--fialova); /* Barva pøi hoveru */
         border-color: var(--fialova);
+        cursor: url('/images/cursor.png'), auto;
     }
 
     .btn:focus {
         background-color: var(--fialova); /* Barva pøi hoveru */
         border-color: var(--fialova);
+        cursor: url('/images/cursor.png'), auto;
     }
 
 .text-custom {
@@ -373,10 +377,11 @@ table {
         font-size: 16px;
     }
 
-    .button-profile{
-        margin: 10px;
-        padding: -50px;
-    }
+.button-profile {
+    margin: 10px;
+    padding: -50px;
+    cursor: url('/images/cursor.png'), auto;
+}
 
 .input-container-profile {
     position: relative;
@@ -433,6 +438,7 @@ button[type="button"]:focus {
     background-color: var(--fialova); /* pozadí */
     border: var(--fialova);
     outline: none; /* Odstraní modrý okraj pøi kliknutí */
+    cursor: url('/images/cursor.png'), auto;
 }
 
 /* Pokud chceš, aby tlaèítko po kliknutí zùstalo èerné i po ztrátì fokusu */
@@ -443,6 +449,7 @@ button[type="button"]:focus {
     color: #fff; /* Bílý text */
     border: var(--fialova); /* Pøípadnì pøidej okraj podle potøeby */
     outline: none;
+    cursor: url('/images/cursor.png'), auto;
 }
 
 /* --- mùj pes---*/
@@ -537,17 +544,20 @@ button[type="button"]:focus {
     padding: 10px;
     border: none; /* odstraní okraj */
     outline: none; /* odstraní obrys */
+    cursor: url('/images/cursor.png'), auto;
 }
 
-.btn-rezervace:hover {
-    background-color: var(--fialova); /* Barva pøi hoveru */
-    border-color: var(--fialova);
-}
+    .btn-rezervace:hover {
+        background-color: var(--fialova); /* Barva pøi hoveru */
+        border-color: var(--fialova);
+        cursor: url('/images/cursor.png'), auto;
+    }
 
-.btn-rezervace:focus {
-    background-color: var(--fialova); /* Barva pøi hoveru */
-    border-color: var(--fialova);
-}
+    .btn-rezervace:focus {
+        background-color: var(--fialova); /* Barva pøi hoveru */
+        border-color: var(--fialova);
+        cursor: url('/images/cursor.png'), auto;
+    }
 
     .input-container-rezervace input[type="text"] {
         font-size: 20px;
@@ -586,16 +596,19 @@ button[type="button"]:focus {
     padding: 10px;
     border: none; /* odstraní okraj */
     outline: none; /* odstraní obrys */
+    cursor: url('/images/cursor.png'), auto;
 }
 
     .btn-rezervace2:hover {
         background-color: var(--fialova); /* Barva pøi hoveru */
         border-color: var(--fialova);
+        cursor: url('/images/cursor.png'), auto;
     }
 
     .btn-rezervace2:focus {
         background-color: var(--fialova); /* Barva pøi hoveru */
         border-color: var(--fialova);
+        cursor: url('/images/cursor.png'), auto;
     }
 
 /*-- chovatele index --*/
@@ -625,6 +638,7 @@ button[type="button"]:focus {
     align-items: flex-start; /* Vertikální zarovnání */
     gap: 15px; /* Mezera mezi tlaèítky */
     font-size: 40px;
+    cursor: url('/images/cursor.png'), auto;
 }
 
     .button-chovatele button,
@@ -636,6 +650,7 @@ button[type="button"]:focus {
         margin: 5px; /* Zrušení marginu formuláøe */
         padding: 5px; /* Odstranìní jakéhokoli paddingu */
         justify-content: center; /* Zarovnání formuláøe do støedu */
+        cursor: url('/images/cursor.png'), auto;
     }
 
 
@@ -794,17 +809,20 @@ button[type="button"]:focus {
     background-color: var(--levandule);
     outline: none;
     color: white;
+    cursor: url('/images/cursor.png'), auto;
 }
 
     .container-pridatPsa button:hover {
         background-color: var(--fialova); /* Barva pøi hoveru */
         border-color: var(--fialova);
+        cursor: url('/images/cursor.png'), auto;
     }
 
-.container-pridatPsa button:focus {
-    background-color: var(--fialova); /* Barva pøi hoveru */
-    border-color: var(--fialova);
-}
+    .container-pridatPsa button:focus {
+        background-color: var(--fialova); /* Barva pøi hoveru */
+        border-color: var(--fialova);
+        cursor: url('/images/cursor.png'), auto;
+    }
 
 
 .hidden-file-input {
