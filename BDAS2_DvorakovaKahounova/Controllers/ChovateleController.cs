@@ -56,7 +56,32 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			return RedirectToAction("Login", "Osoba");
         }
 
-		[HttpPost]
+        public IActionResult VyriditAdopci(int pesId)
+        {
+            int uzivatelID = GetLoggedInUserId();
+            if (uzivatelID == 0)
+            {
+                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+            }
+
+            if (User.Identity.IsAuthenticated && User.IsInRole("C"))
+            {
+                PesMajitelModel model = new PesMajitelModel();
+                //var pes = _dataAccess.GetPesById(pesId);
+                model.Pes = new Pes();
+                model.Pes.ID_PSA = pesId;
+                Console.WriteLine("Id psa ve VyriditAdopci nahore: " + pesId);
+                var originallRole = HttpContext.Session.GetString("OriginalRole");
+                ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+                return View(model); // Zobrazí stránku 
+            }
+
+            // Pokud podmínky nejsou splněny, přesměruj na přihlášení nebo jinou stránku
+            return RedirectToAction("Login", "Osoba");
+        }
+
+        [HttpPost]
 		public IActionResult PridatOdcerveniAkce(int pesId, DateTime datumOdcerveni)
 		{
             int uzivatelID = GetLoggedInUserId();
@@ -370,7 +395,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 // 4. Vložení záznamu o pobytu
                 _dataAccess.VlozZaznamOPobytu(pobytId);
 
-				//return RedirectToAction("PesDetails", new { id = pesId }); // Přesměrování na detail psa
 				return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -386,6 +410,85 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             }
         }
 
+		//metoda pro adoptování psa )bez rezervace)
+		[HttpPost]
+		public IActionResult Adoptovat(int pesId)
+		{
+			return RedirectToAction("VyriditAdopci", new { pesId = pesId });
+			//return RedirectToAction("VyriditAdopci");  // Např. přesměrování na domovskou stránku.
+		}
 
-    }
+		[HttpPost]
+		public IActionResult VyriditAdopci(string email, string action, int idPes, int majitelIdOsoba)
+		{
+            Console.WriteLine("Druha VyriditAdopce id pes: " + idPes);
+			int uzivatelID = GetLoggedInUserId();
+			if (uzivatelID == 0)
+			{
+				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+			}
+
+			if (User.Identity.IsAuthenticated && User.IsInRole("C"))
+			{
+                if (action == "search")
+                {
+					var osoba = _dataAccess.OveritEmail(email);
+					// Zavoláme metodu v data access vrstvě pro ověření emailu
+
+
+					if (osoba != null)
+					{
+						//PesMajitelModel majitel = new PesMajitelModel
+						//{
+						//	Majitel = osoba // Pokud email existuje, přiřadíme objekt 'osoba' do 'Majitel'
+						//};
+                       PesMajitelModel majitel = new PesMajitelModel();
+                        majitel.Pes = new Pes();
+                        majitel.Pes.ID_PSA = idPes;
+                        majitel.Majitel = osoba;
+						
+                        Console.WriteLine(majitel.Majitel.EMAIL.ToString());
+						var originalllRole = HttpContext.Session.GetString("OriginalRole");
+						ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+						// Pokud email existuje, přesměrujeme uživatele na stránku pro potvrzení adopce
+						return View(majitel);
+					}
+					else
+					{
+						// Pokud email není nalezen, zobrazíme chybovou zprávu
+						ViewBag.ErrorMessage = "Osoba s tímto emailem není zaregistrována.";
+						
+                        PesMajitelModel majitel = new PesMajitelModel();
+						majitel.Pes = new Pes();
+						majitel.Pes.ID_PSA = idPes;
+
+						var originalllRole = HttpContext.Session.GetString("OriginalRole");
+						ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
+						
+                        return View(majitel);
+					}
+
+					var originallllRole = HttpContext.Session.GetString("OriginalRole");
+					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallllRole == "A" || User.IsInRole("A")));
+
+					return View(); // Zobrazí stránku s formulářem
+				} else if (action == "adoptovatPsa")
+                {
+					_dataAccess.ZpracujRezervatorZmena(majitelIdOsoba, idPes);
+					_dataAccess.PridejMajitele(majitelIdOsoba);
+					_dataAccess.PridejAdopci(idPes, majitelIdOsoba);
+					return RedirectToAction("Index");
+				}
+				// Pokud podmínky nejsou splněny, zobrazíme formulář pro vyřízení adopce
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+				return View(); // Zobrazí stránku s formulářem
+
+			}
+			// Pokud podmínky nejsou splněny, přesměrujeme uživatele na přihlášení
+			return RedirectToAction("Login", "Osoba");
+		}
+
+	}
 }

@@ -54,6 +54,10 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
                 if (_dataAccess.RegisterUser(novaOsoba))
                 {
+                    if (User.Identity.IsAuthenticated && User.IsInRole("C"))
+                    {
+						return RedirectToAction("Index", "Chovatele");
+					}
 					//když se registrace podaří, zobrazí se uživateli stránka s přihlášením
 					return RedirectToAction("Login", new { email = novaOsoba.EMAIL });
                 }

@@ -279,8 +279,16 @@
 
 				</td>
 				<td class="td-chovatele" colspan="2">
+					
 					<div class="button-chovatele">
-					<button class="btn btn-primary">Vyřídit adopci</button>
+						@if (@pes.ID_MAJITEL == null && @pes.REZERVOVANO == null)
+						{
+							<form asp-action="Adoptovat" method="post">
+								<input type="hidden" name="pesId" value="@pes.ID_PSA" />
+								<button class="btn btn-primary" type="submit">Vyřídit adopci</button>
+							</form>
+						}
+
 
 					<button class="btn btn-primary">Upravit vlastnosti</button>
 

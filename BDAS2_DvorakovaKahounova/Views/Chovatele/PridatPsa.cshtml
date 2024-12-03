@@ -1,359 +1,358 @@
 ﻿@model BDAS2_DvorakovaKahounova.Models.PesMajitelModel
 @{
-    var barvyList = ViewData["Barvy"] as List<BDAS2_DvorakovaKahounova.Models.Barva>;
-    var plemenaList = ViewData["Plemena"] as List<BDAS2_DvorakovaKahounova.Models.Plemeno>;
-    var duvodyList = ViewData["Duvody"] as List<BDAS2_DvorakovaKahounova.Models.DuvodPobytu>;
+	var barvyList = ViewData["Barvy"] as List<BDAS2_DvorakovaKahounova.Models.Barva>;
+	var plemenaList = ViewData["Plemena"] as List<BDAS2_DvorakovaKahounova.Models.Plemeno>;
+	var duvodyList = ViewData["Duvody"] as List<BDAS2_DvorakovaKahounova.Models.DuvodPobytu>;
 }
 
 @{
-    ViewData["Title"] = "PridatPsa";
+	ViewData["Title"] = "PridatPsa";
 }
 <h1>Přidat psa</h1>
-    
+
 <div class="container-rezervace">
 
-    <div class="input-container-rezervace">
-<form method="post">
-    
-        @* <label for="cisloCipu">Číslo čipu:</label> *@
-            <input type="text" id="cisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu"
-                   required placeholder="Zadejte číslo čipu psa" pattern="\d{15}" oninvalid="this.setCustomValidity('Číslo čipu musí obsahovat přesně 15 číslic.')"
-                   oninput="this.setCustomValidity('')" /><p></p>
-    <button type="submit" class="btn-rezervace" name="action" value="search">Vyhledat</button>
-</form>
+	<div class="input-container-rezervace">
+		<form method="post">
 
-<form method="post">
-        <button type="submit" class="btn-rezervace" name="action" value="nochip">Pes bez čipu</button>
-</form>
-    </div>
+			@* <label for="cisloCipu">Číslo čipu:</label> *@
+			<input type="text" id="cisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu"
+				   required placeholder="Zadejte číslo čipu psa" pattern="\d{15}" oninvalid="this.setCustomValidity('Číslo čipu musí obsahovat přesně 15 číslic.')"
+				   oninput="this.setCustomValidity('')" /><p></p>
+			<button type="submit" class="btn-rezervace" name="action" value="search">Vyhledat</button>
+		</form>
 
-@* @if (ViewBag.Message != null)
-{
-    <div>
-        <p>@ViewBag.Message</p>
-    </div>
-}
- *@
+		<form method="post">
+			<button type="submit" class="btn-rezervace" name="action" value="nochip">Pes bez čipu</button>
+		</form>
+	</div>
+
+	@* @if (ViewBag.Message != null)
+	{
+	<div>
+	<p>@ViewBag.Message</p>
+	</div>
+	}
+	*@
 
 </div>
 
 <!-- ----------------------------------------------------------------------------------------------------- -->
-
-@if (ViewBag.ShowForm == true)  
+@if (ViewBag.ShowForm == true)
 {
-    
-<form method="post" enctype="multipart/form-data">
-        <div class="container-pridatPsa">
-            <div class="input-container-pridatPsa">
-                <!-- Skryté pole pro číslo čipu -->
-                <input type="hidden" id="hiddenCisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" />
-                <label for="jmeno">Jméno psa:</label>
-                <input type="text" id="jmeno" name="jmeno" placeholder="Jméno psa" value="@Model.Pes?.JMENO ?? " Neznámé"" />
-            </div>
-        </div>
-        <!-- Datum narození -->
-        <div class="container-pridatPsa">
-            <div class="input-container-pridatPsa">
-             <label for="datumNarozeni">Datum narození:</label>
-            <input type="date" id="datumNarozeni" name="datumNarozeni" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
 
-            </div>
-        </div>
-    <!-- Combobox pro barvu -->
-        <div class="container-pridatPsa">
-            <div class="input-container-pridatPsa">
-        <label for="barva">Barva:</label>
-        <select id="barva" name="barva">
-            @if (barvyList != null && barvyList.Any())
-            {
-                @foreach (var barva in barvyList)
-                {
-                    <option value="@barva.Id">@barva.Nazev</option>
-                }
-            }
-            else
-            {
-                <p>Žádné barvy k dispozici.</p>
-            }
-        </select>
-        </div>
-    </div>
+	<form method="post" enctype="multipart/form-data">
+		<div class="container-pridatPsa">
+			<div class="input-container-pridatPsa">
+				<!-- Skryté pole pro číslo čipu -->
+				<input type="hidden" id="hiddenCisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu" />
+				<label for="jmeno">Jméno psa:</label>
+				<input type="text" id="jmeno" name="jmeno" placeholder="Jméno psa" value="@Model.Pes?.JMENO ?? " Neznámé"" />
+			</div>
+		</div>
+		<!-- Datum narození -->
+		<div class="container-pridatPsa">
+			<div class="input-container-pridatPsa">
+				<label for="datumNarozeni">Datum narození:</label>
+				<input type="date" id="datumNarozeni" name="datumNarozeni" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
 
-    <!-- Combobox pro plemeno -->
-        <div class="container-pridatPsa">
-            <div class="input-container-pridatPsa">
-        <label for="plemeno">Plemeno:</label>
-        <select id="plemeno" name="plemeno">
-            @if (plemenaList != null && plemenaList.Any())
-            {
-                @foreach (var plemeno in plemenaList)
-                {
-                    <option value="@plemeno.Id">@plemeno.Nazev</option>
-                }
-            }
-            else
-            {
-                <option disabled>Žádná plemena k dispozici</option>
-            }
-        </select>
-        </div>
-    </div>
-    <!-- Combobox pro pohlaví -->
-        <div class="container-pridatPsa">
-            <div class="input-container-pridatPsa">
-            <label for="pohlavi">Pohlaví:</label>
-            <select id="pohlavi" name="pohlavi">
-                <option value="0">Pes</option> <!-- 0 pro psa -->
-                <option value="1">Fena</option> <!-- 1 pro fenu -->
-            </select>
-        </div>
-        </div>
-    <!-- Combobox pro důvod pobytu -->
-        <div class="container-pridatPsa">
-            <div class="input-container-pridatPsa">
-        <label for="duvodPobytu">Důvod pobytu:</label>
-        <select id="duvodPobytu" name="duvodPobytu">
-            @if (duvodyList != null && duvodyList.Any())
-            {
-                @foreach (var duvod in duvodyList)
-                {
-                    <option value="@duvod.Id">@duvod.Nazev</option>
-                }
-            }
-            else
-            {
-                <option disabled>Žádné důvody pobytu k dispozici</option>
-            }
-        </select>
-    </div>
-    </div>
+			</div>
+		</div>
+		<!-- Combobox pro barvu -->
+		<div class="container-pridatPsa">
+			<div class="input-container-pridatPsa">
+				<label for="barva">Barva:</label>
+				<select id="barva" name="barva">
+					@if (barvyList != null && barvyList.Any())
+					{
+						@foreach (var barva in barvyList)
+						{
+							<option value="@barva.Id">@barva.Nazev</option>
+						}
+					}
+					else
+					{
+						<p>Žádné barvy k dispozici.</p>
+					}
+				</select>
+			</div>
+		</div>
 
-    <!-- Datum začátku pobytu -->
-        <div class="container-pridatPsa">
-            <div class="input-container-pridatPsa">
-        <label for="zacatekPobytu">Začátek pobytu:</label>
-            <input type="date" id="zacatekPobytu" name="zacatekPobytu"
-                   value="@DateTime.Now.ToString("yyyy-MM-dd")"
-                   max="@DateTime.Now.ToString("yyyy-MM-dd")"
-                   required />
-    </div>
-    </div>
+		<!-- Combobox pro plemeno -->
+		<div class="container-pridatPsa">
+			<div class="input-container-pridatPsa">
+				<label for="plemeno">Plemeno:</label>
+				<select id="plemeno" name="plemeno">
+					@if (plemenaList != null && plemenaList.Any())
+					{
+						@foreach (var plemeno in plemenaList)
+						{
+							<option value="@plemeno.Id">@plemeno.Nazev</option>
+						}
+					}
+					else
+					{
+						<option disabled>Žádná plemena k dispozici</option>
+					}
+				</select>
+			</div>
+		</div>
+		<!-- Combobox pro pohlaví -->
+		<div class="container-pridatPsa">
+			<div class="input-container-pridatPsa">
+				<label for="pohlavi">Pohlaví:</label>
+				<select id="pohlavi" name="pohlavi">
+					<option value="0">Pes</option> <!-- 0 pro psa -->
+					<option value="1">Fena</option> <!-- 1 pro fenu -->
+				</select>
+			</div>
+		</div>
+		<!-- Combobox pro důvod pobytu -->
+		<div class="container-pridatPsa">
+			<div class="input-container-pridatPsa">
+				<label for="duvodPobytu">Důvod pobytu:</label>
+				<select id="duvodPobytu" name="duvodPobytu">
+					@if (duvodyList != null && duvodyList.Any())
+					{
+						@foreach (var duvod in duvodyList)
+						{
+							<option value="@duvod.Id">@duvod.Nazev</option>
+						}
+					}
+					else
+					{
+						<option disabled>Žádné důvody pobytu k dispozici</option>
+					}
+				</select>
+			</div>
+		</div>
 
-    <!-- Váha -->
-        <div class="container-pridatPsa">
-            <div class="input-container-pridatPsa">
-        <label for="vaha">Hmotnost (kg):</label>
-            <input type="number" id="vaha" name="vaha" required min="0.1" step="0.1" />
-            <span id="vahaError" style="color: red; display: none;">Hmotnost musí být větší než 0,1 kg</span>
-    </div>
-    </div>
+		<!-- Datum začátku pobytu -->
+		<div class="container-pridatPsa">
+			<div class="input-container-pridatPsa">
+				<label for="zacatekPobytu">Začátek pobytu:</label>
+				<input type="date" id="zacatekPobytu" name="zacatekPobytu"
+					   value="@DateTime.Now.ToString("yyyy-MM-dd")"
+					   max="@DateTime.Now.ToString("yyyy-MM-dd")"
+					   required />
+			</div>
+		</div>
 
-        <!-- Vlastnosti -->
-        <div class="container-pridatPsa">
-            <div class="input-container-pridatPsa">
-            <label for="vlastnostiToggle">Vlastnosti:</label>
-            <button type="button" id="vlastnostiToggle" onclick="toggleVlastnosti()">Zobrazit vlastnosti</button>
-        </div>
-        </div>
+		<!-- Váha -->
+		<div class="container-pridatPsa">
+			<div class="input-container-pridatPsa">
+				<label for="vaha">Hmotnost (kg):</label>
+				<input type="number" id="vaha" name="vaha" required min="0.1" step="0.1" />
+				<span id="vahaError" style="color: red; display: none;">Hmotnost musí být větší než 0,1 kg</span>
+			</div>
+		</div>
 
-        <div id="vlastnostiContainer" style="display:none;">
-                <div class="vlastnosti-grid">
-            @if (ViewData["Vlastnosti"] is List<Vlastnost> vlastnosti && vlastnosti.Any())
-            {
-                foreach (var vlastnost in vlastnosti)
-                {
-                            <div class="vlastnost-item">
-                        <input type="checkbox" id="vlastnost_@vlastnost.Id" name="vlastnosti[]" value="@vlastnost.Id" />
-                        <label for="vlastnost_@vlastnost.Id">@vlastnost.Nazev</label>
-                    </div>
-                }
-            }
-            else
-            {
-                <p>Žádné vlastnosti nejsou k dispozici.</p>
-            }
-        </div>
-        </div>
+		<!-- Vlastnosti -->
+		<div class="container-pridatPsa">
+			<div class="input-container-pridatPsa">
+				<label for="vlastnostiToggle">Vlastnosti:</label>
+				<button type="button" id="vlastnostiToggle" onclick="toggleVlastnosti()">Zobrazit vlastnosti</button>
+			</div>
+		</div>
 
-    <!-- Tlačítko pro přidání fotografie -->
-        <div class="container-pridatPsa">
-            <div class="input-container-pridatPsa">
-                <label>Fotografie:</label>
-            
-                    <label class="custom-file-label" for="fotografie">Vybrat soubor</label>
-        <input type="file" id="fotografie" name="fotografie" class="hidden-file-input" />
-        </div>
-        </div>
+		<div id="vlastnostiContainer" style="display:none;">
+			<div class="vlastnosti-grid">
+				@if (ViewData["Vlastnosti"] is List<Vlastnost> vlastnosti && vlastnosti.Any())
+				{
+					foreach (var vlastnost in vlastnosti)
+					{
+						<div class="vlastnost-item">
+							<input type="checkbox" id="vlastnost_@vlastnost.Id" name="vlastnosti[]" value="@vlastnost.Id" />
+							<label for="vlastnost_@vlastnost.Id">@vlastnost.Nazev</label>
+						</div>
+					}
+				}
+				else
+				{
+					<p>Žádné vlastnosti nejsou k dispozici.</p>
+				}
+			</div>
+		</div>
 
-        <div class="container-rezervace">
+		<!-- Tlačítko pro přidání fotografie -->
+		<div class="container-pridatPsa">
+			<div class="input-container-pridatPsa">
+				<label>Fotografie:</label>
 
-            <div class="input-container-rezervace">
-        <button type="submit" class="btn-rezervace" name="action" value="createDog">Přidat psa</button>
-            </div>
-        </div>
-        
-        
-    </form>
-        
+				<label class="custom-file-label" for="fotografie">Vybrat soubor</label>
+				<input type="file" id="fotografie" name="fotografie" class="hidden-file-input" />
+			</div>
+		</div>
+
+		<div class="container-rezervace">
+
+			<div class="input-container-rezervace">
+				<button type="submit" class="btn-rezervace" name="action" value="createDog">Přidat psa</button>
+			</div>
+		</div>
+
+
+	</form>
+
 }
 
 <!-- ----------------------------------------------------------------------------------------------------- -->
 @if (ViewBag.ShowForm == false)
 {
-    <div class="grid-container-pridatpsa">
-    <div class="container-mujpes">
-            <div class="grid-item">
-            @{
-                string imageUrl = @Model.Pes.ID_FOTOGRAFIE != null
-                ? Url.Action("GetImage", "Pes", new { id = @Model.Pes.ID_FOTOGRAFIE })
-                : Url.Action("DefaultImage", "Pes");
-            }
-            <img src="@imageUrl" alt="Fotka psa" class="img">
-      </div>
+	<div class="grid-container-pridatpsa">
+		<div class="container-mujpes">
+			<div class="grid-item">
+				@{
+					string imageUrl = @Model.Pes.ID_FOTOGRAFIE != null
+					? Url.Action("GetImage", "Pes", new { id = @Model.Pes.ID_FOTOGRAFIE })
+					: Url.Action("DefaultImage", "Pes");
+				}
+				<img src="@imageUrl" alt="Fotka psa" class="img">
+			</div>
 
-            <div class="grid-container-pridatpsa-item">
-        <div class="info-mujpes">
-            <h2><strong>Jméno psa: </strong> @Model.Pes.JMENO</h2>
-            @* třeba opravit pro možnost, že neznáme narození psa *@
-            <p><strong>Věk:</strong> @(DateTime.Now.Year - @Model.Pes.NAROZENI?.Year) let</p>
-            @if (@Model.Pes.POHLAVI == 0)
-            {
-                <p><strong>Pohlaví:  &male;</strong></p>
-            }
-            @if (@Model.Pes.POHLAVI == 1)
-            {
-                <p><strong>Pohlaví: &female;</strong></p>
-            }
+			<div class="grid-container-pridatpsa-item">
+				<div class="info-mujpes">
+					<h2><strong>Jméno psa: </strong> @Model.Pes.JMENO</h2>
+					@* třeba opravit pro možnost, že neznáme narození psa *@
+					<p><strong>Věk:</strong> @(DateTime.Now.Year - @Model.Pes.NAROZENI?.Year) let</p>
+					@if (@Model.Pes.POHLAVI == 0)
+					{
+						<p><strong>Pohlaví:  &male;</strong></p>
+					}
+					@if (@Model.Pes.POHLAVI == 1)
+					{
+						<p><strong>Pohlaví: &female;</strong></p>
+					}
 
-            <p><strong>Plemeno:</strong> @Model.Pes.PLEMENO</p>
-            <p><strong>Barva:</strong> @Model.Pes.BARVA</p>
-            <p><strong>Vlastnosti:</strong> @Model.Pes.VLASTNOSTI</p>
-            <p><strong>Číslo čipu:</strong> @Model.Pes.CISLO_CIPU</p>
-            
-            @* <button onclick="pridatPobyt()">Přidat pobyt</button> *@
-        
-        
+					<p><strong>Plemeno:</strong> @Model.Pes.PLEMENO</p>
+					<p><strong>Barva:</strong> @Model.Pes.BARVA</p>
+					<p><strong>Vlastnosti:</strong> @Model.Pes.VLASTNOSTI</p>
+					<p><strong>Číslo čipu:</strong> @Model.Pes.CISLO_CIPU</p>
 
-        @if (@Model.Majitel.EMAIL != null)
-        {
-                    <p><strong>Majitel:</strong> @Model.Majitel.JMENO @Model.Majitel.PRIJMENI</p>
-                    <p><strong>Telefon:</strong> @Model.Majitel.TELEFON</p>
-                    <p><strong>Email:</strong> @Model.Majitel.EMAIL</p>
-        }
+					@* <button onclick="pridatPobyt()">Přidat pobyt</button> *@
 
-        </div>
-        </div>
-    </div>
 
-        <div class="grid-container-pridatpsa-item">
-    <div class="container-pridatPsa">
-            <div class="input-container-pridatPsa">
-        <form method="post">
-            @* ChovateleController/PridatPobyt *@
-            <!-- Skryté pole pro ID psa -->
-            <input type="hidden" name="pesId" value="@Model.Pes.ID_PSA" />
 
-            <!-- Combobox pro důvod pobytu -->
-            <div>
-                <label for="duvodPobytu">Důvod pobytu:</label>
-                <select id="duvodPobytu" name="idDuvod">
-                    @if (duvodyList != null && duvodyList.Any())
-                    {
-                        @foreach (var duvod in duvodyList)
-                        {
-                            <option value="@duvod.Id">@duvod.Nazev</option>
-                        }
-                    }
-                    else
-                    {
-                        <option disabled>Žádné důvody pobytu k dispozici</option>
-                    }
-                </select>
-            </div>
+					@if (@Model.Majitel.EMAIL != null)
+					{
+						<p><strong>Majitel:</strong> @Model.Majitel.JMENO @Model.Majitel.PRIJMENI</p>
+						<p><strong>Telefon:</strong> @Model.Majitel.TELEFON</p>
+						<p><strong>Email:</strong> @Model.Majitel.EMAIL</p>
+					}
 
-            <!-- Datum začátku pobytu -->
-            <div>
-                <label for="zacatekPobytu">Začátek pobytu:</label>
-                <input type="date" id="zacatekPobytu" name="zacatekPobytu" required />
-            </div>
+				</div>
+			</div>
+		</div>
 
-            <!-- Váha -->
-            <div>
-                <label for="vaha">Hmotnost (kg):</label>
-                <input type="number" id="vaha" name="vaha" required min="0.1" step="0.1" />
-                <span id="vahaError" style="color: red; display: none;">Hmotnost musí být větší než 0,1 kg</span>
-            </div>
+		<div class="grid-container-pridatpsa-item">
+			<div class="container-pridatPsa">
+				<div class="input-container-pridatPsa">
+					<form method="post">
+						@* ChovateleController/PridatPobyt *@
+						<!-- Skryté pole pro ID psa -->
+						<input type="hidden" name="pesId" value="@Model.Pes.ID_PSA" />
 
-                <div class="container-rezervace">
+						<!-- Combobox pro důvod pobytu -->
+						<div>
+							<label for="duvodPobytu">Důvod pobytu:</label>
+							<select id="duvodPobytu" name="idDuvod">
+								@if (duvodyList != null && duvodyList.Any())
+								{
+									@foreach (var duvod in duvodyList)
+									{
+										<option value="@duvod.Id">@duvod.Nazev</option>
+									}
+								}
+								else
+								{
+									<option disabled>Žádné důvody pobytu k dispozici</option>
+								}
+							</select>
+						</div>
 
-            <!-- Tlačítko pro odeslání -->
-            <button type="submit" class ="btn-rezervace" name="action" value="addStay">Přidat pobyt</button>
-            </div>
-        </form>
-        </div>
-        </div>
-        </div>
-        </div>
-    
+						<!-- Datum začátku pobytu -->
+						<div>
+							<label for="zacatekPobytu">Začátek pobytu:</label>
+							<input type="date" id="zacatekPobytu" name="zacatekPobytu" required />
+						</div>
+
+						<!-- Váha -->
+						<div>
+							<label for="vaha">Hmotnost (kg):</label>
+							<input type="number" id="vaha" name="vaha" required min="0.1" step="0.1" />
+							<span id="vahaError" style="color: red; display: none;">Hmotnost musí být větší než 0,1 kg</span>
+						</div>
+
+						<div class="container-rezervace">
+
+							<!-- Tlačítko pro odeslání -->
+							<button type="submit" class="btn-rezervace" name="action" value="addStay">Přidat pobyt</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
 }
 
 <script>
-    function toggleVlastnosti() {
-    var container = document.getElementById("vlastnostiContainer");
-    var button = document.getElementById("vlastnostiToggle");
+		function toggleVlastnosti() {
+		var container = document.getElementById("vlastnostiContainer");
+		var button = document.getElementById("vlastnostiToggle");
 
-    // Pokud je vlastnostiContainer skrytý, zobrazí se
-    if (container.style.display === "none") {
-        container.style.display = "block";
-        button.textContent = "Skrýt vlastnosti";
-    } else {
-        container.style.display = "none";
-        button.textContent = "Zobrazit vlastnosti";
-    }
-}
+		// Pokud je vlastnostiContainer skrytý, zobrazí se
+		if (container.style.display === "none") {
+			container.style.display = "block";
+			button.textContent = "Skrýt vlastnosti";
+		} else {
+			container.style.display = "none";
+			button.textContent = "Zobrazit vlastnosti";
+		}
+	}
 </script>
 
 <script>
-    document.querySelector("form").addEventListener("submit", function (event) {
-        var vahaInput = document.getElementById("vaha");
-        var errorMessage = document.getElementById("vahaError");
+	document.querySelector("form").addEventListener("submit", function (event) {
+		var vahaInput = document.getElementById("vaha");
+		var errorMessage = document.getElementById("vahaError");
 
-        // Prověření hodnoty před odesláním
-        if (parseFloat(vahaInput.value) < 0.1) {
-            event.preventDefault(); // Zastaví odeslání formuláře
-            errorMessage.style.display = "inline"; // Zobrazí chybovou zprávu
-        } else {
-            errorMessage.style.display = "none"; // Skryje chybovou zprávu, pokud je hodnota správná
-        }
-    });
+		// Prověření hodnoty před odesláním
+		if (parseFloat(vahaInput.value) < 0.1) {
+			event.preventDefault(); // Zastaví odeslání formuláře
+			errorMessage.style.display = "inline"; // Zobrazí chybovou zprávu
+		} else {
+			errorMessage.style.display = "none"; // Skryje chybovou zprávu, pokud je hodnota správná
+		}
+	});
 
-    // Volitelně: Můžete také přidat real-time validaci při změně hodnoty v poli
-    document.getElementById("vaha").addEventListener("input", function () {
-        var vahaInput = document.getElementById("vaha");
-        var errorMessage = document.getElementById("vahaError");
+	// Volitelně: Můžete také přidat real-time validaci při změně hodnoty v poli
+	document.getElementById("vaha").addEventListener("input", function () {
+		var vahaInput = document.getElementById("vaha");
+		var errorMessage = document.getElementById("vahaError");
 
-        if (parseFloat(vahaInput.value) < 0.1) {
-            errorMessage.style.display = "inline";
-        } else {
-            errorMessage.style.display = "none";
-        }
-    });
+		if (parseFloat(vahaInput.value) < 0.1) {
+			errorMessage.style.display = "inline";
+		} else {
+			errorMessage.style.display = "none";
+		}
+	});
 </script>
 
 <script>
-    @if (ViewBag.Message != null)
-    {
-        <text>
-                alert('@Html.Raw(ViewBag.Message)');
-        </text>
-    }
+	@if (ViewBag.Message != null)
+	{
+		<text>
+					alert('@Html.Raw(ViewBag.Message)');
+		</text>
+	}
 </script>
 
 <script>
-    document.getElementById('fotografie').addEventListener('change', function() {
-    const fileName = this.files[0]?.name || "Žádný soubor nevybrán";
-    document.querySelector('.custom-file-label').textContent = fileName;
-});
+		document.getElementById('fotografie').addEventListener('change', function() {
+		const fileName = this.files[0]?.name || "Žádný soubor nevybrán";
+		document.querySelector('.custom-file-label').textContent = fileName;
+	});
 </script>
 
 @* <script>
@@ -375,15 +374,15 @@
 </script> *@
 
 <script>
-    const input = document.getElementById('cisloCipu');
-    const errorMessage = document.getElementById('error-message');
+	const input = document.getElementById('cisloCipu');
+	const errorMessage = document.getElementById('error-message');
 
-    input.addEventListener('blur', function () {
-        if (input.value.length !== 15) {
-            errorMessage.textContent = "Číslo čipu musí mít přesně 15 znaků.";
-            errorMessage.style.display = 'block';
-        } else {
-            errorMessage.style.display = 'none';
-        }
-    });
+	input.addEventListener('blur', function () {
+		if (input.value.length !== 15) {
+			errorMessage.textContent = "Číslo čipu musí mít přesně 15 znaků.";
+			errorMessage.style.display = 'block';
+		} else {
+			errorMessage.style.display = 'none';
+		}
+	});
 </script>

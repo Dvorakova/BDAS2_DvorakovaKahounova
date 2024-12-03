@@ -1,0 +1,36 @@
+﻿@model BDAS2_DvorakovaKahounova.Models.PesMajitelModel
+
+@{
+    ViewData["Title"] = "VyriditAdopci";
+}
+
+<h1>Vyřídit Adopci</h1>
+
+<div class="input-container-rezervace">
+	<form method="post">
+		<input type="hidden" name="idPes" value="@Model.Pes.ID_PSA" />
+		<input type="text" id="email" name="email" value="@ViewBag.Email"
+			   required placeholder="Zadejte email žadatele o adopci"
+			   @* oninput="this.setCustomValidity('')" *@ /><p></p>
+		<button type="submit" class="btn-rezervace" name="action" value="search">Vyhledat</button>
+	</form>
+</div>
+
+@* @if (Model?.Majitel?.EMAIL != null) *@
+@if (@Model?.Majitel?.EMAIL != null)
+{
+	<p><strong>Majitel:</strong> @Model.Majitel.JMENO @Model.Majitel.PRIJMENI</p>
+	<p><strong>Telefon:</strong> @Model.Majitel.TELEFON</p>
+	<p><strong>Email:</strong> @Model.Majitel.EMAIL</p>
+
+	<form method="post">
+		<input type="hidden" name="idPes" value="@Model.Pes.ID_PSA" />
+		<input type="hidden" name="majitelIdOsoba" value="@Model.Majitel.ID_OSOBA" />
+		<button type="submit" class="btn btn-primary" name="action" value="adoptovatPsa">Adoptovat psa</button>
+	</form>
+}
+else if (ViewBag.ErrorMessage != null)
+{
+	<p>Osoba nenalezena. Žadatel o adopci se musí nejprve zaregistrovat.</p>
+        <a href="@Url.Action("Register", "Osoba")" class="btn btn-primary">Registrovat se</a>
+}
