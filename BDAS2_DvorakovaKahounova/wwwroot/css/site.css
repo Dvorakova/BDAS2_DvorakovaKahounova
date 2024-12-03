@@ -933,8 +933,8 @@ a.btn.btn-primary {
 
 .log-page {
     padding: 0; /* Odstranìní vnitøního odsazení */
-    margin: 0;
-    overflow-y: scroll;
+    margin: 0 auto;
+    overflow-y: auto;
     direction: ltr;
     /*max-height: 100vh;*/
     max-height: 400px;
@@ -945,7 +945,7 @@ a.btn.btn-primary {
 
 .log-table {
     width: 100%;
-    margin: 0;
+    margin: 0 auto;
     border-collapse: collapse;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
@@ -977,3 +977,18 @@ a.btn.btn-primary {
         background-color: #f1f1f1;
         cursor: pointer;
     }
+
+    /* Stylování posuvníku */
+.log-page::-webkit-scrollbar {
+    width: 8px; /* Šíøka posuvníku */
+    background-color: #f4f4f4; /* Barva pozadí */
+}
+
+.log-page::-webkit-scrollbar-thumb {
+    background-color: var(--levandule); /* Barva "palce" posuvníku */
+    border-radius: 4px; /* Zakulacení rohu */
+}
+
+.log-page::-webkit-scrollbar-thumb:hover {
+    background-color: var(--fialova); /* Barva pøi najetí myší */
+}
