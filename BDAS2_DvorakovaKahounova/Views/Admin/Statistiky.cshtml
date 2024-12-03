@@ -1,5 +1,5 @@
 ﻿
-@{
+@* @{
     ViewData["Title"] = "Statistiky";
 }
 
@@ -9,4 +9,39 @@
 <h2>Aktuální počet psů v útulku: @ViewData["PocetPsuvUtulku"]</h2>
 <h2>Aktuální počet psů v karanténě: @ViewData["PocetPsuVKarantene"]</h2>
 <h2>Průměrná doba pobytu psů: @ViewData["PrumernyPobyt"] dní</h2>
+ *@
 
+@{
+    ViewData["Title"] = "Statistiky";
+}
+
+<div class="stats-page">
+    <h1>Statistiky útulku</h1>
+
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>Popis</th>
+                <th>Hodnota</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Celková denní krmná dávka</td>
+                <td>@ViewData["CelkovaDavkaKg"] kg</td>
+            </tr>
+            <tr>
+                <td>Aktuální počet psů v útulku</td>
+                <td>@ViewData["PocetPsuvUtulku"]</td>
+            </tr>
+            <tr>
+                <td>Aktuální počet psů v karanténě</td>
+                <td>@ViewData["PocetPsuVKarantene"]</td>
+            </tr>
+            <tr>
+                <td>Průměrná doba pobytu psů</td>
+                <td>@ViewData["PrumernyPobyt"] dní</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

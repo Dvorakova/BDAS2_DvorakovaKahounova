@@ -893,3 +893,43 @@ a.btn.btn-primary {
     a.btn.btn-primary:hover {
         color: white; /* Zmìní barvu textu pøi najetí myší na modrou */
     }
+
+
+
+
+.stats-page {
+    padding: 20px;
+}
+
+.stats-table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 30px;
+    cursor: url('/images/cursor.png'), auto;
+}
+
+    .stats-table th, .stats-table td {
+        padding: 15px;
+        text-align: left;
+        border: 1px solid #ccc;
+        cursor: url('/images/cursor.png'), auto;
+    }
+
+.stats-table th {
+    background-color: var(--levandule);
+    color: white;
+    font-weight: bold;
+}
+
+.stats-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.stats-table tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
