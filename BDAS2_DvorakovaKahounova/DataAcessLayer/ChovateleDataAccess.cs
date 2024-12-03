@@ -99,7 +99,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return newId;
         }
 
-		//meotda nastaví v tabulce pes u daného psa (podle id) id fotografie na nové id fotografie
+		//metoda nastaví v tabulce pes u daného psa (podle id) id fotografie na nové id fotografie
         public void UpdatePesFotografie(int pesId, int fotografieId)
         {
             using (var con = new OracleConnection(_connectionString))
@@ -147,38 +147,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
         }
 
 
-
-        //      public Fotografie GetFotografieByPesId(int pesId)
-        //{
-        //	Fotografie fotografie = null;
-
-        //	using (var con = new OracleConnection(_connectionString))
-        //	{
-        //		con.Open();
-        //		using (var cmd = new OracleCommand(
-        //			"SELECT id_fotografie, nazev_souboru, typ_souboru, obsah_souboru FROM Fotografie WHERE id_fotografie = (SELECT id_fotografie FROM Psi WHERE id_psa = :pesId)", con))
-        //		{
-        //			cmd.Parameters.Add(new OracleParameter("pesId", pesId));
-
-        //			using (var reader = cmd.ExecuteReader())
-        //			{
-        //				if (reader.Read())
-        //				{
-        //					fotografie = new Fotografie
-        //					{
-        //						id_fotografie = reader.GetInt32(0),
-        //						nazev_souboru = reader.GetString(1),
-        //						typ_souboru = reader.GetString(2),
-        //						obsah_souboru = reader["obsah_souboru"] as byte[]
-        //					};
-        //				}
-        //			}
-        //		}
-        //	}
-
-        //	return fotografie;
-        //}
-
         public Fotografie GetFotografieByPesId(int pesId)
         {
             Fotografie fotografie = null;
@@ -209,8 +177,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
             return fotografie;
         }
-
-
 
         public void PridatOdcerveni(int pesId, DateTime datumOdcerveni)
 		{
@@ -480,51 +446,45 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			return null; // Pokud uživatel nebyl nalezen
 		}
 
-		//Samotná metoda přidání nového psa do tabulky psi
-		public int VlozPsa(string jmeno, string cisloCipu, DateTime? datumNarozeni, int plemenoId, int barvaId, int pohlaviId, int? fotografieId, int vaha)
-		{
-			using (var con = new OracleConnection(_connectionString))
-			{
-				con.Open();
+        //Samotná metoda přidání nového psa do tabulky psi
+        public int VlozPsa(string jmeno, string cisloCipu, DateTime? datumNarozeni, int plemenoId, int barvaId, int pohlaviId, int? fotografieId, int vaha)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
 
-				// SQL dotaz pro vložení nového psa
-				var sql = @"
-            INSERT INTO Psi (JMENO, CISLO_CIPU, NAROZENI, ID_PLEMENO, ID_BARVA, ID_FOTOGRAFIE, ID_POHLAVI, VAHA)
-            VALUES (:jmeno, :cisloCipu, :datumNarozeni, :plemenoId, :barvaId, :fotografieId, :pohlaviId, :vaha)
-            RETURNING ID_PSA INTO :newId";
+                using (var cmd = new OracleCommand("vloz_psa", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-				using (var cmd = new OracleCommand(sql, con))
-				{
-					// Přidání parametrů
-					cmd.Parameters.Add(new OracleParameter("jmeno", string.IsNullOrEmpty(jmeno) ? DBNull.Value : jmeno));
-					cmd.Parameters.Add(new OracleParameter("cisloCipu", string.IsNullOrEmpty(cisloCipu) ? DBNull.Value : cisloCipu));
-					cmd.Parameters.Add(new OracleParameter("datumNarozeni", datumNarozeni.HasValue ? (object)datumNarozeni.Value : DBNull.Value));
-					cmd.Parameters.Add(new OracleParameter("plemenoId", plemenoId));
-					cmd.Parameters.Add(new OracleParameter("barvaId", barvaId));
-					cmd.Parameters.Add(new OracleParameter("fotografieId", fotografieId.HasValue ? (object)fotografieId.Value : DBNull.Value));
-					cmd.Parameters.Add(new OracleParameter("pohlaviId", pohlaviId));
-					cmd.Parameters.Add(new OracleParameter("vaha", vaha));
+                    // Přidání parametrů
+                    cmd.Parameters.Add(new OracleParameter("p_jmeno", string.IsNullOrEmpty(jmeno) ? DBNull.Value : jmeno));
+                    cmd.Parameters.Add(new OracleParameter("p_cislo_cipu", string.IsNullOrEmpty(cisloCipu) ? DBNull.Value : cisloCipu));
+                    cmd.Parameters.Add(new OracleParameter("p_narozeni", datumNarozeni.HasValue ? (object)datumNarozeni.Value : DBNull.Value));
+                    cmd.Parameters.Add(new OracleParameter("p_plemeno_id", plemenoId));
+                    cmd.Parameters.Add(new OracleParameter("p_barva_id", barvaId));
+                    cmd.Parameters.Add(new OracleParameter("p_fotografie_id", fotografieId.HasValue ? (object)fotografieId.Value : DBNull.Value));
+                    cmd.Parameters.Add(new OracleParameter("p_pohlavi_id", pohlaviId));
+                    cmd.Parameters.Add(new OracleParameter("p_vaha", vaha));
 
+                    // Výstupní parametr pro ID nově vloženého psa
+                    var newIdParam = new OracleParameter("p_new_id", OracleDbType.Int32)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(newIdParam);
 
-					// Výstupní parametr pro získání ID nově vloženého záznamu
-					var newIdParam = new OracleParameter("newId", OracleDbType.Int32)
-					{
-						Direction = ParameterDirection.Output
-					};
-					cmd.Parameters.Add(newIdParam);
+                    // Spuštění příkazu
+                    cmd.ExecuteNonQuery();
 
-					// Spuštění příkazu
-					cmd.ExecuteNonQuery();
+                    // Vrácení nově vygenerovaného ID
+                    return Convert.ToInt32(newIdParam.Value.ToString());
+                }
+            }
+        }
 
-					// Vrácení nově vygenerovaného ID
-					return Convert.ToInt32(newIdParam.Value.ToString());
-				}
-			}
-		}
-
-
-		//vlozeni pobytu (voláno po vložení psa)
-		public int VlozPobyt(int idPes, DateTime zacatekPobytu, int idDuvod, double vaha)
+        //vlozeni pobytu (voláno po vložení psa)
+        public int VlozPobyt(int idPes, DateTime zacatekPobytu, int idDuvod, double vaha)
 		{
 			using (var connection = new OracleConnection(_connectionString))
 			{
@@ -597,66 +557,74 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			}
 		}
 
-		//metoda pro přidání vlastností do databáze pro nového psa
-		public void PridatVlastnostiDoDatabaze(int pesId, int[] vlastnostiIds)
-		{
-			// Pokud není žádná vlastnost zaškrtnutá, nic neprovádíme
-			if (vlastnostiIds == null || vlastnostiIds.Length == 0)
-				return;
+        //metoda pro přidání vlastností do databáze pro nového psa
+        public void PridatVlastnostiDoDatabaze(int pesId, int[] vlastnostiIds)
+        {
+            // Pokud není žádná vlastnost zaškrtnutá, nic neprovádíme
+            if (vlastnostiIds == null || vlastnostiIds.Length == 0)
+                return;
 
-			// Otevření připojení k Oracle databázi
-			using (var con = new OracleConnection(_connectionString))
-			{
-				con.Open();
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
 
-				// Pro každý ID vlastnosti zaškrtnuté v checkboxech
-				foreach (var vlastnostId in vlastnostiIds)
-				{
-					// Vytvoření SQL dotazu pro vložení do tabulky psi_vlastnosti
-					string query = "INSERT INTO psi_vlastnosti (id_psa, id_vlastnost) VALUES (:PesId, :VlastnostId)";
+                foreach (var vlastnostId in vlastnostiIds)
+                {
+                    using (var cmd = new OracleCommand("pridat_vlastnost_psovi", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-					using (var cmd = new OracleCommand(query, con))
-					{
-						// Přidání parametrů do dotazu
-						cmd.Parameters.Add(new OracleParameter(":PesId", pesId));
-						cmd.Parameters.Add(new OracleParameter(":VlastnostId", vlastnostId));
+                        // Přidání parametrů do procedury
+                        cmd.Parameters.Add(new OracleParameter("p_pes_id", pesId));
+                        cmd.Parameters.Add(new OracleParameter("p_vlastnost_id", vlastnostId));
 
-						// Provedení dotazu
-						cmd.ExecuteNonQuery();
-					}
-				}
-			}
-		}
+                        // Spuštění procedury
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
 
-		//metody pro přidání pobytu psa, který už v útulku kdysi byl
-		public void AktualizujMajitelePsaNaNull(int pesId)
-		{
-			using (var con = new OracleConnection(_connectionString))
-			{
-				con.Open();
-				using (var cmd = new OracleCommand("UPDATE psi SET majitel_id_osoba = NULL WHERE id_psa = :idPes", con))
-				{
-					cmd.Parameters.Add(new OracleParameter("idPes", pesId));
-					cmd.ExecuteNonQuery();
-				}
-			}
-		}
+        //metody pro přidání pobytu psa, který už v útulku kdysi byl
+        public void AktualizujMajitelePsaNaNull(int pesId)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand("aktualizuj_majitele_psa_na_null", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-		public void AktualizujVahuPsa(int pesId, double vaha)
-		{
-			using (var con = new OracleConnection(_connectionString))
-			{
-				con.Open();
-				using (var cmd = new OracleCommand("UPDATE psi SET vaha = :vaha WHERE id_psa = :idPes", con))
-				{
-					cmd.Parameters.Add(new OracleParameter("idPes", pesId));
-					cmd.Parameters.Add(new OracleParameter("vaha", vaha));
-					cmd.ExecuteNonQuery();
-				}
-			}
-		}
+                    // Přidání parametru do procedury
+                    cmd.Parameters.Add(new OracleParameter("p_pes_id", pesId));
 
-		public void ZpracujMajiteleBezPsa(int osobaId)
+                    // Spuštění procedury
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void AktualizujVahuPsa(int pesId, double vaha)
+        {
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand("aktualizuj_vahu_psa", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Přidání parametrů
+                    cmd.Parameters.Add(new OracleParameter("p_pes_id", pesId));
+                    cmd.Parameters.Add(new OracleParameter("p_vaha", vaha));
+
+                    // Spuštění procedury
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public void ZpracujMajiteleBezPsa(int osobaId)
 		{
 			using (var con = new OracleConnection(_connectionString))
 			{

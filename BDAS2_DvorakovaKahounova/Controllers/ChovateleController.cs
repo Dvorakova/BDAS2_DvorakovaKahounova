@@ -334,7 +334,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                     {
                         // Aktualizace psa - nastavení majitele na null
                         var osobaId = _dataAccess.GetMajitelIdByPesId(pesId);
-                        _dataAccess.AktualizujMajitelePsaNaNull(pesId); // Tuto metodu musíme přidat do data access                        
+                        _dataAccess.AktualizujMajitelePsaNaNull(pesId);                        
                         if (osobaId != null)
                         {
                             _dataAccess.ZpracujMajiteleBezPsa(osobaId.Value);
@@ -383,7 +383,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 if (idDuvod == 1)
                 {
                     // Aktualizace psa - nastavení majitele na null
-                    _dataAccess.AktualizujMajitelePsaNaNull(pesId); // Tuto metodu musíme přidat do data access
+                    _dataAccess.AktualizujMajitelePsaNaNull(pesId); 
                 }
 
                 // 2. Aktualizace váhy psa
@@ -410,7 +410,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             }
         }
 
-		//metoda pro adoptování psa )bez rezervace)
+		//metoda pro adoptování psa (bez rezervace)
 		[HttpPost]
 		public IActionResult Adoptovat(int pesId)
 		{

@@ -17,17 +17,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             _dataAccess = new AdminDataAccess(connectionString);
         }
 
-        // Slovník popisů rolí a jejich zkratek
-        private readonly Dictionary<string, string> roleMap = new()
-        {
-            { "Majitel", "M" },
-            { "Rezervátor", "R" },
-            { "Chovatel", "C" },
-            { "Přihlášený uživatel", "U" },
-            { "Majitel i rezervátor", "P" }
-        };
-
-
         public IActionResult Index()
         {
             var originallRole = HttpContext.Session.GetString("OriginalRole");
@@ -69,8 +58,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         }
         public IActionResult Emulace()
         {
-            // Předání klíčů slovníku (popisů rolí) do pohledu
-            //var roles = roleMap.Keys.ToList();
 
             var users = _dataAccess.GetAllUsers();
 

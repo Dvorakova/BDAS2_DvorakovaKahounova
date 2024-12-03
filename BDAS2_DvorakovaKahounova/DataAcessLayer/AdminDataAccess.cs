@@ -161,7 +161,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
             using (var connection = new OracleConnection(_connectionString))
             {
-                using (var command = new OracleCommand("SPOCTI_PRUMERNE_DOBU_POBOYTU", connection))
+                using (var command = new OracleCommand("SPOCTI_PRUMERNOU_DOBU_POBYTU", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -175,15 +175,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     connection.Open();
                     command.ExecuteNonQuery();
 
-                    // Kontrola, zda je hodnota NULL a převod na decimal
-                    //if (outputParam.Value != DBNull.Value)
-                    //{
-                    //    OracleDecimal oracleDecimal = (OracleDecimal)outputParam.Value;
-                    //    if (!oracleDecimal.IsNull)
-                    //    {
-                    //        prumernyPobyt = oracleDecimal.Value; // Používáme Value k získání decimal hodnoty
-                    //    }
-                    //}
                     if (outputParam.Value != DBNull.Value)
                     {
                         OracleDecimal oracleDecimal = (OracleDecimal)outputParam.Value;
@@ -201,7 +192,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
 
 		//Metody pro emulaci:
-        // Metoda rpo výpis všech uživatelů
+        // Metoda pro výpis všech uživatelů
 		public List<Osoba> GetAllUsers()
 		{
 			var users = new List<Osoba>();

@@ -7,21 +7,6 @@
 <h1>Emulace</h1>
 
 <h2>Vyberte uživatele k emulaci</h2>
-@* 
-<form asp-action="Emulovat" method="post">
-    @foreach (var role in Model)
-    {
-        <div>
-            <input type="radio" id="@role" name="selectedRole" value="@role" />
-            <label for="@role">@role</label>
-        </div>
-    }
-    <button type="submit">Emulovat</button>
-</form>
-
-<form asp-action="ResetRole" method="post">
-    <button type="submit">Zrušit emulaci</button>
-</form> *@
 
 <table>
     <thead>
@@ -39,7 +24,6 @@
             <tr>
                 <td>@osoba.JMENO</td>
                 <td>@osoba.PRIJMENI</td>
-               @*  <td>@osoba.TYP_OSOBY</td> *@
                <td>
                     @switch (@osoba.TYP_OSOBY)
                     {
