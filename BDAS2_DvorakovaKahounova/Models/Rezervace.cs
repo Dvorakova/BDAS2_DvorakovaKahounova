@@ -4,6 +4,6 @@
     {
         public DateTime RezervaceDatum { get; set; }     // datum rezervace
         public string RezervaceKod { get; set; }         // kód rezervace
-        public Pes Pes { get; set; }                     // objekt typu Pes, který obsahuje detaily o psu
+        public Pes Pes { get; set; }
     }
 }

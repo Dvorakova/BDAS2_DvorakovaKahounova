@@ -170,10 +170,5 @@ namespace BDAS2_DvorakovaKahounova.Models
             }
         }
 
-       
-
-
-
-
     }
 }
