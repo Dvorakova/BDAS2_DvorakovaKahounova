@@ -26,7 +26,7 @@
 		<div class="profile-grid">
 			<!-- První kontejner s obrázkem -->
 			<div class="profile-image">
-				<img src="/images/profil.png" alt="Profilový obrázek" class="profile-img">
+				<img src="/images/logoObracene.png" alt="Profilový obrázek" class="profile-img">
 			</div>
 			<!-- Zobrazení informací nebo editačního formuláře -->
 			<div class="input-container-profie">
@@ -61,24 +61,13 @@
 				else
 				{
 					<!-- Zobrazení pouze údajů -->
-					<table>
-						<tr>
-							<td><strong>Jméno:</strong></td>
-							<td>@Model.JMENO</td>
-						</tr>
-						<tr>
-							<td><strong>Příjmení:</strong></td>
-							<td>@Model.PRIJMENI</td>
-						</tr>
-						<tr>
-							<td><strong>Telefon:</strong></td>
-							<td>@Model.TELEFON</td>
-						</tr>
-						<tr>
-							<td><strong>Email:</strong></td>
-							<td>@Model.EMAIL</td>
-						</tr>
-					</table>
+
+					<div class="container-profil">
+						<p><strong>Jméno: </strong>@Model.JMENO</p>
+						<p><strong>Příjmení: </strong>@Model.PRIJMENI</p>
+						<p><strong>Telefon: </strong>@Model.TELEFON</p>
+						<p><strong>Email: </strong>@Model.EMAIL</p>
+					</div>
 				}
 			</div>
 		</div>

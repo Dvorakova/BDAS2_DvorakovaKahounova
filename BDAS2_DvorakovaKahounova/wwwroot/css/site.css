@@ -332,12 +332,12 @@ h2{
 .profile-image {
     display: flex;
     justify-content: left;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .profile-img {
-    width: 150px;
-    height: 150px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
     border: 2px solid var(--fialova);
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
@@ -445,6 +445,15 @@ button[type="button"]:focus {
     outline: none;
     cursor: url('/images/cursor.png'), auto;
 }
+
+.btn-secondary {
+    color: white !important; /* Nastaví bílou barvu textu */
+}
+
+    .btn-secondary:hover {
+        color: white;
+    }
+
 
 /* --- mùj pes---*/
 .container-mujpes {
@@ -1072,3 +1081,14 @@ a.btn.btn-primary {
         background-color: #f1f1f1;
         cursor: pointer;
     }
+
+.container-profil {
+    padding: 20px;
+    font-size: 18px;
+    margin: 0 auto;
+    margin-left: 63px;
+}
+
+.tooltip-icon {
+    cursor: url('/images/cursor.png'), auto;
+}
