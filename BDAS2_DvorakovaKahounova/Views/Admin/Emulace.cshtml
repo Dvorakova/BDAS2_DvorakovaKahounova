@@ -8,7 +8,14 @@
 
 <h2>Vyberte uživatele k emulaci</h2>
 
-<table>
+    <form asp-action="ResetRole" method="post" class="button-form">
+        <button class="btn btn-primary" type="submit">Zrušit emulaci</button>
+</form>
+
+
+<div class="emaulce-page">
+
+    <table class="emulace-table">
     <thead>
         <tr>
             <th>Jméno</th>
@@ -52,9 +59,9 @@
                </td>
                 <td>@osoba.EMAIL</td>
                 <td>
-                    <form asp-action="Emulovat" method="post">
+                        <form asp-action="Emulovat" method="post" class="button-form">
                         <input type="hidden" name="userId" value="@osoba.ID_OSOBA" />
-                        <button type="submit">Emulovat</button>
+                            <button class="btn btn-primary" type="submit">Emulovat</button>
                     </form>
                 </td>
             </tr>
@@ -62,6 +69,4 @@
     </tbody>
 </table>
 
-<form asp-action="ResetRole" method="post">
-    <button type="submit">Zrušit emulaci</button>
-</form>
+</div>

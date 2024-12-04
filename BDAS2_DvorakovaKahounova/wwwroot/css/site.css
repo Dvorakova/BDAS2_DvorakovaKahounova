@@ -941,6 +941,7 @@ a.btn.btn-primary {
 
 .log-table {
     width: 100%;
+    max-width: none;
     margin: 0 auto;
     border-collapse: collapse;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -988,3 +989,86 @@ a.btn.btn-primary {
 .log-page::-webkit-scrollbar-thumb:hover {
     background-color: var(--fialova); /* Barva pøi najetí myší */
 }
+
+.form-kontakty {
+    background-color: white;
+    width: 70%; /* Nastavíme šíøku na 50% rodièe */
+    max-width: 600px; /* Maximální šíøka pro malé obrazovky */
+    margin: 20px auto; /* Automatické zarovnání na støed horizontálnì */
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid transparent; /* Umožní efekt rozplynutí na okrajích */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Jemný stín pro zvýraznìní */
+}
+
+    .form-kontakty label {
+        color: var(--bordo);
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .form-kontakty .form-control {
+        border: 1px solid #ccc;
+        padding: 8px;
+        font-size: 14px;
+    }
+
+        .form-kontakty .form-control:focus {
+            border-color: var(--fialova);
+        }
+
+    .form-kontakty button.btn-primary {
+        margin-top: 15px; /* Pøidá mezeru nad tlaèítko */
+    }
+
+
+/*-- emulace --*/
+
+/*emulace-container {
+    background-color: aqua;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}*/
+
+.emulace-page {
+    padding: 20px;
+    max-width: 1600px;
+    width: 100%;
+}
+
+.emulace-table {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 30px;
+    cursor: url('/images/cursor.png'), auto;
+}
+
+    .emulace-table th, .emulace-table td {
+        padding: 15px;
+        text-align: left;
+        border: 1px solid #ccc;
+        cursor: url('/images/cursor.png'), auto;
+    }
+
+    .emulace-table th {
+        background-color: var(--levandule);
+        color: white;
+        font-weight: bold;
+    }
+
+    .emulace-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .emulace-table tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
