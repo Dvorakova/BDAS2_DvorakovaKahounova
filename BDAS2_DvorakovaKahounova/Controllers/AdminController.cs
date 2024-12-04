@@ -144,7 +144,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			ViewBag.IsEditMode = TempData["IsEditMode"];
 			ViewBag.NazevTabulky = TempData["NazevTabulky"];
 			ViewBag.EditValues = TempData["EditValues"];
-
+            ViewBag.IsSearchMode = TempData["IsSearchMode"];
 			var originallRole = HttpContext.Session.GetString("OriginalRole");
 			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
@@ -215,6 +215,12 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			return RedirectToAction("Index");
 		}
 
+		[HttpPost]
+		public IActionResult Search(string tableName, Dictionary<string, string> values)
+		{
+			TempData["IsSearchMode"] = true;
 
+			return RedirectToAction("Index");
+		}
 	}
 }
