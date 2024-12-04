@@ -1,82 +1,144 @@
 ﻿ @model BDAS2_DvorakovaKahounova.Models.DatabaseViewModel
 
 @{
-    ViewData["Title"] = "Práce s databází";
+	ViewData["Title"] = "Práce s databází";
 }
 
 <h1>Práce s databází</h1>
 
 @foreach (var tableGroup in Model.TablesAndColumns.GroupBy(t => t.TableName))
 {
-    <div>
-        <h2>Tabulka: @tableGroup.Key</h2>
+	@if (tableGroup.Key.ToUpper() == "LOGOVANI")
+	{
+		continue;
+	}
+	
+	<div>
+		<h2>Tabulka: @tableGroup.Key</h2>
+		@* Pokud je aktivní režim editace, zobrazí se formulář pro editaci *@
 
-        <h3>Přidat nový záznam</h3>
-      
-        <form method="post" asp-action="AddRecord" asp-route-tableName="@tableGroup.Key">
-            @foreach (var (column, index) in tableGroup.Select((column, index) => (column, index)))  // Přidání indexu pro kontrolu prvního sloupce
-            {
-                // Zakázání pouze prvního sloupce (primární klíč) a specifických sloupců jako 'id_osoba'
-                bool isPrimaryKey = index == 0 && column.ColumnName.StartsWith("ID_") && column.ColumnName != "ID_OSOBA";  // První sloupec, který začíná na 'id_'
-                bool isOsobaPrimaryKey = tableGroup.Key.ToUpper() == "OSOBY" && column.ColumnName == "ID_OSOBA"; // Specifická kontrola pro tabulku 'osoby'
-                bool onlyEdit = (column.ColumnName == "KONEC_KARANTENY") || (column.ColumnName == "KONEC_POBYTU") || (column.ColumnName == "UMRTI") || (column.ColumnName == "ID_ADOPCE" && tableGroup.Key.ToUpper() == "REZERVACE") || (column.ColumnName == "DATUM_ZMENY") || (column.ColumnName == "ZMENENO_ID_OSOBA") || (column.ColumnName == "VRACENI_PSA");
-                <label>
-                    @column.ColumnName (@column.DataType):
-                    @if (isPrimaryKey || isOsobaPrimaryKey)
-                    {
-                        @* Zakázání vstupu pro primární klíč *@
-                        <input type="hidden" name="values[@column.ColumnName]" value="" />
-                        <input type="text" disabled value="Automaticky generováno" />
-                    }
-                    else if (onlyEdit)
-                    {
-                        <input type="hidden" name="values[@column.ColumnName]" value="" />
-                        <input type="text" disabled value="Lze pouze editovat" />
-                    }
-                    else
-                    {
-                        @* Normální vstup pro ostatní sloupce *@
-                        <input type="text" name="values[@column.ColumnName]" />
-                    }
-                </label>
-                <br />
-            }
-            <button type="submit">Přidat záznam</button>
-        </form>
+		@if (ViewBag.IsEditMode != null && ViewBag.IsEditMode == true && ViewBag.NazevTabulky == tableGroup.Key.ToUpper())
+		{
+			Console.WriteLine("zde");
+			<h3>Editovat záznam</h3>
+			<form method="post" asp-action="UpdateRecord" asp-route-tableName="@tableGroup.Key">
+				@foreach (var (column, index) in tableGroup.Select((column, index) => (column, index)))
+				{
+
+					bool isPrimaryKey = index == 0 && column.ColumnName.StartsWith("ID_") && column.ColumnName != "ID_OSOBA";  // První sloupec, který začíná na 'id_'
+					bool isOsobaPrimaryKey = tableGroup.Key.ToUpper() == "OSOBY" && column.ColumnName == "ID_OSOBA";
+					<label>
+						@column.ColumnName (@column.DataType):
+						@if (isPrimaryKey || isOsobaPrimaryKey)
+						{
+							@* Zakázání vstupu pro primární klíč *@
+
+							<input type="text" disabled name="values[@column.ColumnName]" value="@ViewBag.EditValues[column.ColumnName]" />
+						}
+						else
+						{
+							@* Normální vstup pro ostatní sloupce *@
+							<input type="text" name="values[@column.ColumnName]" value="@ViewBag.EditValues[column.ColumnName]" />
+						}
+					</label>
+
+					<br />
+				}
+				<button type="submit">Uložit změny</button>
+			</form>
+		} else {
+		<h3>Přidat nový záznam</h3>
 
 
+		<form method="post" asp-action="AddRecord" asp-route-tableName="@tableGroup.Key">
+			@foreach (var (column, index) in tableGroup.Select((column, index) => (column, index)))  // Přidání indexu pro kontrolu prvního sloupce
+			{
+				// Zakázání pouze prvního sloupce (primární klíč) a specifických sloupců jako 'id_osoba'
+				bool isPrimaryKey = index == 0 && column.ColumnName.StartsWith("ID_") && column.ColumnName != "ID_OSOBA";  // První sloupec, který začíná na 'id_'
+				bool isOsobaPrimaryKey = tableGroup.Key.ToUpper() == "OSOBY" && column.ColumnName == "ID_OSOBA"; // Specifická kontrola pro tabulku 'osoby'
+				bool onlyEdit = (column.ColumnName == "KONEC_KARANTENY") || (column.ColumnName == "KONEC_POBYTU") || (column.ColumnName == "UMRTI") || (column.ColumnName == "ID_ADOPCE" && tableGroup.Key.ToUpper() == "REZERVACE") || (column.ColumnName == "DATUM_ZMENY") || (column.ColumnName == "ZMENENO_ID_OSOBA") || (column.ColumnName == "VRACENI_PSA");
+				<label>
+					@column.ColumnName (@column.DataType):
+					@if (isPrimaryKey || isOsobaPrimaryKey)
+					{
+						@* Zakázání vstupu pro primární klíč *@
+						<input type="hidden" name="values[@column.ColumnName]" value="" />
+						<input type="text" disabled value="Automaticky generováno" />
+					}
+					else if (onlyEdit)
+					{
+						<input type="hidden" name="values[@column.ColumnName]" value="" />
+						<input type="text" disabled value="Lze pouze editovat" />
+					}
+					else
+					{
+						@* Normální vstup pro ostatní sloupce *@
+						<input type="text" name="values[@column.ColumnName]" />
+					}
+				</label>
+				<br />
+			}
+			<button type="submit">Přidat záznam</button>
+		</form>
+		}
 
-        <table>
-            <thead>
-                <tr>
-                    @foreach (var column in tableGroup)
-                    {
-                        <th>
-                            <strong>@column.ColumnName</strong> (@column.DataType)
-                        </th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.TableContents.ContainsKey(tableGroup.Key))
-                {
-                    @foreach (var row in Model.TableContents[tableGroup.Key])
-                    {
-                        <tr>
-                            @foreach (var value in row.Values)
-                            {
-                                <td>@value</td>
-                            }
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="@tableGroup.Count()">Žádná data k dispozici</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+
+		<table>
+			<thead>
+				<tr>
+					@foreach (var column in tableGroup)
+					{
+						<th>
+							<strong>@column.ColumnName</strong> (@column.DataType)
+						</th>
+					}
+					<th>Editace</th>
+					<th>Odstranění</th>
+				</tr>
+			</thead>
+			<tbody>
+				@if (Model.TableContents.ContainsKey(tableGroup.Key))
+				{
+					@foreach (var row in Model.TableContents[tableGroup.Key])
+					{
+						<tr>
+							@foreach (var value in row.Values)
+							{
+								<td>@value</td>
+							}
+
+							<!-- Tlačítka Editovat a Smazat -->
+							<td>
+								<!-- Editovat -->
+								<form method="post" asp-action="EditRecord" asp-route-tableName="@tableGroup.Key">
+									@foreach (var column in tableGroup)
+									{
+										<input type="hidden" name="values[@column.ColumnName]" value="@row[column.ColumnName]" />
+									}
+									<button type="submit">Editovat</button>
+								</form>
+							</td>
+							<td>
+								<!-- Smazat -->
+								<form method="post" asp-action="DeleteRecord" asp-route-tableName="@tableGroup.Key">
+									@foreach (var column in tableGroup)
+									{
+										<input type="hidden" name="values[@column.ColumnName]" value="@row[column.ColumnName]" />
+									}
+									<button type="submit">Smazat</button>
+								</form>
+							</td>
+
+						</tr>
+					}
+				}
+				else
+				{
+					<tr>
+						<td colspan="@tableGroup.Count()">Žádná data k dispozici</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 }

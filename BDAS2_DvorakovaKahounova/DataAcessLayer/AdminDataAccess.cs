@@ -531,6 +531,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             int? majitelIdOsoba = values.ContainsKey("MAJITEL_ID_OSOBA") && int.TryParse(values["MAJITEL_ID_OSOBA"], out int majitelIdOsobaVal) ? majitelIdOsobaVal : (int?)null;
             int? idPohlavi = values.ContainsKey("ID_POHLAVI") && int.TryParse(values["ID_POHLAVI"], out int idPohlaviVal) ? idPohlaviVal : (int?)null;
             int? idFotografie = values.ContainsKey("ID_FOTOGRAFIE") && int.TryParse(values["ID_FOTOGRAFIE"], out int idFotografieVal) ? idFotografieVal : (int?)null;
+            decimal? vaha = values.ContainsKey("VAHA") && decimal.TryParse(values["VAHA"], out decimal vahaVal) ? vahaVal : (decimal?)null;
 
             using (var conn = new OracleConnection(_connectionString))
             {
@@ -548,8 +549,9 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     cmd.Parameters.Add(new OracleParameter("p_id_plemeno", idPlemeno.HasValue ? (object)idPlemeno.Value : DBNull.Value));
                     cmd.Parameters.Add(new OracleParameter("p_id_barva", idBarva.HasValue ? (object)idBarva.Value : DBNull.Value));
                     cmd.Parameters.Add(new OracleParameter("p_majitel_id_osoba", majitelIdOsoba.HasValue ? (object)majitelIdOsoba.Value : DBNull.Value));
-                    cmd.Parameters.Add(new OracleParameter("p_id_pohlavi", idPohlavi.HasValue ? (object)idPohlavi.Value : DBNull.Value));
                     cmd.Parameters.Add(new OracleParameter("p_id_fotografie", idFotografie.HasValue ? (object)idFotografie.Value : DBNull.Value));
+                    cmd.Parameters.Add(new OracleParameter("p_id_pohlavi", idPohlavi.HasValue ? (object)idPohlavi.Value : DBNull.Value));
+                    cmd.Parameters.Add(new OracleParameter("p_vaha", vaha.HasValue ? (object)vaha.Value : DBNull.Value));
 
                     // Spuštění procedury
                     cmd.ExecuteNonQuery();
@@ -913,9 +915,344 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             }
         }
 
-        // Pokračuj s metodami pro všechny tabulky podle stejného vzoru...
+		// Pro odstranění záznamu z tabulek:
+		public void DeleteRecord(string tableName, Dictionary<string, string> values)
+		{
+			//var conditions = string.Join(" AND ", values.Select(v => $"{v.Key} = :{v.Value}"));
+			//string sql = $"DELETE FROM {tableName} WHERE {conditions}";
+            //Console.WriteLine(sql);
+
+			int primaryKeyID;
+
+			if (tableName.Equals("osoby", StringComparison.OrdinalIgnoreCase))
+			{
+				// Čtvrtý sloupec pro tabulku 'osoby'
+				var keyColumn = values.Keys.ElementAtOrDefault(3); // Získání názvu 4. sloupce (index 3)
+				if (keyColumn != null && int.TryParse(values[keyColumn], out primaryKeyID))
+				{
+					Console.WriteLine($"Primární klíč pro tabulku {tableName}: {primaryKeyID}");
+				}
+				else
+				{
+					Console.WriteLine($"Chyba: Nepodařilo se získat primární klíč pro tabulku {tableName}.");
+					return;
+				}
+			}
+			else
+			{
+				// První sloupec pro ostatní tabulky
+				var keyColumn = values.Keys.FirstOrDefault(); // Získání názvu 1. sloupce
+				if (keyColumn != null && int.TryParse(values[keyColumn], out primaryKeyID))
+				{
+					Console.WriteLine($"Primární klíč pro tabulku {tableName}: {primaryKeyID}");
+				}
+				else
+				{
+					Console.WriteLine($"Chyba: Nepodařilo se získat primární klíč pro tabulku {tableName}.");
+					return;
+				}
+			}
+
+			switch (tableName.ToLower())
+			{
+				case "barvy":
+					CallDeleteProcedure("mazani_administratorem.X_BARVY", primaryKeyID);
+					break;
+				case "adopce":
+					CallDeleteProcedure("mazani_administratorem.X_ADOPCE", primaryKeyID);
+					break;
+				case "duvody_pobytu":
+					CallDeleteProcedure("mazani_administratorem.X_DUVODY_POBYTU", primaryKeyID);
+					break;
+				case "fotografie":
+					CallDeleteProcedure("mazani_administratorem.X_FOTOGRAFIE", primaryKeyID);
+					break;
+				case "majitele":
+					CallDeleteProcedure("mazani_administratorem.X_MAJITELE", primaryKeyID);
+					break;
+				case "ockovani":
+					CallDeleteProcedure("mazani_administratorem.X_OCKOVANI", primaryKeyID);
+					break;
+				case "odcerveni":
+					CallDeleteProcedure("mazani_administratorem.X_ODCERVENI", primaryKeyID);
+					break;
+				case "osoby":
+					CallDeleteProcedure("mazani_administratorem.X_OSOBY", primaryKeyID);
+					break;
+				case "plemena":
+					CallDeleteProcedure("mazani_administratorem.X_PLEMENA", primaryKeyID);
+					break;
+				case "pobyty":
+					CallDeleteProcedure("mazani_administratorem.X_POBYTY", primaryKeyID);
+					break;
+				case "predpisy_karanteny":
+					CallDeleteProcedure("mazani_administratorem.X_PREDPISY_KARANTENY", primaryKeyID);
+					break;
+				case "psi":
+					CallDeleteProcedure("mazani_administratorem.X_PSI", primaryKeyID);
+					break;
+				case "pohlavi":
+					CallDeleteProcedure("mazani_administratorem.X_POHLAVI", primaryKeyID);
+					break;
+				case "psi_vlastnosti":
+					CallDeleteProcedure("mazani_administratorem.X_PSI_VLASTNOSTI", primaryKeyID);
+					break;
+				case "rezervace":
+					CallDeleteProcedure("mazani_administratorem.X_REZERVACE", primaryKeyID);
+					break;
+				case "rezervatori":
+					CallDeleteProcedure("mazani_administratorem.X_REZERVATORI", primaryKeyID);
+					break;
+				case "vlastnosti":
+					CallDeleteProcedure("mazani_administratorem.X_VLASTNOSTI", primaryKeyID);
+					break;
+				case "zaznamy_o_prubehu_pobytu":
+					CallDeleteProcedure("mazani_administratorem.X_ZAZNAMY_O_PRUBEHU_POBYTU", primaryKeyID);
+					break;
+				default:
+					throw new ArgumentException($"Neznámá tabulka: {tableName}");
+			}
 
 
+			//switch (tableName.ToLower())
+			//{
+			//	case "barvy":
+			//		X_barvy(primaryKeyID);
+			//		break;
+			//	case "adopce":
+			//		X_adopce(primaryKeyID);
+			//		break;
+			//	case "duvody_pobytu":
+			//		X_duvody_pobytu(primaryKeyID);
+			//		break;
+			//	case "fotografie":
+			//		X_fotografie(primaryKeyID);
+			//		break;
+			//	case "majitele":
+			//		X_majitele(primaryKeyID);
+			//		break;
+			//	case "ockovani":
+			//		X_ockovani(primaryKeyID);
+			//		break;
+			//	case "odcerveni":
+			//		X_odcerveni(primaryKeyID);
+			//		break;
+			//	case "osoby":
+			//		X_osoby(primaryKeyID);
+			//		break;
+			//	case "plemena":
+			//		X_plemena(primaryKeyID);
+			//		break;
+			//	case "pobyty":
+			//		X_pobyty(primaryKeyID);
+			//		break;
+			//	case "predpisy_karanteny":
+			//		X_predpisy_karanteny(primaryKeyID);
+			//		break;
+			//	case "psi":
+			//		X_psi(primaryKeyID);
+			//		break;
+			//	case "pohlavi":
+			//		X_pohlavi(primaryKeyID);
+			//		break;
+			//	case "psi_vlastnosti":
+			//		X_psi_vlastnosti(primaryKeyID);
+			//		break;
+			//	case "rezervace":
+			//		X_rezervace(primaryKeyID);
+			//		break;
+			//	case "rezervatori":
+			//		X_rezervatori(primaryKeyID);
+			//		break;
+			//	case "vlastnosti":
+			//		X_vlastnosti(primaryKeyID);
+			//		break;
+			//	case "zaznamy_o_prubehu_pobytu":
+			//		X_zaznamy_o_prubehu_pobytu(primaryKeyID);
+			//		break;
+			//	default:
+			//		throw new ArgumentException($"Neznámá tabulka: {tableName}");
+			//}
 
-    }
+		}
+
+		private void CallDeleteProcedure(string procedureName, int primaryKeyID)
+		{
+			using (var con = new OracleConnection(_connectionString))
+			{
+				con.Open();
+				using (var command = new OracleCommand(procedureName, con))
+				{
+					command.CommandType = CommandType.StoredProcedure;
+
+					// Přidání parametru pro primární klíč
+					command.Parameters.Add(new OracleParameter("p_primaryKeyID", primaryKeyID));
+
+					// Volání procedury
+					command.ExecuteNonQuery();
+				}
+			}
+
+			Console.WriteLine($"Procedura {procedureName} byla úspěšně vykonána pro ID {primaryKeyID}.");
+		}
+
+
+		//private void X_zaznamy_o_prubehu_pobytu(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_vlastnosti(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_rezervatori(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_rezervace(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_psi_vlastnosti(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_pohlavi(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_psi(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_predpisy_karanteny(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_pobyty(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_plemena(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_osoby(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_odcerveni(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_ockovani(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_majitele(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_fotografie(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_duvody_pobytu(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_adopce(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//private void X_barvy(int primaryKeyID)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		// pro editaci:
+		internal void UpdateRecord(string tableName, Dictionary<string, string> values)
+		{
+            /*
+			switch (tableName.ToLower())
+			{
+				case "barvy":
+					Y_barvy(values);
+					break;
+				case "adopce":
+					Y_adopce(values);
+					break;
+				case "duvody_pobytu":
+					Y_duvody_pobytu(values);
+					break;
+				case "fotografie":
+					Y_fotografie(values);
+					break;
+				case "majitele":
+					Y_majitele(values);
+					break;
+				case "ockovani":
+					Y_ockovani(values);
+					break;
+				case "odcerveni":
+					Y_odcerveni(values);
+					break;
+				case "osoby":
+					Y_osoby(values);
+					break;
+				case "plemena":
+					Y_plemena(values);
+					break;
+				case "pobyty":
+					Y_pobyty(values);
+					break;
+				case "predpisy_karanteny":
+					Y_predpisy_karanteny(values);
+					break;
+				case "psi":
+					Y_psi(values);
+					break;
+				case "pohlavi":
+					Y_pohlavi(values);
+					break;
+				case "psi_vlastnosti":
+					Y_psi_vlastnosti(values);
+					break;
+				case "rezervace":
+					Y_rezervace(values);
+					break;
+				case "rezervatori":
+					Y_rezervatori(values);
+					break;
+				case "vlastnosti":
+					Y_vlastnosti(values);
+					break;
+				case "zaznamy_o_prubehu_pobytu":
+					Y_zaznamy_o_prubehu_pobytu(values);
+					break;
+				default:
+					throw new ArgumentException($"Neznámá tabulka: {tableName}");
+			}
+            */
+		}
+
+
+	}
 }

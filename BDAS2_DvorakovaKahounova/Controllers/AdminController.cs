@@ -141,8 +141,15 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             {
                 model.TableContents[tableName] = _dataAccess.TableContent(tableName);
             }
+			ViewBag.IsEditMode = TempData["IsEditMode"];
+			ViewBag.NazevTabulky = TempData["NazevTabulky"];
+			ViewBag.EditValues = TempData["EditValues"];
 
-            return View(model);
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+
+
+			return View(model);
         }
 
         [HttpPost]
@@ -161,7 +168,53 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         //    return RedirectToAction(nameof(Index));
         //}
 
+        [HttpPost]
+        public IActionResult DeleteRecord(string tableName, Dictionary<string, string> values)
+        {
+			foreach (var pair in values)
+			{
+				Console.WriteLine($"{pair.Key} = {pair.Value}");
+			}
+			// Zavolejte DataAccess metodu pro smazání
+			_dataAccess.DeleteRecord(tableName, values);
+
+            // Přesměrování zpět na Index stránku
+            return RedirectToAction("Index");
+        }
+
+        //[HttpGet]
+        //public IActionResult EditRecord(string tableName, Dictionary<string, string> values)
+        //{
+        //    // Předání dat do zobrazení
+        //    var model = new DatabaseViewModel
+        //    {
+        //        SelectedTable = tableName,
+        //        TableContents = new Dictionary<string, List<Dictionary<string, string>>> { { tableName, new List<Dictionary<string, string>> { values } } }
+        //    };
+
+        //    return View("EditRecord", model); // Použijte speciální zobrazení pro editaci
+        //}
+
+        [HttpPost]
+        public IActionResult UpdateRecord(string tableName, Dictionary<string, string> values)
+        {
+            // Zavolejte DataAccess metodu pro aktualizaci
+            _dataAccess.UpdateRecord(tableName, values);
+
+            // Přesměrování zpět na Index stránku
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+		public IActionResult EditRecord(string tableName, Dictionary<string, string> values)
+		{
+			TempData["IsEditMode"] = true;
+			TempData["NazevTabulky"] = tableName.ToUpper();
+			TempData["EditValues"] = values;
+
+			return RedirectToAction("Index");
+		}
 
 
-    }
+	}
 }
