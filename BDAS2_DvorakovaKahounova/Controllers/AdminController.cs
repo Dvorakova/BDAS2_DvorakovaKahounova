@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Oracle.ManagedDataAccess.Client;
 using System.Security.Claims;
+using static System.Runtime.InteropServices.Marshalling.IIUnknownCacheStrategy;
 
 namespace BDAS2_DvorakovaKahounova.Controllers
 {
@@ -15,14 +17,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         {
             string connectionString = configuration.GetConnectionString("OracleConnection");
             _dataAccess = new AdminDataAccess(connectionString);
-        }
-
-        public IActionResult Index()
-        {
-            var originallRole = HttpContext.Session.GetString("OriginalRole");
-            ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
-
-            return View();
         }
 
         public IActionResult Statistiky()
@@ -133,6 +127,39 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult Index()
+        {
+            var model = new DatabaseViewModel
+            {
+                TablesAndColumns = _dataAccess.VypisTabulkyASloupce()
+            };
+
+            // Pro každou tabulku načíst její obsah
+            var tableNames = model.TablesAndColumns.Select(t => t.TableName).Distinct();
+            foreach (var tableName in tableNames)
+            {
+                model.TableContents[tableName] = _dataAccess.TableContent(tableName);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult AddRecord(string tableName, Dictionary<string, string> values)
+        {
+            // Zde zavoláme metodu pro přidání záznamu
+            _dataAccess.InsertRecord(tableName, values);
+
+            // Po úspěšném přidání záznamu přesměrujeme zpět na Index stránku
+            return RedirectToAction("Index");
+        }
+        //[HttpPost]
+        //public IActionResult DeleteRecord(string tableName, Dictionary<string, string> keys)
+        //{
+        //    _dataAccess.DeleteRecord(tableName, keys);
+        //    return RedirectToAction(nameof(Index));
+        //}
 
 
 

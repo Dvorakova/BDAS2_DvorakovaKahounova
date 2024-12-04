@@ -1,35 +1,4 @@
-﻿@* @model List<BDAS2_DvorakovaKahounova.Models.Log>
-
-@{
-    ViewData["Title"] = "HistorieUprav";
-}
-
-<h1>Historie úprav</h1>
-
-<table class="stats-table">
-    <thead>
-        <tr>
-            <th>Název upravené tabulky</th>
-            <th>Akce</th>
-            <th>Popis akce</th>
-            <th>Čas úpravy</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var log in Model)
-        {
-            <tr>
-                <td>@log.NazevTabulky</td>
-                <td>@log.Akce</td>
-                <td>@log.PopisAkce</td>
-                <td>@log.Cas</td>
-            </tr>
-        }
-    </tbody>
-</table>
- *@
-
-@* @model List<BDAS2_DvorakovaKahounova.Models.Log> *@
+﻿@model List<BDAS2_DvorakovaKahounova.Models.Log>
 
 @{
     ViewData["Title"] = "HistorieUprav";
