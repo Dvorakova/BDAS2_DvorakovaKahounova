@@ -17,17 +17,11 @@
 		<h2>Tabulka: @tableGroup.Key</h2>
 
 		<!--formulář por vyhledávání-->
-		<form method="post" asp-action="Search" asp-route-tableName="@tableGroup.Key">
+		@* <form method="post" asp-action="Search" asp-route-tableName="@tableGroup.Key">
 			<label for="searchQuery">Vyhledat:</label>
 			<input type="text" name="searchQuery" id="searchQuery" placeholder="Zadejte hledaný text" />
 			<button type="submit">Hledat</button>
-		</form>
-
-		@if (ViewBag.IsSearchMode != null && ViewBag.IsSearchMode == true)
-		{
-			
-		}
-
+		</form> *@
 
 		@* Pokud je aktivní režim editace, zobrazí se formulář pro editaci *@
 		@if (ViewBag.IsEditMode != null && ViewBag.IsEditMode == true && ViewBag.NazevTabulky == tableGroup.Key.ToUpper())
@@ -45,7 +39,7 @@
 						@if (isPrimaryKey || isOsobaPrimaryKey)
 						{
 							@* Zakázání vstupu pro primární klíč *@
-
+							<input type="hidden" name="values[@column.ColumnName]" value="@ViewBag.EditValues[column.ColumnName]" />
 							<input type="text" disabled name="values[@column.ColumnName]" value="@ViewBag.EditValues[column.ColumnName]" />
 						}
 						else
