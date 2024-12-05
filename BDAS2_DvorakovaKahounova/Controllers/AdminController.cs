@@ -154,8 +154,16 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         [HttpPost]
         public IActionResult AddRecord(string tableName, Dictionary<string, string> values)
         {
+            try
+            {
+				_dataAccess.InsertRecord(tableName, values);
+			}
+            catch (Exception)
+            {
+				TempData["ErrorMessage"] = "Záznam se nepovedlo přidat";
+			}
             // Zde zavoláme metodu pro přidání záznamu
-            _dataAccess.InsertRecord(tableName, values);
+            
 
             // Po úspěšném přidání záznamu přesměrujeme zpět na Index stránku
             return RedirectToAction("Index");
@@ -168,8 +176,16 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			{
 				Console.WriteLine($"{pair.Key} = {pair.Value}");
 			}
-			// Zavolejte DataAccess metodu pro smazání
-			_dataAccess.DeleteRecord(tableName, values);
+            try
+            {
+				// Volání DataAccess metody pro smazání
+				_dataAccess.DeleteRecord(tableName, values);
+			}
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Záznam se nepovedlo smazat";
+			}
+			
 
             // Přesměrování zpět na Index stránku
             return RedirectToAction("Index");
@@ -178,8 +194,16 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         [HttpPost]
         public IActionResult UpdateRecord(string tableName, Dictionary<string, string> values)
         {
-            // Zavolejte DataAccess metodu pro aktualizaci
-            _dataAccess.UpdateRecord(tableName, values);
+            try
+            {
+				// Zavolejte DataAccess metodu pro aktualizaci
+				_dataAccess.UpdateRecord(tableName, values);
+			}
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Záznam se nepovedlo přidat";
+			}
+            
 
             // Přesměrování zpět na Index stránku
             return RedirectToAction("Index");

@@ -6,6 +6,13 @@
 
 <h1>Práce s databází</h1>
 
+@if (TempData["ErrorMessage"] != null)
+{
+	<div class="alert alert-danger">
+		@TempData["ErrorMessage"]
+	</div>
+}
+
 @foreach (var tableGroup in Model.TablesAndColumns.GroupBy(t => t.TableName))
 {
 	@if (tableGroup.Key.ToUpper() == "LOGOVANI")
@@ -61,7 +68,7 @@
 			@foreach (var (column, index) in tableGroup.Select((column, index) => (column, index)))  // Přidání indexu pro kontrolu prvního sloupce
 			{
 				// Zakázání pouze prvního sloupce (primární klíč) a specifických sloupců jako 'id_osoba'
-				bool isPrimaryKey = index == 0 && column.ColumnName.StartsWith("ID_") && column.ColumnName != "ID_OSOBA";  // První sloupec, který začíná na 'id_'
+					bool isPrimaryKey = index == 0 && column.ColumnName.StartsWith("ID_") && column.ColumnName != "ID_OSOBA" && tableGroup.Key.ToUpper() != "PSI_VLASTNOSTI";  // První sloupec, který začíná na 'id_'
 				bool isOsobaPrimaryKey = tableGroup.Key.ToUpper() == "OSOBY" && column.ColumnName == "ID_OSOBA"; // Specifická kontrola pro tabulku 'osoby'
 				bool onlyEdit = (column.ColumnName == "KONEC_KARANTENY") || (column.ColumnName == "KONEC_POBYTU") || (column.ColumnName == "UMRTI") || (column.ColumnName == "ID_ADOPCE" && tableGroup.Key.ToUpper() == "REZERVACE") || (column.ColumnName == "DATUM_ZMENY") || (column.ColumnName == "ZMENENO_ID_OSOBA") || (column.ColumnName == "VRACENI_PSA");
 				<label>

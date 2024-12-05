@@ -1436,7 +1436,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 		}
 
 
-		///////////dolů orpavit na null hodnoty
 		private void Y_predpisy_karanteny(Dictionary<string, string> values)
 		{
 			using (var conn = new OracleConnection(_connectionString))
