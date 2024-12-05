@@ -410,12 +410,18 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             }
         }
 
+		[HttpPost]
+		public IActionResult VyzvednoutMajitelem(int pesId)
+		{
+            _dataAccess.UkonciPobyt(pesId);
+			return RedirectToAction("Index");
+		}
+
 		//metoda pro adoptování psa (bez rezervace)
 		[HttpPost]
 		public IActionResult Adoptovat(int pesId)
 		{
 			return RedirectToAction("VyriditAdopci", new { pesId = pesId });
-			//return RedirectToAction("VyriditAdopci");  // Např. přesměrování na domovskou stránku.
 		}
 
 		[HttpPost]

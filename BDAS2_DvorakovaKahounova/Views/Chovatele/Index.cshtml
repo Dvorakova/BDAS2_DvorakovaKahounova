@@ -124,6 +124,11 @@
 								<input type="hidden" name="pesId" value="@pes.ID_PSA" />
 								<button class="btn btn-primary" type="submit">Vyřídit adopci</button>
 							</form>
+						} else if (pes.ID_MAJITEL != null){
+							<form asp-action="VyzvednoutMajitelem" method="post" class="button-form">
+								<input type="hidden" name="pesId" value="@pes.ID_PSA" />
+								<button class="btn btn-primary" type="submit">Vyzvednut majitelem</button>
+							</form>
 						}
 
 

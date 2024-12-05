@@ -67,59 +67,60 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 				.ToList();
 
 			ViewBag.TableNames = tableNames;
+            ViewBag.HasSearched = false;
 
-			var originalRole = HttpContext.Session.GetString("OriginalRole");
+            var originalRole = HttpContext.Session.GetString("OriginalRole");
 			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
 
 			return View();
 		}
 
-        [HttpPost]
-        public IActionResult Search(string selectedTable, string searchQuery)
-        {
+		[HttpPost]
+		public IActionResult Search(string selectedTable, string searchQuery)
+		{
+			ViewBag.HasSearched = true;
 			if (string.IsNullOrEmpty(selectedTable) || string.IsNullOrEmpty(searchQuery))
 			{
-				ViewBag.ErrorMessage = "Musíte vybrat tabulku a zadat hledaný text.";
+				TempData["ErrorMessage"] = "Musíte vybrat tabulku a zadat hledaný text.";
 			}
 			else
 			{
-				//try
-				//{
+                try
+				{
+					// Prohledání tabulky
+					var results = _dataAccess.SearchTableProcedure(selectedTable, searchQuery);
+					// Kontrola, zda jsou výsledky prázdné
+					if (results == null || !results.Any())
+					{
+						ViewBag.NoResultsMessage = "Žádné výsledky nebyly nalezeny pro zadaný text.";
+					}
+					// Předej výsledky do pohledu
+					ViewBag.SearchResults = results;
+					ViewBag.SelectedTable = selectedTable;
+				}
+				catch (Exception ex)
+				{
 
-				//}
-				//catch (Exception ex)
-				//{
-
-    //                ViewBag.ErrorMessage = "Došlo k chybě při vyhledávání: " + ex.Message;
-    //            }
-				// Prohledání tabulky
-				var results = _dataAccess.SearchTableProcedure(selectedTable, searchQuery);
-                // Kontrola, zda jsou výsledky prázdné
-                if (results == null || !results.Any())
-                {
-                    ViewBag.NoResultsMessage = "Žádné výsledky nebyly nalezeny pro zadaný hledaný termín.";
-                }
-                // Předej výsledky do pohledu
-                ViewBag.SearchResults = results;
-				ViewBag.SelectedTable = selectedTable;
+					TempData["ErrorMessage"] = "Došlo k chybě při vyhledávání: " + ex.Message;
+				}
 			}
-            var tableNames = _dataAccess.VypisTabulkyASloupce()
-                .Select(t => t.TableName)
-                .Distinct()
-                .ToList();
+			var tableNames = _dataAccess.VypisTabulkyASloupce()
+				.Select(t => t.TableName)
+				.Distinct()
+				.ToList();
 
-            ViewBag.TableNames = tableNames;
+			ViewBag.TableNames = tableNames;
 
-            var originalRole = HttpContext.Session.GetString("OriginalRole");
-            ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
+			var originalRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
 
-            return View("Vyhledavani");
-        }
-
-
+			return View("Vyhledavani");
+		}
 
 
-        [HttpPost]
+
+
+		[HttpPost]
 		public IActionResult Emulovat(int userId)
 		{
 			//uložení původní role, pokud emulujeme poprvé
@@ -250,17 +251,17 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult UpdateRecord(string tableName, Dictionary<string, string> values)
+		public IActionResult UpdateRecord(string tableName, Dictionary<string, string> values, Dictionary<string, string> oldValues)
 		{
-			try
-			{
+			//try
+			//{
 				// Zavolejte DataAccess metodu pro aktualizaci
-				_dataAccess.UpdateRecord(tableName, values);
-			}
-			catch (Exception)
-			{
-				TempData["ErrorMessage"] = "Záznam se nepovedlo přidat";
-			}
+				_dataAccess.UpdateRecord(tableName, values, oldValues);
+			//}
+			//catch (Exception)
+			//{
+			//	TempData["ErrorMessage"] = "Záznam se nepovedlo přidat";
+			//}
 
 
 			// Přesměrování zpět na Index stránku

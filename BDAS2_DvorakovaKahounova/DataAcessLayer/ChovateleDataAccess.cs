@@ -836,6 +836,25 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			}
 		}
 
+		public void UkonciPobyt(int pesId)
+		{
+			using (var conn = new OracleConnection(_connectionString))
+			{
+				conn.Open();
+
+				// Vytvoření OracleCommand pro zavolání uložené procedury
+				using (var cmd = new OracleCommand("AktualizujKonecPobytu", conn))
+				{
+					cmd.CommandType = CommandType.StoredProcedure;
+
+					// Přidání parametru pro ID psa
+					cmd.Parameters.Add(new OracleParameter("p_id_psa", pesId));
+
+					// Spuštění procedury
+					cmd.ExecuteNonQuery();
+				}
+			}
+		}
 
 
 

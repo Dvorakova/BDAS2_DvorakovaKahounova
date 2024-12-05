@@ -30,13 +30,6 @@
 	<div class="log-page">
 		<h2>Tabulka: @tableGroup.Key</h2>
 
-		<!--formulář por vyhledávání-->
-		@* <form method="post" asp-action="Search" asp-route-tableName="@tableGroup.Key">
-			<label for="searchQuery">Vyhledat:</label>
-			<input type="text" name="searchQuery" id="searchQuery" placeholder="Zadejte hledaný text" />
-			<button type="submit">Hledat</button>
-		</form> *@
-
 		@* Pokud je aktivní režim editace, zobrazí se formulář pro editaci *@
 		@if (ViewBag.IsEditMode != null && ViewBag.IsEditMode == true && ViewBag.NazevTabulky == tableGroup.Key.ToUpper())
 		{
@@ -46,10 +39,15 @@
 				@foreach (var (column, index) in tableGroup.Select((column, index) => (column, index)))
 				{
 
-					bool isPrimaryKey = index == 0 && column.ColumnName.StartsWith("ID_") && column.ColumnName != "ID_OSOBA";  // První sloupec, který začíná na 'id_'
+					bool isPrimaryKey = index == 0 && column.ColumnName.StartsWith("ID_") && column.ColumnName != "ID_OSOBA" && tableGroup.Key.ToUpper() != "PSI_VLASTNOSTI";  // První sloupec, který začíná na 'id_'
 					bool isOsobaPrimaryKey = tableGroup.Key.ToUpper() == "OSOBY" && column.ColumnName == "ID_OSOBA";
 					<label>
 						@column.ColumnName (@column.DataType):
+						@if (ViewBag.EditValues != null && ViewBag.EditValues.ContainsKey(column.ColumnName))
+						{
+							<!-- Skrytá pole pro staré hodnoty -->
+							<input type="hidden" name="oldValues[@column.ColumnName]" value="@ViewBag.EditValues[column.ColumnName]" />
+						}
 						@if (isPrimaryKey || isOsobaPrimaryKey)
 						{
 							@* Zakázání vstupu pro primární klíč *@

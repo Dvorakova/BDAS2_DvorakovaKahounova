@@ -303,11 +303,10 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
         }
 
         //Vyhledávání
-
         public List<Dictionary<string, string>> SearchTableProcedure(string tableName, string searchTerm)
         {
             var results = new List<Dictionary<string, string>>();
-            bool isNumber = decimal.TryParse(searchTerm, out decimal numericValue);
+			//bool isNumber = decimal.TryParse(searchTerm, out decimal numericValue);
             bool isDate = DateTime.TryParse(searchTerm, out DateTime dateValue);
 
             using (var con = new OracleConnection(_connectionString))
@@ -319,15 +318,16 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     // Dynamické sestavení názvu procedury
-                    string prefix = isNumber ? "N_" : isDate ? "D_" : "T_";
+                    string prefix =/* isNumber ? "N_" :*/ isDate ? "D_" : "T_";
                     cmd.CommandText = $"vyhledavani_administratorem.{prefix}{tableName}";
 
                     // Přidání parametrů
-                    if (isNumber)
-                    {
-                        cmd.Parameters.Add("searchTerm", OracleDbType.Decimal).Value = numericValue;
-                    }
-                    else if (isDate)
+                    //if (isNumber)
+                    //{
+                    //    cmd.Parameters.Add("searchTerm", OracleDbType.Decimal).Value = numericValue;
+                    //}
+                    //else
+					if (isDate)
                     {
                         cmd.Parameters.Add("searchTerm", OracleDbType.Date).Value = dateValue;
                     }
@@ -356,87 +356,9 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return results;
         }
 
-
-        //funguje, ale je bez D_
-        //public List<Dictionary<string, string>> SearchTableProcedure(string tableName, string searchTerm)
-        //{
-        //    var results = new List<Dictionary<string, string>>();
-        //    bool isNumber = decimal.TryParse(searchTerm, out decimal numericValue);
-
-        //    using (var con = new OracleConnection(_connectionString))
-        //    {
-        //        con.Open();
-        //        using (var cmd = new OracleCommand())
-        //        {
-        //            cmd.Connection = con;
-        //            cmd.CommandType = CommandType.StoredProcedure;
-
-        //            // Dynamické sestavení názvu procedury
-        //            string prefix = isNumber ? "N_" : "T_";
-        //            cmd.CommandText = $"vyhledavani_administratorem.{prefix}{tableName}";
-
-        //            // Přidání parametrů
-        //            if (isNumber)
-        //            {
-        //                cmd.Parameters.Add("searchTerm", OracleDbType.Decimal).Value = numericValue;
-        //            }
-        //            else
-        //            {
-        //                cmd.Parameters.Add("searchTerm", OracleDbType.Varchar2).Value = searchTerm;
-        //            }
-        //            cmd.Parameters.Add("results", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-
-        //            // Zpracování výsledků
-        //            using (var reader = cmd.ExecuteReader())
-        //            {
-        //                while (reader.Read())
-        //                {
-        //                    var row = new Dictionary<string, string>();
-        //                    for (int i = 0; i < reader.FieldCount; i++)
-        //                    {
-        //                        row[reader.GetName(i)] = reader[i]?.ToString();
-        //                    }
-        //                    results.Add(row);
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return results;
-        //}
-
-
-        //public List<Dictionary<string, string>> SearchTable(string tableName, string query)
-        //{
-        //    var results = new List<Dictionary<string, string>>();
-
-        //    using (var con = new OracleConnection(_connectionString))
-        //    {
-        //        con.Open();
-        //        var command = new OracleCommand(
-        //            $"SELECT * FROM VIEW_PSIVUTULKUBEZMAJITELE WHERE LOWER(JMENO) LIKE '%' || :query || '%'", con);
-        //        command.Parameters.Add(new OracleParameter("query", query.ToLower()));
-
-        //        var reader = command.ExecuteReader();
-        //        while (reader.Read())
-        //        {
-        //            var row = new Dictionary<string, string>();
-        //            for (int i = 0; i < reader.FieldCount; i++)
-        //            {
-        //                row[reader.GetName(i)] = reader[i]?.ToString();
-        //            }
-        //            results.Add(row);
-        //        }
-        //    }
-        //    return results;
-        //}
-
-
-        //metoda pro přidání nového záznamu do (jakékoli) tabulky v databázi
-
-        //rozcestník pro správnou přidání proceduru
-
-        public void InsertRecord(string tableName, Dictionary<string, string> values)
+		//metoda pro přidání nového záznamu do (jakékoli) tabulky v databázi
+		//rozcestník pro správnou proceduru pro přidání záznamu
+		public void InsertRecord(string tableName, Dictionary<string, string> values)
         {
             // Switch podle názvu tabulky
             switch (tableName.ToLower())
@@ -1194,7 +1116,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
 
 		// pro editaci:
-		internal void UpdateRecord(string tableName, Dictionary<string, string> values)
+		internal void UpdateRecord(string tableName, Dictionary<string, string> values, Dictionary<string, string> oldValues)
 		{
 		//	var conditions = string.Join(" AND ", values.Select(v => $"{v.Key} = :{v.Value}"));
 		//	Console.WriteLine(conditions);
@@ -1213,9 +1135,9 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 				case "fotografie":
 					Y_fotografie(values);
 					break;
-				//case "majitele":
-				//	Y_majitele(values);
-				//	break;
+				case "majitele":
+					Y_majitele(values, oldValues);
+					break;
 				case "ockovani":
 					Y_ockovani(values);
 					break;
@@ -1240,15 +1162,15 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 				case "pohlavi":
 					Y_pohlavi(values);
 					break;
-				//case "psi_vlastnosti":
-				//	Y_psi_vlastnosti(values);
-				//	break;
+				case "psi_vlastnosti":
+					Y_psi_vlastnosti(values, oldValues);
+					break;
 				case "rezervace":
 					Y_rezervace(values);
 					break;
-				//case "rezervatori":
-				//	Y_rezervatori(values);
-				//	break;
+				case "rezervatori":
+					Y_rezervatori(values, oldValues);
+					break;
 				case "vlastnosti":
 					Y_vlastnosti(values);
 					break;
@@ -1330,10 +1252,43 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 		}
 
 
-		//private void Y_rezervatori(Dictionary<string, string> values)
-		//{
-		//	throw new NotImplementedException();
-		//}
+		private void Y_rezervatori(Dictionary<string, string> values, Dictionary<string, string> oldValues)
+		{
+			using (var conn = new OracleConnection(_connectionString))
+			{
+				conn.Open();
+
+				// Vytvoření OracleCommand pro zavolání uložené procedury
+				using (var cmd = new OracleCommand("uprava_administratorem.Y_rezervatori", conn))
+				{
+					cmd.CommandType = CommandType.StoredProcedure;
+
+					// Staré hodnoty
+					if (oldValues.ContainsKey("ID_OSOBA") && int.TryParse(oldValues["ID_OSOBA"], out int oldIdOsoba))
+					{
+						cmd.Parameters.Add(new OracleParameter("p_old_id_osoba", oldIdOsoba));
+					}
+					else
+					{
+						throw new ArgumentException("Chybí nebo neplatná hodnota pro OLD_ID_OSOBA.");
+					}
+
+					// Nové hodnoty
+					if (values.ContainsKey("ID_OSOBA") && int.TryParse(values["ID_OSOBA"], out int newIdOsoba))
+					{
+						cmd.Parameters.Add(new OracleParameter("p_new_id_osoba", newIdOsoba));
+					}
+					else
+					{
+						throw new ArgumentException("Chybí nebo neplatná hodnota pro NEW_ID_OSOBA.");
+					}
+
+					// Spuštění procedury
+					cmd.ExecuteNonQuery();
+				}
+			}
+		}
+
 
 		private void Y_rezervace(Dictionary<string, string> values)
 		{
@@ -1413,10 +1368,61 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 		}
 
 
-		//private void Y_psi_vlastnosti(Dictionary<string, string> values)
-		//{
-		//	throw new NotImplementedException();
-		//}
+		private void Y_psi_vlastnosti(Dictionary<string, string> values, Dictionary<string, string> oldValues)
+		{
+			using (var conn = new OracleConnection(_connectionString))
+			{
+				conn.Open();
+
+				// Vytvoření OracleCommand pro zavolání uložené procedury
+				using (var cmd = new OracleCommand("uprava_administratorem.Y_psi_vlastnosti", conn))
+				{
+					cmd.CommandType = CommandType.StoredProcedure;
+
+					// Staré hodnoty
+					if (oldValues.ContainsKey("ID_VLASTNOST") && int.TryParse(oldValues["ID_VLASTNOST"], out int oldIdVlastnost))
+					{
+						cmd.Parameters.Add(new OracleParameter("p_old_id_vlastnost", oldIdVlastnost));
+					}
+					else
+					{
+						throw new ArgumentException("Chybí nebo neplatná hodnota pro OLD_ID_VLASTNOST.");
+					}
+
+					if (oldValues.ContainsKey("ID_PSA") && int.TryParse(oldValues["ID_PSA"], out int oldIdPsa))
+					{
+						cmd.Parameters.Add(new OracleParameter("p_old_id_psa", oldIdPsa));
+					}
+					else
+					{
+						throw new ArgumentException("Chybí nebo neplatná hodnota pro OLD_ID_PSA.");
+					}
+
+					// Nové hodnoty
+					if (values.ContainsKey("ID_VLASTNOST") && int.TryParse(values["ID_VLASTNOST"], out int newIdVlastnost))
+					{
+						cmd.Parameters.Add(new OracleParameter("p_new_id_vlastnost", newIdVlastnost));
+					}
+					else
+					{
+						throw new ArgumentException("Chybí nebo neplatná hodnota pro NEW_ID_VLASTNOST.");
+					}
+
+					if (values.ContainsKey("ID_PSA") && int.TryParse(values["ID_PSA"], out int newIdPsa))
+					{
+						cmd.Parameters.Add(new OracleParameter("p_new_id_psa", newIdPsa));
+					}
+					else
+					{
+						throw new ArgumentException("Chybí nebo neplatná hodnota pro NEW_ID_PSA.");
+					}
+
+					// Spuštění procedury
+					cmd.ExecuteNonQuery();
+				}
+			}
+		}
+
 
 		private void Y_pohlavi(Dictionary<string, string> values)
 		{
@@ -1805,23 +1811,41 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 						cmd.Parameters.Add(new OracleParameter("p_id_osoba", DBNull.Value)); // Použití prázdné hodnoty
 					}
 
-					// Předání typu osoby (pokud existuje)
-					if (values.ContainsKey("TYP_OSOBY"))
+					// Předání typu osoby
+					if (values.ContainsKey("TYP_OSOBY") && !string.IsNullOrEmpty(values["TYP_OSOBY"]))
 					{
-						// Pokud je to číslo, přetypujeme, jinak předáme text
-						if (int.TryParse(values["TYP_OSOBY"], out int typOsoby))
+						string typOsoby = values["TYP_OSOBY"];
+
+						// Ověření, že jde o jedno písmeno
+						if (typOsoby.Length == 1)
 						{
 							cmd.Parameters.Add(new OracleParameter("p_typ_osoby", typOsoby));
 						}
 						else
 						{
-							cmd.Parameters.Add(new OracleParameter("p_typ_osoby", values["TYP_OSOBY"]));
+							throw new ArgumentException("Typ osoby musí být jedno písmeno.");
 						}
 					}
 					else
 					{
 						cmd.Parameters.Add(new OracleParameter("p_typ_osoby", DBNull.Value)); // Použití prázdné hodnoty
 					}
+					//if (values.ContainsKey("TYP_OSOBY"))
+					//{
+					//	// Pokud je to číslo, přetypujeme, jinak předáme text
+					//	if (int.TryParse(values["TYP_OSOBY"], out int typOsoby))
+					//	{
+					//		cmd.Parameters.Add(new OracleParameter("p_typ_osoby", typOsoby));
+					//	}
+					//	else
+					//	{
+					//		cmd.Parameters.Add(new OracleParameter("p_typ_osoby", values["TYP_OSOBY"]));
+					//	}
+					//}
+					//else
+					//{
+					//	cmd.Parameters.Add(new OracleParameter("p_typ_osoby", DBNull.Value)); // Použití prázdné hodnoty
+					//}
 
 					// Předání e-mailu osoby
 					if (values.ContainsKey("EMAIL"))
@@ -1957,35 +1981,42 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			}
 		}
 
+		private void Y_majitele(Dictionary<string, string> values, Dictionary<string, string> oldValues)
+		{
+			using (var conn = new OracleConnection(_connectionString))
+			{
+				conn.Open();
 
+				// Vytvoření OracleCommand pro zavolání uložené procedury
+				using (var cmd = new OracleCommand("uprava_administratorem.Y_majitele", conn))
+				{
+					cmd.CommandType = CommandType.StoredProcedure;
 
-		//private void Y_majitele(Dictionary<string, string> values)
-		//{
-		//	using (var conn = new OracleConnection(_connectionString))
-		//	{
-		//		conn.Open();
+					// Staré hodnoty
+					if (oldValues.ContainsKey("ID_OSOBA") && int.TryParse(oldValues["ID_OSOBA"], out int oldIdOsoba))
+					{
+						cmd.Parameters.Add(new OracleParameter("p_old_id_osoba", oldIdOsoba));
+					}
+					else
+					{
+						throw new ArgumentException("Chybí nebo neplatná hodnota pro OLD_ID_OSOBA.");
+					}
 
-		//		// Vytvoření OracleCommand pro zavolání uložené procedury
-		//		using (var cmd = new OracleCommand("uprava_administratorem.Y_majitele", conn))
-		//		{
-		//			cmd.CommandType = CommandType.StoredProcedure;
+					// Nové hodnoty
+					if (values.ContainsKey("ID_OSOBA") && int.TryParse(values["ID_OSOBA"], out int newIdOsoba))
+					{
+						cmd.Parameters.Add(new OracleParameter("p_new_id_osoba", newIdOsoba));
+					}
+					else
+					{
+						throw new ArgumentException("Chybí nebo neplatná hodnota pro NEW_ID_OSOBA.");
+					}
 
-		//			// Předání ID osoby
-		//			if (values.ContainsKey("ID_OSOBA") && int.TryParse(values["ID_OSOBA"], out int idOsoba))
-		//			{
-		//				cmd.Parameters.Add(new OracleParameter("p_id_osoba", idOsoba));
-		//			}
-		//			else
-		//			{
-		//				throw new ArgumentException("Chybí nebo neplatná hodnota pro ID_OSOBA.");
-		//			}
-
-		//			// Spuštění procedury
-		//			cmd.ExecuteNonQuery();
-		//		}
-		//	}
-		//}
-
+					// Spuštění procedury
+					cmd.ExecuteNonQuery();
+				}
+			}
+		}
 
 		private void Y_fotografie(Dictionary<string, string> values)
 		{
