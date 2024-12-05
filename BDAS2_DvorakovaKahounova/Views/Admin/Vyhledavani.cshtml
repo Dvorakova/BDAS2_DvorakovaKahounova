@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "Vyhledavani";
+}
+
+<h1>Vyhledávání</h1>
+
+<!--formulář por vyhledávání-->
+@* asp-route-tableName="@tableGroup.Key" *@
+@* <form method="post" asp-action="Search" >
+			<label for="searchQuery">Vyhledat:</label>
+			<input type="text" name="searchQuery" id="searchQuery" placeholder="Zadejte hledaný text" />
+			<button type="submit">Hledat</button>
+		</form> *@
+
+<form method="post" asp-action="Search">
+    <label for="tableSelect">Vyberte tabulku:</label>
+    <select name="selectedTable" id="tableSelect">
+        <option value="">-- Vyberte tabulku --</option>
+        @foreach (var tableName in ViewBag.TableNames as List<string>)
+        {
+            <option value="@tableName">@tableName</option>
+        }
+    </select>
+
+    <label for="searchQuery">Vyhledat:</label>
+    <input type="text" name="searchQuery" id="searchQuery" placeholder="Zadejte hledaný text" />
+
+    <button type="submit">Hledat</button>
+</form>
+
+@if (ViewBag.SearchResults != null && ((List<Dictionary<string, string>>)ViewBag.SearchResults).Any())
+{
+    <h2>Výsledky hledání v tabulce @ViewBag.SelectedTable:</h2>
+    <table>
+        <thead>
+            <tr>
+                @foreach (var key in ((List<Dictionary<string, string>>)ViewBag.SearchResults)[0].Keys)
+                {
+                    <th>@key</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in ViewBag.SearchResults as List<Dictionary<string, string>>)
+            {
+                <tr>
+                    @foreach (var value in row.Values)
+                    {
+                        <td>@value</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h2>Žádné výsledky nebyly nalezeny pro zadaný hledaný termín.</h2>
+}

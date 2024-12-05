@@ -2,6 +2,7 @@
 using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using System.Data;
+using System.Data.Common;
 using System.Security.Cryptography;
 
 namespace BDAS2_DvorakovaKahounova.DataAcessLayer
@@ -301,8 +302,138 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return rows;
         }
 
+        //Vyhledávání
+
+        public List<Dictionary<string, string>> SearchTableProcedure(string tableName, string searchTerm)
+        {
+            var results = new List<Dictionary<string, string>>();
+            bool isNumber = decimal.TryParse(searchTerm, out decimal numericValue);
+            bool isDate = DateTime.TryParse(searchTerm, out DateTime dateValue);
+
+            using (var con = new OracleConnection(_connectionString))
+            {
+                con.Open();
+                using (var cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Dynamické sestavení názvu procedury
+                    string prefix = isNumber ? "N_" : isDate ? "D_" : "T_";
+                    cmd.CommandText = $"vyhledavani_administratorem.{prefix}{tableName}";
+
+                    // Přidání parametrů
+                    if (isNumber)
+                    {
+                        cmd.Parameters.Add("searchTerm", OracleDbType.Decimal).Value = numericValue;
+                    }
+                    else if (isDate)
+                    {
+                        cmd.Parameters.Add("searchTerm", OracleDbType.Date).Value = dateValue;
+                    }
+                    else
+                    {
+                        cmd.Parameters.Add("searchTerm", OracleDbType.Varchar2).Value = searchTerm;
+                    }
+                    cmd.Parameters.Add("results", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                    // Zpracování výsledků
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var row = new Dictionary<string, string>();
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                row[reader.GetName(i)] = reader[i]?.ToString();
+                            }
+                            results.Add(row);
+                        }
+                    }
+                }
+            }
+
+            return results;
+        }
+
+
+        //funguje, ale je bez D_
+        //public List<Dictionary<string, string>> SearchTableProcedure(string tableName, string searchTerm)
+        //{
+        //    var results = new List<Dictionary<string, string>>();
+        //    bool isNumber = decimal.TryParse(searchTerm, out decimal numericValue);
+
+        //    using (var con = new OracleConnection(_connectionString))
+        //    {
+        //        con.Open();
+        //        using (var cmd = new OracleCommand())
+        //        {
+        //            cmd.Connection = con;
+        //            cmd.CommandType = CommandType.StoredProcedure;
+
+        //            // Dynamické sestavení názvu procedury
+        //            string prefix = isNumber ? "N_" : "T_";
+        //            cmd.CommandText = $"vyhledavani_administratorem.{prefix}{tableName}";
+
+        //            // Přidání parametrů
+        //            if (isNumber)
+        //            {
+        //                cmd.Parameters.Add("searchTerm", OracleDbType.Decimal).Value = numericValue;
+        //            }
+        //            else
+        //            {
+        //                cmd.Parameters.Add("searchTerm", OracleDbType.Varchar2).Value = searchTerm;
+        //            }
+        //            cmd.Parameters.Add("results", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+        //            // Zpracování výsledků
+        //            using (var reader = cmd.ExecuteReader())
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    var row = new Dictionary<string, string>();
+        //                    for (int i = 0; i < reader.FieldCount; i++)
+        //                    {
+        //                        row[reader.GetName(i)] = reader[i]?.ToString();
+        //                    }
+        //                    results.Add(row);
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    return results;
+        //}
+
+
+        //public List<Dictionary<string, string>> SearchTable(string tableName, string query)
+        //{
+        //    var results = new List<Dictionary<string, string>>();
+
+        //    using (var con = new OracleConnection(_connectionString))
+        //    {
+        //        con.Open();
+        //        var command = new OracleCommand(
+        //            $"SELECT * FROM VIEW_PSIVUTULKUBEZMAJITELE WHERE LOWER(JMENO) LIKE '%' || :query || '%'", con);
+        //        command.Parameters.Add(new OracleParameter("query", query.ToLower()));
+
+        //        var reader = command.ExecuteReader();
+        //        while (reader.Read())
+        //        {
+        //            var row = new Dictionary<string, string>();
+        //            for (int i = 0; i < reader.FieldCount; i++)
+        //            {
+        //                row[reader.GetName(i)] = reader[i]?.ToString();
+        //            }
+        //            results.Add(row);
+        //        }
+        //    }
+        //    return results;
+        //}
+
+
         //metoda pro přidání nového záznamu do (jakékoli) tabulky v databázi
-        
+
         //rozcestník pro správnou přidání proceduru
 
         public void InsertRecord(string tableName, Dictionary<string, string> values)
