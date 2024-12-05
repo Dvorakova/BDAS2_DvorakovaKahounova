@@ -1,5 +1,6 @@
 ﻿using BDAS2_DvorakovaKahounova.Models;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 using System.Security.Cryptography;
 
 namespace BDAS2_DvorakovaKahounova.DataAcessLayer
@@ -30,7 +31,8 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                 }
             }
         }
-        // Metoda pro registraci uživatele
+
+
         public bool RegisterUser(Osoba novaOsoba)
         {
             using (var con = new OracleConnection(_connectionString))
@@ -45,14 +47,52 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     cmd.Parameters.Add(new OracleParameter("typ_osoby", novaOsoba.TYP_OSOBY));
                     cmd.Parameters.Add(new OracleParameter("email", novaOsoba.EMAIL));
                     cmd.Parameters.Add(new OracleParameter("heslo", novaOsoba.HESLO));
-                    cmd.Parameters.Add(new OracleParameter("salt", novaOsoba.SALT)); 
+                    cmd.Parameters.Add(new OracleParameter("salt", novaOsoba.SALT));
 
                     // Vrátí true, pokud byl vložen alespoň jeden řádek
                     return cmd.ExecuteNonQuery() > 0;
                 }
-                
+
             }
         }
+
+        //public bool RegisterUser(Osoba novaOsoba)
+        //{
+        //	using (var con = new OracleConnection(_connectionString))
+        //	{
+        //		con.Open();
+        //		using (var cmd = new OracleCommand("RegisterUser", con))
+        //		{
+        //			cmd.CommandType = CommandType.StoredProcedure;
+
+        //			// Přidání parametrů
+        //			cmd.Parameters.Add("p_jmeno", OracleDbType.Varchar2).Value = novaOsoba.JMENO;
+        //			cmd.Parameters.Add("p_prijmeni", OracleDbType.Varchar2).Value = novaOsoba.PRIJMENI;
+        //			cmd.Parameters.Add("p_telefon", OracleDbType.Varchar2).Value = novaOsoba.TELEFON;
+        //			cmd.Parameters.Add("p_typ_osoby", OracleDbType.Varchar2).Value = novaOsoba.TYP_OSOBY;
+        //			cmd.Parameters.Add("p_email", OracleDbType.Varchar2).Value = novaOsoba.EMAIL;
+        //			cmd.Parameters.Add("p_heslo", OracleDbType.Varchar2).Value = novaOsoba.HESLO;
+        //			cmd.Parameters.Add("p_salt", OracleDbType.Varchar2).Value = novaOsoba.SALT;
+
+        //			// Výstupní parametr pro počet ovlivněných řádků
+        //			var affectedRowsParam = new OracleParameter("p_success", OracleDbType.Int32)
+        //			{
+        //				Direction = ParameterDirection.Output
+        //			};
+        //			cmd.Parameters.Add(affectedRowsParam);
+
+        //			// Spuštění procedury
+        //			cmd.ExecuteNonQuery();
+
+        //			// Získání počtu ovlivněných řádků
+        //			return Convert.ToInt32(affectedRowsParam.Value) > 0;
+        //		}
+        //	}
+        //}
+
+
+
+
 
         // Metoda pro přihlášení uživatele
         public Osoba LoginUser(string email, string heslo)

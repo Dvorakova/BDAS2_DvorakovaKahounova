@@ -8,9 +8,16 @@
 
 @if (TempData["ErrorMessage"] != null)
 {
-	<div class="alert alert-danger">
+	@* <div class="alert alert-danger">
 		@TempData["ErrorMessage"]
-	</div>
+	</div> *@
+
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			<strong>Chyba!</strong> @TempData["ErrorMessage"]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	
+
 }
 
 @foreach (var tableGroup in Model.TablesAndColumns.GroupBy(t => t.TableName))
@@ -20,7 +27,7 @@
 		continue;
 	}
 	
-	<div>
+	<div class="log-page">
 		<h2>Tabulka: @tableGroup.Key</h2>
 
 		<!--formulář por vyhledávání-->
@@ -58,7 +65,7 @@
 
 					<br />
 				}
-				<button type="submit">Uložit změny</button>
+				<button class="btn btn-primary" type="submit">Uložit změny</button>
 			</form>
 		} else {
 		<h3>Přidat nový záznam</h3>
@@ -92,12 +99,12 @@
 				</label>
 				<br />
 			}
-			<button type="submit">Přidat záznam</button>
+				<button class="btn btn-primary" type="submit">Přidat záznam</button>
 		</form>
 		}
 
 
-		<table>
+		<table class="log-table">
 			<thead>
 				<tr>
 					@foreach (var column in tableGroup)
@@ -129,7 +136,7 @@
 									{
 										<input type="hidden" name="values[@column.ColumnName]" value="@row[column.ColumnName]" />
 									}
-									<button type="submit">Editovat</button>
+									<button class="btn btn-primary" type="submit">Editovat</button>
 								</form>
 							</td>
 							<td>
@@ -139,7 +146,7 @@
 									{
 										<input type="hidden" name="values[@column.ColumnName]" value="@row[column.ColumnName]" />
 									}
-									<button type="submit">Smazat</button>
+									<button class="btn btn-primary" type="submit">Smazat</button>
 								</form>
 							</td>
 
