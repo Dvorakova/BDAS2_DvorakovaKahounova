@@ -1243,3 +1243,77 @@ a.btn.btn-primary {
         border-color: var(--fialova);
         cursor: url('/images/cursor.png'), auto;
     }
+
+
+
+    /* zobrazení informací u mého profilu*/
+/*------ Settings ------*/
+.container-profil2 {
+    --color: #a5a5b0;
+    --size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    font-size: var(--size);
+    user-select: none;
+    fill: var(--color);
+    cursor: url('/images/cursor.png'), auto;
+}
+
+    .container-profil2 .eye {
+        position: absolute;
+        animation: keyframes-fill .5s;
+        cursor: url('/images/cursor.png'), auto;
+    }
+
+    .container-profil2 .eye-slash {
+        position: absolute;
+        animation: keyframes-fill .5s;
+        display: none;
+        cursor: url('/images/cursor.png'), auto;
+    }
+
+    /* ------ On check event ------ */
+    .container-profil2 input:checked ~ .eye {
+        display: none;
+        cursor: url('/images/cursor.png'), auto;
+    }
+
+    .container-profil2 input:checked ~ .eye-slash {
+        display: block;
+        cursor: url('/images/cursor.png'), auto;
+    }
+
+    /* ------ Hide the default checkbox ------ */
+    .container-profil2 input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+/* ------ Animation ------ */
+@keyframes keyframes-fill {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+/* Zobrazení/skrytí informací na základì stavu checkboxu */
+#toggle-info:checked ~ #info-container #email,
+#toggle-info:checked ~ #info-container #telefon {
+    display: inline;
+}
+
+#toggle-info:not(:checked) ~ #info-container #email,
+#toggle-info:not(:checked) ~ #info-container #telefon {
+    display: none;
+}
