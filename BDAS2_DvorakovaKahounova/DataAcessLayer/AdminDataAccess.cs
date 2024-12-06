@@ -210,7 +210,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 							{
 								Nazev = reader.GetString(0),
 								Typ = reader.GetString(1),
-								Status = reader.GetString(2)
+								Stav = reader.GetString(2)
 							});
 						}
 					}

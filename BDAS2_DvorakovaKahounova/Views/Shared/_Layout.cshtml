@@ -75,15 +75,19 @@
 
 					</ul>
 					<ul class="navbar-nav ms-auto">
-						<!-- Možnost emulace pro administrátora -->
-						@* @if ((User.Identity.IsAuthenticated && User.IsInRole("A")) || (User.Identity.IsAuthenticated && HttpContext.Session.GetString("OriginalRole") == "A")) *@
+						<!-- Možnosti pro administrátora -->
+						@if (User.Identity.IsAuthenticated && User.IsInRole("A"))
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Katalog">Systémový katalog</a>
+							</li>
+						}
 						@if ((User.Identity.IsAuthenticated && User.IsInRole("A")) || (User.Identity.IsAuthenticated && (bool?)ViewData["IsAdmin"] == true))
 						{
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Emulace">Emulace</a>
 							</li>
 						}
-
 						@if (User.Identity.IsAuthenticated)
 						{
 							<!-- Možnosti pro přihlášeného uživatele -->
@@ -104,12 +108,7 @@
 							</li>
 
 						}
-						@if (User.Identity.IsAuthenticated && User.IsInRole("A"))
-						{
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Katalog">Systémový katalog</a>
-							</li>
-						}
+						
 						<!-- Společné možnosti (kromě administrátora)-->
 						@if (!(User.Identity.IsAuthenticated && User.IsInRole("A")))
 						{

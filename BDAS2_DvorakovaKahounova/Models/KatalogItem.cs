@@ -4,6 +4,6 @@
 	{
 		public string Nazev { get; set; }
 		public string Typ { get; set; }
-		public string Status { get; set; }
+		public string Stav { get; set; }
 	}
 }
