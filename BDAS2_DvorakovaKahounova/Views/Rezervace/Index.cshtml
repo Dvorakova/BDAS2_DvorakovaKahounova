@@ -1,5 +1,4 @@
-﻿@* @model BDAS2_DvorakovaKahounova.Models.Rezervace *@
-@model List<BDAS2_DvorakovaKahounova.Models.Rezervace>
+﻿@model List<BDAS2_DvorakovaKahounova.Models.Rezervace>
 
 @{
     ViewData["Title"] = "Rezervace";
@@ -45,3 +44,13 @@
         </div>
     </div>
 }
+
+<script>
+    // Kontrola, zda existuje nějaká zpráva v ViewBag
+    @if (ViewBag.Message != null)
+    {
+        <text>
+                    alert('@Html.Raw(ViewBag.Message)'.replace(/'/g, "\\'"));
+        </text>
+    }
+</script>

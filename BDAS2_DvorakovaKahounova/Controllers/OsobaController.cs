@@ -37,7 +37,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
             if (ModelState.IsValid)
             {
-                Console.WriteLine("kontrola mailu v controolleer");
                 if (_dataAccess.EmailExists(novaOsoba.EMAIL))
                 {
                     ModelState.AddModelError("EMAIL", "Tento email již byl použit.");
@@ -51,11 +50,12 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 var (hashedPassword, salt) = HashPassword(novaOsoba.HESLO);
                 novaOsoba.HESLO = hashedPassword;
                 novaOsoba.SALT = salt;
-
+                
                 if (_dataAccess.RegisterUser(novaOsoba))
                 {
                     if (User.Identity.IsAuthenticated && User.IsInRole("C"))
                     {
+                        //v případě, že osobu registroval chovatel, je chovatel vrácen na jeho hlavní stranu
 						return RedirectToAction("Index", "Chovatele");
 					}
 					//když se registrace podaří, zobrazí se uživateli stránka s přihlášením
@@ -85,15 +85,11 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
         // Zpracování přihlášení
         [HttpPost]
-        //public IActionResult Login(string email, string heslo)
         public async Task<IActionResult> Login(string email, string heslo)
         {
             var osoba = _dataAccess.LoginUser(email, heslo);
             if (osoba != null)
             {
-
-                /////
-                //PRIDANO
                 // Pokud přihlášení uspěje, nastavíme identity
                 var claims = new List<Claim>
                     {
@@ -110,17 +106,14 @@ namespace BDAS2_DvorakovaKahounova.Controllers
                 // Uložení identity do cookies pro přetrvání přihlášení
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-                /////
-
-
-                // pokud se přihlášení povede, uživateli se zobrazí stránka (zatím home)
+                // pokud se přihlášení povede, uživateli se zobrazí stránka
                 if (claimsPrincipal.IsInRole("C"))
                 {
 					return RedirectToAction("Index", "Chovatele");
 				}
 				if (claimsPrincipal.IsInRole("A"))
 				{
-					return RedirectToAction("Index", "Home"); //potom změnit na nějakou administrátorskou stránku
+					return RedirectToAction("Index", "Home");
 				}
 
 				return RedirectToAction("PsiKAdopci", "Pes");
@@ -158,10 +151,9 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         [HttpPost]
         public IActionResult Logout()
         {
-            // Odhlásit uživatele
             HttpContext.SignOutAsync(); // Zruší autentifikaci
 
-			// Přesměrovat na domovskou stránku nebo na přihlášení
+			// Přesměrovat  na přihlášení
 			return RedirectToAction("Login");
         }
 
@@ -186,7 +178,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 					return NotFound(); // Uživatelský profil nenalezen
 				}
 
-				// **Začátek změny: přidání ViewBag.IsOwner
 				var currentUserId = GetLoggedInUserId();
 				ViewBag.IsOwner = currentUserId == userId.Value; // Kontrola, zda jde o vlastní účet
 				
@@ -199,7 +190,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
             if (string.IsNullOrEmpty(email))
             {
-					// Pokud není přihlášený uživatel, přesměrujeme na login
+					// Pokud není uživatel přihlášený, přesměrujeme na login
 					return RedirectToAction("Login");
             }
 
@@ -212,7 +203,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 				ViewBag.InvalidPassword = false;
 				ViewBag.CanEditNotChovatel = true; // Umožnit úpravy
 
-				// **Začátek změny: nastavení ViewBag.IsOwner pro vlastní účet**
 				var currentUserId = GetLoggedInUserId();
 				ViewBag.IsOwner = true; // Když uživatel načítá svůj vlastní účet, vždy je owner
 				
@@ -274,8 +264,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             {
                 return RedirectToAction("Login");
             }
-			
-            
 			
             // Získáme ID aktuálně přihlášeného uživatele z claims
 			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");

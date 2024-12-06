@@ -14,7 +14,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             _connectionString = configuration;
         }
 
-        //metoda por zobrazení informací o rezervaci uživatele
+        //metoda pro zobrazení informací o rezervaci uživatele
         public List<Rezervace> GetRezervace(int rezervatorIdOsoba)
         {
             List<Rezervace> rezervaceList = new List<Rezervace>();
@@ -66,14 +66,13 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return rezervaceList;
         }
 
+        // metoda rpo získání id psa na základě rezervačního kódu
         public int? ZiskejIdPsa(string rezervaceKod)
         {
             using (var con = new OracleConnection(_connectionString))
             {
                 con.Open();
 
-                //using (var cmd = new OracleCommand("ziskej_id_psa", con))
-                //{
                 string query = "BEGIN :cursor := ziskej_id_psa(:rezervaceKod); END;";
 
                 using (var cmd = new OracleCommand(query, con))
@@ -99,7 +98,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             }
         }
 
-
+        // metoda pro zobrazení informací o psovi
         public Pes ZobrazInfoOPsovi(int pesId)
         {
             using (var con = new OracleConnection(_connectionString))
@@ -138,6 +137,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return null;
         }
 
+        //metoda pro získání id rezervátora
         public int ZiskejIdRezervatora(int idPes)
         {
             using (var con = new OracleConnection(_connectionString))
@@ -152,10 +152,10 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     // Vykonání dotazu a získání výsledku
                     var result = cmd.ExecuteScalar();
 
-                    // Pokud žádný záznam není nalezen, vrátíme -1 nebo jinou hodnotu podle potřeby
+                    // Pokud žádný záznam není nalezen, vrátíme -1
                     if (result == DBNull.Value || result == null)
                     {
-                        return -1; // Nebo jiná hodnota podle potřeby (např. throw new Exception("Rezervace nenalezena"))
+                        return -1;
                     }
 
                     // Vrácení hodnoty jako int
@@ -164,141 +164,134 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             }
         }
 
-
-        //metoda pro vyřízení rezervace (lze použít i pro adopci)
-        public void PridejAdopci(int idPsa, int majitelIdOsoba)
+        //metoda pro adoptování psa na základě rezervace - volá ostatní metody, předává transakci
+        public void ZpracujRezervaciVDatabazi(int majitelIdOsoba, int idPes)
         {
             using (var con = new OracleConnection(_connectionString))
             {
                 con.Open();
 
-                using (var cmd = new OracleCommand("PRIDEJ_ADOPCI", con))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    Console.WriteLine("id psa v PrideAdopci:" + idPsa);
-                    Console.WriteLine("id majitele v PrideAdopci:" + majitelIdOsoba);
-                    // Předání vstupních parametrů proceduře
-                    cmd.Parameters.Add("p_id_psa", OracleDbType.Int32).Value = idPsa;
-                    cmd.Parameters.Add("p_majitel_id_osoba", OracleDbType.Int32).Value = majitelIdOsoba;
+                // Začínáme transakci
+                var transaction = con.BeginTransaction();
 
-                    // Spuštění procedury
-                    cmd.ExecuteNonQuery();
+                try
+                {
+                    // Zpracování změny rezervátora (aktualizace typu osoby)
+                    ZpracujRezervatorZmena(majitelIdOsoba, idPes, con, transaction);
+
+                    // Přidání majitele do tabulky majitele, pokud už tam není
+                    PridejMajitele(majitelIdOsoba, con, transaction);
+
+                    // Přidání adopce do tabulky Adopce
+                    PridejAdopci(idPes, majitelIdOsoba, con, transaction);
+
+                    // Pokud všechny operace proběhnou úspěšně, commitujeme transakci
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    // Pokud dojde k jakékoliv chybě, transakci rollbackujeme
+                    transaction.Rollback();
+                    throw;  // Přeposíláme výjimku dál
                 }
             }
         }
 
-        //public void AktualizujKonecPobytu(int idPsa)
-        //{
-        //    using (var con = new OracleConnection(_connectionString))
-        //    {
-        //        con.Open();
 
-        //        // Vytvoření příkazu pro volání procedury
-        //        using (var cmd = new OracleCommand("AktualizujKonecPobytu", con))
-        //        {
-        //            cmd.CommandType = System.Data.CommandType.StoredProcedure;
-
-        //            // Přidání parametru pro proceduru
-        //            cmd.Parameters.Add(new OracleParameter("p_id_psa", idPsa));
-
-        //            // Spuštění příkazu
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
-
-
-        public bool ExistujeRezervace(int rezervatorIdOsoba, int idPes)
+        //metoda pro adoptování psa
+        public void PridejAdopci(int idPsa, int majitelIdOsoba, OracleConnection con, OracleTransaction transaction)
         {
-            using (var con = new OracleConnection(_connectionString))
+
+            using (var cmd = new OracleCommand("PRIDEJ_ADOPCI", con))
             {
-                con.Open();
-                Console.WriteLine("id osoby v Existuje rezervace:" + rezervatorIdOsoba);
-                using (var cmd = new OracleCommand("SELECT ExistujeRezervace(:rezervatorIdOsoba, :idPes) FROM dual", con))
-                {
-                    // Přidání parametru pro funkci
-                    cmd.Parameters.Add(new OracleParameter("rezervatorIdOsoba", rezervatorIdOsoba));
-                    cmd.Parameters.Add(new OracleParameter("idPes", idPes));
-                    // Získání výsledku z funkce
-                    var result = cmd.ExecuteScalar();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Transaction = transaction;
+                // Předání vstupních parametrů proceduře
+                cmd.Parameters.Add("p_id_psa", OracleDbType.Int32).Value = idPsa;
+                cmd.Parameters.Add("p_majitel_id_osoba", OracleDbType.Int32).Value = majitelIdOsoba;
 
-                    // Pokud je výsledek null, vrátíme false
-                    if (result == DBNull.Value)
-                    {
-                        Console.WriteLine("Výsledek funkce je NULL");
-                        return false;
-                    }
-
-                    // Výpis výsledku pro debugování
-                    Console.WriteLine("result v ExistujeRezervace je: " + result + " (1 znamená TRUE, 0 znamená FALSE)");
-
-                    // Kontrola, zda výsledek je 1 (TRUE) nebo 0 (FALSE)
-                    return Convert.ToInt32(result) == 1;
-                }
+                // Spuštění procedury
+                cmd.ExecuteNonQuery();
             }
         }
 
-
-
-
-        //metoda rpo zpracování, zda se mění typ osoby
-        public void ZpracujRezervatorZmena(int majitelIdOsoba, int idPes)
+        public bool ExistujeRezervace(int rezervatorIdOsoba, int idPes, OracleConnection con)
         {
-            using (var con = new OracleConnection(_connectionString))
+            Console.WriteLine("id osoby v Existuje rezervace:" + rezervatorIdOsoba);
+            using (var cmd = new OracleCommand("SELECT ExistujeRezervace(:rezervatorIdOsoba, :idPes) FROM dual", con))
             {
-                con.Open();
+                // Přidání parametru pro funkci
+                cmd.Parameters.Add(new OracleParameter("rezervatorIdOsoba", rezervatorIdOsoba));
+                cmd.Parameters.Add(new OracleParameter("idPes", idPes));
+                // Získání výsledku z funkce
+                var result = cmd.ExecuteScalar();
 
-                // 1. Zkontroluj, zda existuje rezervace pro daného rezervátora a psa
-                bool existujeRezervace = ExistujeRezervace(majitelIdOsoba, idPes);
+                // Pokud je výsledek null, vrátíme false
+                if (result == DBNull.Value)
+                {
+                    Console.WriteLine("Výsledek funkce je NULL");
+                    return false;
+                }
 
-                if (existujeRezervace)
-                {
-                    // 2. Pokud existuje, změň typ osoby na "P" v tabulce Osoby
-                    using (var updateCmd = new OracleCommand("UPDATE Osoby SET typ_osoby = 'P' WHERE id_osoba = :majitelIdOsoba", con))
-                    {
-                        updateCmd.Parameters.Add(new OracleParameter("majitelIdOsoba", majitelIdOsoba));
-                        updateCmd.ExecuteNonQuery();
-                    }
-                }
-                else
-                {
-                    // Změň typ osoby na "M" v tabulce Osoby
-                    using (var updateCmd = new OracleCommand("UPDATE Osoby SET typ_osoby = 'M' WHERE id_osoba = :majitelIdOsoba", con))
-                    {
-                        updateCmd.Parameters.Add(new OracleParameter("majitelIdOsoba", majitelIdOsoba));
-                        updateCmd.ExecuteNonQuery();
-                    }
-                }
+                // Kontrola, zda výsledek je 1 (TRUE) nebo 0 (FALSE)
+                return Convert.ToInt32(result) == 1;
+
             }
         }
 
-        internal void PridejMajitele(int majitelIdOsoba)
+
+
+
+		//metoda pro zpracování, zda se mění typ osoby
+		public void ZpracujRezervatorZmena(int majitelIdOsoba, int idPes, OracleConnection con, OracleTransaction transaction)
+		{
+			// 1. Zkontroluj, zda existuje rezervace pro daného rezervátora a psa
+			bool existujeRezervace = ExistujeRezervace(majitelIdOsoba, idPes, con);
+
+			if (existujeRezervace)
+			{
+				// 2. Pokud existuje, zavoláme proceduru pro změnu typu osoby na 'P'
+				using (var cmd = new OracleCommand("ZMEN_TYP_OSOBY_P", con))
+				{
+					cmd.CommandType = CommandType.StoredProcedure;
+					cmd.Transaction = transaction;
+					cmd.Parameters.Add("p_id_osoba", OracleDbType.Int32).Value = majitelIdOsoba;
+					cmd.ExecuteNonQuery();
+				}
+			}
+			else
+			{
+				// 3. Pokud neexistuje, zavoláme proceduru pro změnu typu osoby na 'M'
+				using (var cmd = new OracleCommand("ZMEN_TYP_OSOBY_M", con))
+				{
+					cmd.CommandType = CommandType.StoredProcedure;
+					cmd.Transaction = transaction;
+					cmd.Parameters.Add("p_id_osoba", OracleDbType.Int32).Value = majitelIdOsoba;
+					cmd.ExecuteNonQuery();
+				}
+			}
+		}
+
+
+		//metoda pro přidání majitele do tabulky Majitele, pokud už tam není
+		internal void PridejMajitele(int majitelIdOsoba, OracleConnection con, OracleTransaction transaction)
         {
-            using (var con = new OracleConnection(_connectionString))
+            using (var cmd = new OracleCommand("pridat_majitele", con))
             {
-                con.Open();
+                cmd.CommandType = CommandType.StoredProcedure; // Nastavení typu příkazu na proceduru
+                cmd.Transaction = transaction; // Přiřazení transakce
 
-                using (var checkMajitelCmd = new OracleCommand("SELECT COUNT(*) FROM Majitele WHERE id_osoba = :majitelIdOsoba", con))
-                {
-                    checkMajitelCmd.Parameters.Add(new OracleParameter("majitelIdOsoba", majitelIdOsoba));
-                    int count = Convert.ToInt32(checkMajitelCmd.ExecuteScalar());
+                // Přidání parametru pro ID osoby
+                cmd.Parameters.Add(new OracleParameter("p_id_osoba", majitelIdOsoba));
 
-                    if (count == 0)  // Pokud ještě není v tabulce Majitele
-                    {
-                        using (var insertCmd = new OracleCommand("INSERT INTO Majitele (id_osoba) VALUES (:majitelIdOsoba)", con))
-                        {
-                            insertCmd.Parameters.Add(new OracleParameter("majitelIdOsoba", majitelIdOsoba));
-                            insertCmd.ExecuteNonQuery();
-                        }
-                    }
-                }
-
+                // Spuštění procedury
+                cmd.ExecuteNonQuery();
             }
         }
 
+        //metoda pro určení, zda je pes stále v karanténě
         public string ZjistiKarantenu(int idPes)
         {
-            Console.WriteLine("Id psa v Zjisti karantenu: " + idPes);
             using (var con = new OracleConnection(_connectionString))
             {
                 con.Open();
@@ -317,9 +310,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                         Console.WriteLine("Výsledek funkce je NULL");
                         return "Pes nemá aktivní pobyt.";
                     }
-
-                    // Výpis výsledku pro debugování
-                    Console.WriteLine("Výsledek funkce ZjistiKarantenu: " + result);
 
                     return result.ToString();
                 }

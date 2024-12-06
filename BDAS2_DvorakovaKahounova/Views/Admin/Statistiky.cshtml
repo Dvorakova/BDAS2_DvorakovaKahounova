@@ -15,33 +15,40 @@
     ViewData["Title"] = "Statistiky";
 }
 
-<div class="stats-page">
-    <h1>Statistiky útulku</h1>
+@if (ViewBag.Error == null)
+{
+    <div class="stats-page">
+        <h1>Statistiky útulku</h1>
 
-    <table class="stats-table">
-        <thead>
-            <tr>
-                <th>Popis</th>
-                <th>Hodnota</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Celková denní krmná dávka</td>
-                <td>@ViewData["CelkovaDavkaKg"] kg</td>
-            </tr>
-            <tr>
-                <td>Aktuální počet psů v útulku</td>
-                <td>@ViewData["PocetPsuvUtulku"]</td>
-            </tr>
-            <tr>
-                <td>Aktuální počet psů v karanténě</td>
-                <td>@ViewData["PocetPsuVKarantene"]</td>
-            </tr>
-            <tr>
-                <td>Průměrná doba pobytu psů</td>
-                <td>@ViewData["PrumernyPobyt"] dní</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Popis</th>
+                    <th>Hodnota</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Celková denní krmná dávka</td>
+                    <td>@ViewData["CelkovaDavkaKg"] kg</td>
+                </tr>
+                <tr>
+                    <td>Aktuální počet psů v útulku</td>
+                    <td>@ViewData["PocetPsuvUtulku"]</td>
+                </tr>
+                <tr>
+                    <td>Aktuální počet psů v karanténě</td>
+                    <td>@ViewData["PocetPsuVKarantene"]</td>
+                </tr>
+                <tr>
+                    <td>Průměrná doba pobytu psů</td>
+                    <td>@ViewData["PrumernyPobyt"] dní</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+} else
+{
+    <h2>@ViewBag.Error</h2>
+}

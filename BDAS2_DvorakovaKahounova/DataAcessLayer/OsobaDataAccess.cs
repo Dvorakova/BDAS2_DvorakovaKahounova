@@ -17,7 +17,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
         // Metoda pro kontrolu existence emailu
         public bool EmailExists(string email)
         {
-            Console.WriteLine("metoda emailExists v osobaDataAccess.");
             using (var con = new OracleConnection(_connectionString))
             {
                 con.Open();
@@ -32,63 +31,40 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             }
         }
 
-
         public bool RegisterUser(Osoba novaOsoba)
         {
             using (var con = new OracleConnection(_connectionString))
             {
                 con.Open();
-                using (var cmd = new OracleCommand("INSERT INTO OSOBY (JMENO, PRIJMENI, TELEFON, TYP_OSOBY, EMAIL, HESLO, SALT) " +
-                    "VALUES (:jmeno, :prijmeni, :telefon, :typ_osoby, :email, :heslo, :salt)", con))
+                using (var cmd = new OracleCommand("REGISTRACE_UZIVATELE", con))
                 {
-                    cmd.Parameters.Add(new OracleParameter("jmeno", novaOsoba.JMENO));
-                    cmd.Parameters.Add(new OracleParameter("prijmeni", novaOsoba.PRIJMENI));
-                    cmd.Parameters.Add(new OracleParameter("telefon", novaOsoba.TELEFON));
-                    cmd.Parameters.Add(new OracleParameter("typ_osoby", novaOsoba.TYP_OSOBY));
-                    cmd.Parameters.Add(new OracleParameter("email", novaOsoba.EMAIL));
-                    cmd.Parameters.Add(new OracleParameter("heslo", novaOsoba.HESLO));
-                    cmd.Parameters.Add(new OracleParameter("salt", novaOsoba.SALT));
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                    // Vrátí true, pokud byl vložen alespoň jeden řádek
-                    return cmd.ExecuteNonQuery() > 0;
-                }
+                    // Přidání parametrů
+                    cmd.Parameters.Add("p_jmeno", OracleDbType.Varchar2).Value = novaOsoba.JMENO;
+                    cmd.Parameters.Add("p_prijmeni", OracleDbType.Varchar2).Value = novaOsoba.PRIJMENI;
+                    cmd.Parameters.Add("p_telefon", OracleDbType.Varchar2).Value = novaOsoba.TELEFON;
+                    cmd.Parameters.Add("p_typ_osoby", OracleDbType.Varchar2).Value = novaOsoba.TYP_OSOBY;
+                    cmd.Parameters.Add("p_email", OracleDbType.Varchar2).Value = novaOsoba.EMAIL;
+                    cmd.Parameters.Add("p_heslo", OracleDbType.Varchar2).Value = novaOsoba.HESLO;
+                    cmd.Parameters.Add("p_salt", OracleDbType.Varchar2).Value = novaOsoba.SALT;
 
+                    // Výstupní parametr pro počet ovlivněných řádků
+                    var affectedRowsParam = new OracleParameter("p_success", OracleDbType.Int32)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(affectedRowsParam);
+
+                    // Spuštění procedury
+                    cmd.ExecuteNonQuery();
+
+					// Získání počtu ovlivněných řádků
+					var successValue = (Oracle.ManagedDataAccess.Types.OracleDecimal)affectedRowsParam.Value;
+					return successValue.ToInt32() > 0;
+				}
             }
         }
-
-        //public bool RegisterUser(Osoba novaOsoba)
-        //{
-        //	using (var con = new OracleConnection(_connectionString))
-        //	{
-        //		con.Open();
-        //		using (var cmd = new OracleCommand("RegisterUser", con))
-        //		{
-        //			cmd.CommandType = CommandType.StoredProcedure;
-
-        //			// Přidání parametrů
-        //			cmd.Parameters.Add("p_jmeno", OracleDbType.Varchar2).Value = novaOsoba.JMENO;
-        //			cmd.Parameters.Add("p_prijmeni", OracleDbType.Varchar2).Value = novaOsoba.PRIJMENI;
-        //			cmd.Parameters.Add("p_telefon", OracleDbType.Varchar2).Value = novaOsoba.TELEFON;
-        //			cmd.Parameters.Add("p_typ_osoby", OracleDbType.Varchar2).Value = novaOsoba.TYP_OSOBY;
-        //			cmd.Parameters.Add("p_email", OracleDbType.Varchar2).Value = novaOsoba.EMAIL;
-        //			cmd.Parameters.Add("p_heslo", OracleDbType.Varchar2).Value = novaOsoba.HESLO;
-        //			cmd.Parameters.Add("p_salt", OracleDbType.Varchar2).Value = novaOsoba.SALT;
-
-        //			// Výstupní parametr pro počet ovlivněných řádků
-        //			var affectedRowsParam = new OracleParameter("p_success", OracleDbType.Int32)
-        //			{
-        //				Direction = ParameterDirection.Output
-        //			};
-        //			cmd.Parameters.Add(affectedRowsParam);
-
-        //			// Spuštění procedury
-        //			cmd.ExecuteNonQuery();
-
-        //			// Získání počtu ovlivněných řádků
-        //			return Convert.ToInt32(affectedRowsParam.Value) > 0;
-        //		}
-        //	}
-        //}
 
 
 
@@ -172,14 +148,12 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return null; // Pokud uživatel nebyl nalezen
         }
 
-        //přidáno ND pro úpravu uživatelských údajů
         // Metoda pro aktualizaci uživatelských údajů
         public bool UpdateUserProfile(Osoba updatedOsoba)
         {
             using (var con = new OracleConnection(_connectionString))
             {
                 con.Open();
-                //oprava - použití procedury
 
                 using (var cmd = new OracleCommand("UpdateOsoba", con))
                 {

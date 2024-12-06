@@ -12,7 +12,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
     {
         private readonly ChovateleDataAccess _dataAccess;
 
-        // Konstruktor controlleru, který přijímá instanci PesDataAccess
         public ChovateleController(IConfiguration configuration)
         {
             string connectionString = configuration.GetConnectionString("OracleConnection");

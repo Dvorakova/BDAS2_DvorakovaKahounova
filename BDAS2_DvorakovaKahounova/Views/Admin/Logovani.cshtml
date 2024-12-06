@@ -5,7 +5,8 @@
 }
 
 <h1>Historie úprav</h1>
-
+@if (ViewBag.Error == null)
+{
 <div class="log-page">
     <table class="log-table">
         <thead>
@@ -28,5 +29,8 @@
             }
         </tbody>
     </table>
-</div>
-
+    </div>
+} else
+{
+    <h3>ViewBag.Error</h3>
+}

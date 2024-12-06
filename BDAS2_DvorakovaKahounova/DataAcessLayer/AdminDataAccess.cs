@@ -69,7 +69,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                         OracleDecimal oracleDecimal = (OracleDecimal)outputParam.Value;
                         if (!oracleDecimal.IsNull)
                         {
-                            celkemDavkaKg = oracleDecimal.Value; // Používáme Value k získání decimal hodnoty
+                            celkemDavkaKg = oracleDecimal.Value; 
                         }
                     }
                 }
@@ -90,21 +90,17 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    // Definice výstupního parametru
                     OracleParameter outputParam = new OracleParameter("p_pocet_psu", OracleDbType.Decimal);
                     outputParam.Direction = ParameterDirection.Output;
 
                     command.Parameters.Add(outputParam);
 
-                    // Spustíme proceduru
                     command.ExecuteNonQuery();
 
-                    // Použijeme převod na OracleDecimal a následně na Int32
                     if (outputParam.Value != DBNull.Value)
                     {
                         OracleDecimal oracleDecimalValue = (OracleDecimal)outputParam.Value;
 
-                        // Převedeme OracleDecimal na Int32
                         pocetPsu = oracleDecimalValue.ToInt32();
                     }
                 }
@@ -127,21 +123,17 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
-                        // Definice výstupního parametru
                         OracleParameter outputParam = new OracleParameter("p_pocet_psu", OracleDbType.Decimal);
                         outputParam.Direction = ParameterDirection.Output;
 
                         command.Parameters.Add(outputParam);
 
-                        // Spustíme proceduru
                         command.ExecuteNonQuery();
 
-                        // Použijeme převod na OracleDecimal a následně na Int32
                         if (outputParam.Value != DBNull.Value)
                         {
                             OracleDecimal oracleDecimalValue = (OracleDecimal)outputParam.Value;
 
-                            // Převedeme OracleDecimal na Int32
                             pocetPsu = oracleDecimalValue.ToInt32();
                         }
                     }
@@ -182,7 +174,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                         OracleDecimal oracleDecimal = (OracleDecimal)outputParam.Value;
                         if (!oracleDecimal.IsNull)
                         {
-                            // Získáme hodnotu jako double místo decimal
                             prumernyPobyt = Convert.ToDecimal(oracleDecimal.ToDouble());
                         }
                     }
@@ -335,7 +326,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
         public List<Dictionary<string, string>> SearchTableProcedure(string tableName, string searchTerm)
         {
             var results = new List<Dictionary<string, string>>();
-			//bool isNumber = decimal.TryParse(searchTerm, out decimal numericValue);
             bool isDate = DateTime.TryParse(searchTerm, out DateTime dateValue);
 
             using (var con = new OracleConnection(_connectionString))
@@ -442,7 +432,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 		}
 
 
-		//metody pro načtení do comboboxů
+		//metody pro načítání do comboboxů
 		public List<Pes> GetPsi()
 		{
 			var psi = new List<Pes>();

@@ -5,69 +5,74 @@
 }
 
 <h1>Seznam psů k adopci</h1>
-
-@foreach (var pes in Model)
+@if (ViewBag.Message == null)
 {
-    <div class="container-mujpes">
-        <div>
-            @{
-                string imageUrl = pes.ID_FOTOGRAFIE != null
-                ? Url.Action("GetImage", "Pes", new { id = pes.ID_FOTOGRAFIE })
-                : Url.Action("DefaultImage", "Pes");
-            }
 
-            <img src="@imageUrl" alt="Fotka psa" class="img">
+	@foreach (var pes in Model)
+	{
+		<div class="container-mujpes">
+			<div>
+				@{
+					string imageUrl = pes.ID_FOTOGRAFIE != null
+					? Url.Action("GetImage", "Pes", new { id = pes.ID_FOTOGRAFIE })
+					: Url.Action("DefaultImage", "Pes");
+				}
 
-        </div>
-        <div class="info-mujpes">
-            @* <h2><strong>Jméno psa: </strong> @pes.JMENO</h2> *@
-            <h2><strong>Jméno psa: </strong> @(string.IsNullOrEmpty(pes.JMENO) ? "Neznámé" : pes.JMENO)</h2>
-            <p><strong>Věk:</strong> @(pes.NAROZENI.HasValue ? (DateTime.Now.Year - pes.NAROZENI.Value.Year) + " let" : "Není znám") </p>
+				<img src="@imageUrl" alt="Fotka psa" class="img">
 
-            @if (@pes.POHLAVI == 0)
-            {
-                <p><strong>Pohlaví: &male;</strong></p>
-            }
-            @if (@pes.POHLAVI == 1)
-            {
-                <p><strong>Pohlaví: &female;</strong></p>
-            }
-            <p><strong>Plemeno:</strong> @pes.PLEMENO</p>
-            <p><strong>Barva:</strong> @pes.BARVA</p>
-            <p><strong>Vlastnosti:</strong> @pes.VLASTNOSTI</p>
+			</div>
+			<div class="info-mujpes">
+				<h2><strong>Jméno psa: </strong> @(string.IsNullOrEmpty(pes.JMENO) ? "Neznámé" : pes.JMENO)</h2>
+				<p><strong>Věk:</strong> @(pes.NAROZENI.HasValue ? (DateTime.Now.Year - pes.NAROZENI.Value.Year) + " let" : "Není znám") </p>
 
-            @if (User.Identity.IsAuthenticated)
-            {
-                @if (pes.KARANTENA_DO.HasValue)
-                {
-                <p class="karantena-info">
-                    <strong>Karanténa do:</strong> @pes.KARANTENA_DO?.ToShortDateString()
-                    <span class="tooltip-icon">?</span>
-                    <span class="tooltip-text">Datum, do kterého musí být pes v karanténě z důvodu ochrany zdraví ostatních zvířat a lidí.</span>
-                </p>
-                }
-                <p>
-                    @if (pes.REZERVOVANO != null)
-                    {
-                        <strong>Rezervace: </strong><span>@pes.REZERVOVANO</span>
-                    }
-                    else
-                    {
-                        @* <button class="btn btn-primary">Rezervovat</button> *@
-                        <form asp-action="Rezervovat" asp-controller="Pes" method="post">
-                            <input type="hidden" name="idPsa" value="@pes.ID_PSA" />
-                            <button type="submit" class="btn-rezervace2" onclick="processReservation()">Rezervovat</button>
-                        </form>
-                    }
-                </p>
-            }
-        </div>
-    </div>
+				@if (@pes.POHLAVI == 0)
+				{
+					<p><strong>Pohlaví: &male;</strong></p>
+				}
+				@if (@pes.POHLAVI == 1)
+				{
+					<p><strong>Pohlaví: &female;</strong></p>
+				}
+				<p><strong>Plemeno:</strong> @pes.PLEMENO</p>
+				<p><strong>Barva:</strong> @pes.BARVA</p>
+				<p><strong>Vlastnosti:</strong> @pes.VLASTNOSTI</p>
+
+				@if (User.Identity.IsAuthenticated)
+				{
+					@if (pes.KARANTENA_DO.HasValue)
+					{
+						<p class="karantena-info">
+							<strong>Karanténa do:</strong> @pes.KARANTENA_DO?.ToShortDateString()
+							<span class="tooltip-icon">?</span>
+							<span class="tooltip-text">Datum, do kterého musí být pes v karanténě z důvodu ochrany zdraví ostatních zvířat a lidí.</span>
+						</p>
+					}
+					<p>
+						@if (pes.REZERVOVANO != null)
+						{
+							<strong>Rezervace: </strong>
+
+							<span>@pes.REZERVOVANO</span>
+						}
+						else
+						{
+							<form asp-action="Rezervovat" asp-controller="Pes" method="post">
+								<input type="hidden" name="idPsa" value="@pes.ID_PSA" />
+								<button type="submit" class="btn-rezervace2" onclick="processReservation()">Rezervovat</button>
+							</form>
+						}
+					</p>
+				}
+			</div>
+		</div>
+	}
 }
-
 <script>
-    function processReservation() {
-        // Můžete přidat logiku pro vyřízení rezervace, např. potvrzení
-        alert("Rezervace byla úspěšně dokončena.");
-    }
+	function processReservation() {
+		if (TempData["Message"] != null) {
+			alert("Došlo k chybě při vytváření rezervace.");
+		} else {
+			alert("Rezervace byla úspěšně dokončena.");
+		}
+	}
 </script>

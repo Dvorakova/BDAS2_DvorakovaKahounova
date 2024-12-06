@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Utilities;
 using System.Security.Claims;
 using static System.Runtime.InteropServices.Marshalling.IIUnknownCacheStrategy;
 
@@ -23,20 +24,28 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 		public IActionResult Statistiky()
 		{
-			decimal celkovaDavkaKg = _dataAccess.SpoctiKrmneDavky();
-			ViewData["CelkovaDavkaKg"] = celkovaDavkaKg;
+			try
+			{
+				decimal celkovaDavkaKg = _dataAccess.SpoctiKrmneDavky();
+				ViewData["CelkovaDavkaKg"] = celkovaDavkaKg;
 
-			int pocetPsu = _dataAccess.SpoctiPocetPsuVUtulku();
+				int pocetPsu = _dataAccess.SpoctiPocetPsuVUtulku();
 
-			// Předáme počet psů do ViewData, aby se zobrazil na stránce
-			ViewData["PocetPsuvUtulku"] = pocetPsu;
+				// Předáme počet psů do ViewData, aby se zobrazil na stránce
+				ViewData["PocetPsuvUtulku"] = pocetPsu;
 
-			int pocetPsuVKarantene = _dataAccess.SpoctiPocetPsuVKarantene();
-			ViewData["PocetPsuVKarantene"] = pocetPsuVKarantene;
+				int pocetPsuVKarantene = _dataAccess.SpoctiPocetPsuVKarantene();
+				ViewData["PocetPsuVKarantene"] = pocetPsuVKarantene;
 
-			decimal prumernyPobyt = _dataAccess.SpoctiPrumernouDobuPobytu();
-			prumernyPobyt = Math.Round(prumernyPobyt, 2);
-			ViewData["PrumernyPobyt"] = prumernyPobyt;
+				decimal prumernyPobyt = _dataAccess.SpoctiPrumernouDobuPobytu();
+				prumernyPobyt = Math.Round(prumernyPobyt, 2);
+				ViewData["PrumernyPobyt"] = prumernyPobyt;
+
+			}
+			catch (Exception)
+			{
+				ViewBag.Error = "Chyba při načítání stránky.";
+			}
 
 			var originallRole = HttpContext.Session.GetString("OriginalRole");
 			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
@@ -46,24 +55,53 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 		public IActionResult Logovani()
 		{
+
+			List<Log> logs = new List<Log>();
+
+			try
+			{
+				logs = _dataAccess.GetLogs();
+
+			}
+			catch (Exception)
+			{
+				ViewBag.Error = "Chyba při načítání dat na stránce.";
+			}
 			var originallRole = HttpContext.Session.GetString("OriginalRole");
 			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
-			List<Log> logs = _dataAccess.GetLogs();
 			return View(logs);
 		}
 
 		public IActionResult Katalog()
 		{
-			List<KatalogItem> katalog = _dataAccess.GetKatalogViewAll();
+			List<KatalogItem> katalog = new List<KatalogItem>();
+
+			try
+			{
+				katalog = _dataAccess.GetKatalogViewAll();
+			}
+			catch (Exception)
+			{
+				TempData["ErrorMessage"] = "Chyba při načítání dat na stránce.";
+			}
+
 			var originallRole = HttpContext.Session.GetString("OriginalRole");
-			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));			
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 			return View(katalog);
 		}
 
 		public IActionResult Emulace()
 		{
+			var users = new List<Osoba>();
 
-			var users = _dataAccess.GetAllUsers();
+			try
+			{
+				users = _dataAccess.GetAllUsers();
+			}
+			catch (Exception)
+			{
+				ViewBag.Error = "Chyba při načítání dat na stránce.";
+			}
 
 			var originalRole = HttpContext.Session.GetString("OriginalRole");
 			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
@@ -330,7 +368,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		{
 			try
 			{
-				//přidáno - potřeba upravit a pak přidat do editace stejný foreach
 				foreach (var key in values.Keys.ToList())
 				{
 					if (key.StartsWith("ID_NADRIZENEHO") && int.TryParse(values[key], out var result))
@@ -349,7 +386,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 					{
 						values[key] = result3.ToString();
 					}
-					else if ((key.StartsWith("ID_OSOBA")|| key.StartsWith("NAHRANO_ID_OSOBA")) && int.TryParse(values[key], out var result4))
+					else if ((key.StartsWith("ID_OSOBA") || key.StartsWith("NAHRANO_ID_OSOBA")) && int.TryParse(values[key], out var result4))
 					{
 						values[key] = result4.ToString();
 					}
@@ -390,17 +427,13 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 						values[key] = result13.ToString();
 					}
 				}
-				//
-
-
+				//přidání záznamu
 				_dataAccess.InsertRecord(tableName, values);
 			}
 			catch (Exception)
 			{
 				TempData["ErrorMessage"] = "Záznam se nepovedlo přidat";
 			}
-			// Zde zavoláme metodu pro přidání záznamu
-
 
 			// Po úspěšném přidání záznamu přesměrujeme zpět na Index stránku
 			return RedirectToAction("Index");
@@ -431,15 +464,15 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		[HttpPost]
 		public IActionResult UpdateRecord(string tableName, Dictionary<string, string> values, Dictionary<string, string> oldValues)
 		{
-			//try
-			//{
-			// Zavolejte DataAccess metodu pro aktualizaci
-			_dataAccess.UpdateRecord(tableName, values, oldValues);
-			//}
-			//catch (Exception)
-			//{
-			//	TempData["ErrorMessage"] = "Záznam se nepovedlo přidat";
-			//}
+			try
+			{
+				// VoláníDataAccess metody pro aktualizaci
+				_dataAccess.UpdateRecord(tableName, values, oldValues);
+			}
+			catch (Exception)
+			{
+				TempData["ErrorMessage"] = "Záznam se nepovedlo aktualizovat";
+			}
 
 
 			// Přesměrování zpět na Index stránku
@@ -456,12 +489,5 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			return RedirectToAction("Index");
 		}
 
-		//[HttpPost]
-		//public IActionResult Search(string tableName, Dictionary<string, string> values)
-		//{
-		//	TempData["IsSearchMode"] = true;
-
-		//	return RedirectToAction("Index");
-		//}
 	}
 }

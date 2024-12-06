@@ -19,18 +19,19 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             _dataAccess = new PesDataAcess(connectionString);
         }
 
-        //index přesunut do chovatele a využit pro chovatele
-        //public IActionResult Index()
-        //{
-        //    List<Pes> psi = _dataAccess.GetAllPsi();
-
-        //    // Předání seznamu psů do pohledu (view)
-        //    return View(psi);
-        //}
-
         public IActionResult PsiKAdopci()
         {
-            List<Pes> psi = _dataAccess.GetAllPsi();
+			List<Pes> psi = new List<Pes>();
+
+			try
+            {
+				psi = _dataAccess.GetAllPsi();
+			}
+            catch (Exception)
+            {
+                ViewBag.Message = "Došlo při načítání psů k adopci.";
+            }
+            
 
 			var originallRole = HttpContext.Session.GetString("OriginalRole");
 			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
@@ -49,12 +50,19 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 			var originallRole = HttpContext.Session.GetString("OriginalRole");
 			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
-
-			List<Pes> psi = _dataAccess.GetPsiProOsobu(osobaId);
+			List<Pes> psi = new List<Pes>();
+			try
+            {
+				psi = _dataAccess.GetPsiProOsobu(osobaId);
+			}
+            catch (Exception)
+            {
+                ViewBag.Error = "Chyba při načítání psů.";
+            }
+			
             return View(psi);
         }
 
-        //pridano KK
         private int GetLoggedInUserId()
         {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
@@ -62,20 +70,17 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             {
                 return int.Parse(userIdClaim.Value);
             }
-            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);  // získá ID uživatele z Claims
-            //return int.Parse(userId);
             return 0;
         }
 
-        //pridano ND
-        //pokud pes nemá v databázi vlastní obrázek, je mu přiřazen defaultní obrázek (na stránce MujPes)
+        //pokud pes nemá v databázi vlastní obrázek, je mu přiřazen defaultní obrázek (např. na stránce MujPes)
         public IActionResult DefaultImage()
         {
             var defaultImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/ObrazekDefault.png");
             var imageFileStream = System.IO.File.OpenRead(defaultImagePath);
             return File(imageFileStream, "image/png");
         }
-
+        // načtení obrázku
         public IActionResult GetImage(int id)
         {
             var fotografie = _dataAccess.GetFotografieById(id);
@@ -96,17 +101,28 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             {
 				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
             }
+            
+			try
+			{
+				//Zavolání metody pro vytvoření rezervace
+				_dataAccess.VytvorRezervaciSTransakci(idPsa, rezervatorId);
 
-            var identity = (ClaimsIdentity)User.Identity;
+			}
+			catch (Exception ex)
+			{
+				TempData["Message"] = "Došlo k chybě při vytváření rezervace.";
+
+				return RedirectToAction("PsiKAdopci", "Pes");
+			}
+
+			var identity = (ClaimsIdentity)User.Identity;
 
             string role = identity.FindFirst(ClaimTypes.Role)?.Value;
+            
             if (role.Equals("M") || role.Equals("U"))
             {
-
-                _dataAccess.ZmenTypOsoby(rezervatorId);
-
-                // Odstraníme staré hodnoty z claims
-                identity.RemoveClaim(identity.FindFirst(ClaimTypes.Role));
+				// Odstraníme staré hodnoty z claims
+				identity.RemoveClaim(identity.FindFirst(ClaimTypes.Role));
 
                 if (role.Equals("U"))
                 {
@@ -122,25 +138,8 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
                 // Uložíme nový ClaimsPrincipal do cookies pro autentizaci
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-                _dataAccess.PridatDoRezervatori(rezervatorId);
             }
 
-            try
-            {
-                //Zavolání metody pro vytvoření rezervace
-               
-                _dataAccess.VytvorRezervaci(idPsa, rezervatorId);
-
-            }
-            catch (Exception ex)
-            {
-                // Můžete logovat chybu nebo informovat uživatele
-                return StatusCode(500, "Došlo k chybě při vytváření rezervace.");
-            }
-
-			// Přesměrování na seznam psů k adopci
-			//return RedirectToAction("PsiKAdopci");
 			return RedirectToAction("Index", "Rezervace");
         }
     }
