@@ -192,10 +192,39 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return prumernyPobyt;
         }
 
+		// Metoda pro výpis systémového katalogu:
+		public List<KatalogItem> GetKatalogViewAll()
+		{
+			var katalogItems = new List<KatalogItem>();
 
-        //Metody pro emulaci:
-        // Metoda pro výpis všech uživatelů
-        public List<Osoba> GetAllUsers()
+			using (var con = new OracleConnection(_connectionString))
+			{
+				con.Open();
+				using (var cmd = new OracleCommand("SELECT NAZEV, TYP, STATUS FROM KATALOG_VIEW_ALL", con))
+				{
+					using (var reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							katalogItems.Add(new KatalogItem
+							{
+								Nazev = reader.GetString(0),
+								Typ = reader.GetString(1),
+								Status = reader.GetString(2)
+							});
+						}
+					}
+				}
+			}
+
+			return katalogItems;
+		}
+
+
+
+		//Metody pro emulaci:
+		// Metoda pro výpis všech uživatelů
+		public List<Osoba> GetAllUsers()
         {
             var users = new List<Osoba>();
 
@@ -2676,6 +2705,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			}
 		}
 
+		
 
 	}
 }

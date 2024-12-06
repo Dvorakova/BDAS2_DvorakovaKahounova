@@ -1,0 +1,41 @@
+﻿@model List<KatalogItem>
+
+@{
+    ViewData["Title"] = "Systémový katalog";
+}
+
+<h1>Systémový katalog</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Název</th>
+                <th>Typ</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Nazev</td>
+                    <td>@item.Typ</td>
+                    <td>@item.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>V katalogu nejsou žádná data k zobrazení.</p>
+}

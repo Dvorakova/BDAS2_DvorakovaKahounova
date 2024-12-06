@@ -104,6 +104,12 @@
 							</li>
 
 						}
+						@if (User.Identity.IsAuthenticated && User.IsInRole("A"))
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Katalog">Systémový katalog</a>
+							</li>
+						}
 						<!-- Společné možnosti (kromě administrátora)-->
 						@if (!(User.Identity.IsAuthenticated && User.IsInRole("A")))
 						{

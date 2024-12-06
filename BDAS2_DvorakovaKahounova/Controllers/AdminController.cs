@@ -51,6 +51,15 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			List<Log> logs = _dataAccess.GetLogs();
 			return View(logs);
 		}
+
+		public IActionResult Katalog()
+		{
+			List<KatalogItem> katalog = _dataAccess.GetKatalogViewAll();
+			var originallRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));			
+			return View(katalog);
+		}
+
 		public IActionResult Emulace()
 		{
 
