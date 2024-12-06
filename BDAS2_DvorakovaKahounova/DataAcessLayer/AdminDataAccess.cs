@@ -412,6 +412,34 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			return osoby;
 		}
 
+
+		//metody pro načtení do comboboxů
+		public List<Pes> GetPsi()
+		{
+			var psi = new List<Pes>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_PSA, JmenoPsa, CisloCipu FROM CB_PSI";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						psi.Add(new Pes
+						{
+							ID_PSA = reader.GetInt32(0),
+							JMENO = !reader.IsDBNull(1) ? reader.GetString(1) : "Neznámý",
+							CISLO_CIPU = !reader.IsDBNull(2) ? reader.GetString(2) : "Bez čipu"
+						});
+					}
+				}
+			}
+
+			return psi;
+		}
+
 		public List<Osoba> GetZamestnanci()
 		{
 			var zamestnanci = new List<Osoba>();
@@ -453,6 +481,322 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
 			return zamestnanci;
 		}
+
+		public List<Osoba> GetMajitele()
+		{
+			var majitele = new List<Osoba>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_OSOBA, JMENO, PRIJMENI FROM CB_MAJITELE";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						majitele.Add(new Osoba
+						{
+							ID_OSOBA = reader.GetInt32(reader.GetOrdinal("ID_OSOBA")),
+							JMENO = reader.GetString(reader.GetOrdinal("JMENO")),
+							PRIJMENI = reader.GetString(reader.GetOrdinal("PRIJMENI"))
+						});
+					}
+				}
+			}
+
+			return majitele;
+		}
+
+		public List<Osoba> GetRezervatori()
+		{
+			var seznam = new List<Osoba>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_OSOBA, JMENO, PRIJMENI FROM CB_REZERVATORI";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						seznam.Add(new Osoba
+						{
+							ID_OSOBA = reader.GetInt32(reader.GetOrdinal("ID_OSOBA")),
+							JMENO = reader.GetString(reader.GetOrdinal("JMENO")),
+							PRIJMENI = reader.GetString(reader.GetOrdinal("PRIJMENI"))
+						});
+					}
+				}
+			}
+
+			return seznam;
+		}
+
+		public List<Osoba> GetOsoby()
+		{
+			var seznam = new List<Osoba>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_OSOBA, JMENO, PRIJMENI FROM CB_OSOBY";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						seznam.Add(new Osoba
+						{
+							ID_OSOBA = reader.GetInt32(reader.GetOrdinal("ID_OSOBA")),
+							JMENO = reader.GetString(reader.GetOrdinal("JMENO")),
+							PRIJMENI = reader.GetString(reader.GetOrdinal("PRIJMENI"))
+						});
+					}
+				}
+			}
+
+			return seznam;
+		}
+
+		public List<Barva> GetBarvy()
+		{
+			var seznam = new List<Barva>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_BARVA, NAZEV FROM CB_BARVY";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						seznam.Add(new Barva
+						{
+							Id = reader.GetInt32(reader.GetOrdinal("ID_BARVA")),
+							Nazev = reader.GetString(reader.GetOrdinal("NAZEV"))
+						});
+					}
+				}
+			}
+
+			return seznam;
+		}
+
+		public List<Plemeno> GetPlemena()
+		{
+			var seznam = new List<Plemeno>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_PLEMENO, NAZEV FROM CB_PLEMENA";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						seznam.Add(new Plemeno
+						{
+							Id = reader.GetInt32(reader.GetOrdinal("ID_PLEMENO")),
+							Nazev = reader.GetString(reader.GetOrdinal("NAZEV"))
+						});
+					}
+				}
+			}
+
+			return seznam;
+		}
+
+		public List<DuvodPobytu> GetDuvody()
+		{
+			var seznam = new List<DuvodPobytu>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_DUVOD, DUVOD FROM CB_DUVODY";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						seznam.Add(new DuvodPobytu
+						{
+							Id = reader.GetInt32(reader.GetOrdinal("ID_DUVOD")),
+							Nazev = reader.GetString(reader.GetOrdinal("DUVOD"))
+						});
+					}
+				}
+			}
+
+			return seznam;
+		}
+
+		public List<Predpis> GetPredpisy()
+		{
+			var seznam = new List<Predpis>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_PREDPIS, povinny_pocet_dnu_karanteny FROM CB_PREDPIS";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						seznam.Add(new Predpis
+						{
+							Id = reader.GetInt32(reader.GetOrdinal("ID_PREDPIS")),
+							PocetDni = reader.GetInt32(reader.GetOrdinal("povinny_pocet_dnu_karanteny"))
+						});
+					}
+				}
+			}
+
+			return seznam;
+		}
+
+		public List<Pohlavi> GetPohlavi()
+		{
+			var seznam = new List<Pohlavi>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_POHLAVI, NAZEV FROM CB_POHLAVI";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						seznam.Add(new Pohlavi
+						{
+							Id = reader.GetInt32(reader.GetOrdinal("ID_POHLAVI")),
+							Nazev = reader.GetString(reader.GetOrdinal("NAZEV"))
+						});
+					}
+				}
+			}
+
+			return seznam;
+		}
+
+		public List<Vlastnost> GetVlastnosti()
+		{
+			var seznam = new List<Vlastnost>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_VLASTNOST, NAZEV FROM CB_VLASTNOSTI";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						seznam.Add(new Vlastnost
+						{
+							Id = reader.GetInt32(reader.GetOrdinal("ID_VLASTNOST")),
+							Nazev = reader.GetString(reader.GetOrdinal("NAZEV"))
+						});
+					}
+				}
+			}
+
+			return seznam;
+		}
+
+		public List<Fotografie> GetFotografie()
+		{
+			var seznam = new List<Fotografie>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_FOTOGRAFIE, NAZEV_SOUBORU FROM CB_FOTOGRAFIE";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						seznam.Add(new Fotografie
+						{
+							id_fotografie = reader.GetInt32(reader.GetOrdinal("ID_FOTOGRAFIE")),
+							nazev_souboru = reader.GetString(reader.GetOrdinal("NAZEV_SOUBORU"))
+						});
+					}
+				}
+			}
+
+			return seznam;
+		}
+
+		public List<Pobyt> GetPobyty()
+		{
+			var seznam = new List<Pobyt>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_POBYT, JMENO, CISLO_CIPU FROM CB_POBYTY";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						
+							var pobyt = new Pobyt
+						{
+							Id = reader.GetInt32(reader.GetOrdinal("ID_POBYT")),
+							JmenoPsa = !reader.IsDBNull(1) ? reader.GetString(1) : "Neznámý",
+							cisloCipu = !reader.IsDBNull(2) ? reader.GetString(2) : "Bez čipu"
+						};
+						seznam.Add(pobyt);
+					}
+				}
+			}
+
+			return seznam;
+		}
+
+		public List<Zaznam> GetZaznamy()
+		{
+			var seznam = new List<Zaznam>();
+
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+				var query = "SELECT ID_ZAZNAM_POBYT, JMENO, CISLO_CIPU FROM CB_ZAZNAMY";
+				using (var command = new OracleCommand(query, connection))
+				using (var reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						var zaznam = new Zaznam
+						{
+							Id = reader.GetInt32(reader.GetOrdinal("ID_ZAZNAM_POBYT")),
+							JmenoPsa = !reader.IsDBNull(1) ? reader.GetString(1) : "Neznámý",
+							cisloCipu = !reader.IsDBNull(2) ? reader.GetString(2) : "Bez čipu"
+
+						};
+						seznam.Add(zaznam);
+						
+					}
+				}
+			}
+
+			return seznam;
+		}
+
+
+
+
+
+
 
 
 

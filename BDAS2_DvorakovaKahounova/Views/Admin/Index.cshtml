@@ -12,11 +12,11 @@
 		@TempData["ErrorMessage"]
 	</div> *@
 
-		<div class="alert alert-danger alert-dismissible fade show" role="alert">
-			<strong>Chyba!</strong> @TempData["ErrorMessage"]
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div>
-	
+	<div class="alert alert-danger alert-dismissible fade show" role="alert">
+		<strong>Chyba!</strong> @TempData["ErrorMessage"]
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
 
 }
 
@@ -26,7 +26,7 @@
 	{
 		continue;
 	}
-	
+
 	<div class="log-page">
 		<h2>Tabulka: @tableGroup.Key</h2>
 
@@ -42,7 +42,7 @@
 					bool isPrimaryKey = index == 0 && column.ColumnName.StartsWith("ID_") && column.ColumnName != "ID_OSOBA" && tableGroup.Key.ToUpper() != "PSI_VLASTNOSTI";  // První sloupec, který začíná na 'id_'
 					bool isOsobaPrimaryKey = tableGroup.Key.ToUpper() == "OSOBY" && column.ColumnName == "ID_OSOBA";
 					<label>
-						@column.ColumnName (@column.DataType):
+						@* @column.ColumnName (@column.DataType): *@
 						@if (ViewBag.EditValues != null && ViewBag.EditValues.ContainsKey(column.ColumnName))
 						{
 							<!-- Skrytá pole pro staré hodnoty -->
@@ -52,12 +52,204 @@
 						{
 							@* Zakázání vstupu pro primární klíč *@
 							<input type="hidden" name="values[@column.ColumnName]" value="@ViewBag.EditValues[column.ColumnName]" />
-							<input type="text" disabled name="values[@column.ColumnName]" value="@ViewBag.EditValues[column.ColumnName]" />
+							@* <input type="text" disabled name="values[@column.ColumnName]" value="@ViewBag.EditValues[column.ColumnName]" /> *@
 						}
 						else
 						{
-							@* Normální vstup pro ostatní sloupce *@
-							<input type="text" name="values[@column.ColumnName]" value="@ViewBag.EditValues[column.ColumnName]" />
+							@* //////////////////////////////////////////////////////////////////////////////////////////// *@
+							bool isForeignKey = column.ColumnName.StartsWith("ID_") || column.ColumnName.StartsWith("MAJITEL_ID")
+							|| column.ColumnName.StartsWith("REZERVATOR_ID_") || column.ColumnName.StartsWith("NAHRANO_ID_") || column.ColumnName.StartsWith("ZMENENO_ID_");
+							@if (isForeignKey)
+							{
+								@if (column.ColumnName.Equals("ID_PSA"))
+								{
+									<text>Vyberte psa:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte psa --</option>
+										@foreach (var pes in ViewBag.Psi as List<Pes>)
+										{
+											<option value="@pes.ID_PSA">@pes.JMENO (@pes.CISLO_CIPU)</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_NADRIZENEHO"))
+								{
+									<text>Vyberte zaměstnance:</text>
+									<select name="values[@column.ColumnName]">
+										<option value=""> --Vyberte-- </option>
+										@foreach (var osoba in ViewBag.Zamestnanci as List<Osoba>)
+										{
+											<option value="@osoba.ID_OSOBA"> @osoba.JMENO @osoba.PRIJMENI </option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("MAJITEL_ID_OSOBA"))
+								{
+									<text>Vyberte majitele:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var majitel in ViewBag.Majitele as List<Osoba>)
+										{
+											<option value="@majitel.ID_OSOBA">@majitel.JMENO @majitel.PRIJMENI</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("REZERVATOR_ID_OSOBA"))
+								{
+									<text>Vyberte rezervátora:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var rezervator in ViewBag.Rezervatori as List<Osoba>)
+										{
+											<option value="@rezervator.ID_OSOBA">@rezervator.JMENO @rezervator.PRIJMENI</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("NAHRANO_ID_OSOBA"))
+								{
+									<text>Kdo fotografii nahrál:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var rezervator in ViewBag.Osoby as List<Osoba>)
+										{
+											<option value="@rezervator.ID_OSOBA">@rezervator.JMENO @rezervator.PRIJMENI</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ZMENENO_ID_OSOBA"))
+								{
+									<text>Kdo fotografii upravil:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var rezervator in ViewBag.Osoby as List<Osoba>)
+										{
+											<option value="@rezervator.ID_OSOBA">@rezervator.JMENO @rezervator.PRIJMENI</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_OSOBA"))
+								{
+									<text>Vyberte osobu:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var rezervator in ViewBag.Osoby as List<Osoba>)
+										{
+											<option value="@rezervator.ID_OSOBA">@rezervator.JMENO @rezervator.PRIJMENI</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_DUVOD"))
+								{
+									<text>Vyberte důvod pobytu:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var duvod in ViewBag.Duvody as List<DuvodPobytu>)
+										{
+											<option value="@duvod.Id">@duvod.Nazev</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_BARVA"))
+								{
+									<text>Vyberte barvu:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var barva in ViewBag.Barvy as List<Barva>)
+										{
+											<option value="@barva.Id">@barva.Nazev</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_PLEMENO"))
+								{
+									<text>Vyberte plemeno:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var plemeno in ViewBag.Plemena as List<Plemeno>)
+										{
+											<option value="@plemeno.Id">@plemeno.Nazev</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_PREDPIS"))
+								{
+									<text>Vyberte počet dní karantény:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var predpis in ViewBag.Predpisy as List<Predpis>)
+										{
+											<option value="@predpis.Id">@predpis.PocetDni</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_POHLAVI"))
+								{
+									<text>Vyberte pohlaví:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var pohlavi in ViewBag.Pohlavi as List<Pohlavi>)
+										{
+											<option value="@pohlavi.Id">@pohlavi.Nazev</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_VLASTNOST"))
+								{
+									<text>Vyberte vlastnost:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var vlastnost in ViewBag.Vlastnosti as List<Vlastnost>)
+										{
+											<option value="@vlastnost.Id">@vlastnost.Nazev</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_FOTOGRAFIE"))
+								{
+									<text>Vyberte fotografii:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var fotografie in ViewBag.Fotografie as List<Fotografie>)
+										{
+											<option value="@fotografie.id_fotografie">@fotografie.nazev_souboru</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_ZAZNAM_POBYT"))
+								{
+									<text>Vyberte psa:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var zaznam in ViewBag.Zaznamy as List<Zaznam>)
+										{
+											<option value="@zaznam.Id">@zaznam.JmenoPsa (@zaznam.cisloCipu)</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_POBYT"))
+								{
+									<text>Vyberte psa:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var pobyt in ViewBag.Pobyty as List<Pobyt>)
+										{
+											<option value="@pobyt.Id">@pobyt.JmenoPsa (@pobyt.cisloCipu)</option>
+										}
+									</select>
+								}
+
+
+
+
+							}
+							else
+							{
+								<text>@column.ColumnName.ToLower():</text>
+								@* Normální vstup pro ostatní sloupce *@
+								<input type="text" name="values[@column.ColumnName]" value="@ViewBag.EditValues[column.ColumnName]" />
+							}
+							@* //////////////////////////////////////////////////////////////////////////////////////////// *@
+							
 						}
 					</label>
 
@@ -65,40 +257,226 @@
 				}
 				<button class="btn btn-primary" type="submit">Uložit změny</button>
 			</form>
-		} else {
-		<h3>Přidat nový záznam</h3>
+		}
+		else
+		{
+			@* Jinak se zobrazí formulář pro přidávání *@
+			<h3>Přidat nový záznam</h3>
 
 
-		<form method="post" asp-action="AddRecord" asp-route-tableName="@tableGroup.Key">
-			@foreach (var (column, index) in tableGroup.Select((column, index) => (column, index)))  // Přidání indexu pro kontrolu prvního sloupce
-			{
-				// Zakázání pouze prvního sloupce (primární klíč) a specifických sloupců jako 'id_osoba'
+			<form method="post" asp-action="AddRecord" asp-route-tableName="@tableGroup.Key">
+				@foreach (var (column, index) in tableGroup.Select((column, index) => (column, index)))  // Přidání indexu pro kontrolu prvního sloupce
+				{
+					// Zakázání pouze prvního sloupce (primární klíč) a specifických sloupců jako 'id_osoba'
 					bool isPrimaryKey = index == 0 && column.ColumnName.StartsWith("ID_") && column.ColumnName != "ID_OSOBA" && tableGroup.Key.ToUpper() != "PSI_VLASTNOSTI";  // První sloupec, který začíná na 'id_'
-				bool isOsobaPrimaryKey = tableGroup.Key.ToUpper() == "OSOBY" && column.ColumnName == "ID_OSOBA"; // Specifická kontrola pro tabulku 'osoby'
-				bool onlyEdit = (column.ColumnName == "KONEC_KARANTENY") || (column.ColumnName == "KONEC_POBYTU") || (column.ColumnName == "UMRTI") || (column.ColumnName == "ID_ADOPCE" && tableGroup.Key.ToUpper() == "REZERVACE") || (column.ColumnName == "DATUM_ZMENY") || (column.ColumnName == "ZMENENO_ID_OSOBA") || (column.ColumnName == "VRACENI_PSA");
-				<label>
-					@column.ColumnName (@column.DataType):
-					@if (isPrimaryKey || isOsobaPrimaryKey)
-					{
-						@* Zakázání vstupu pro primární klíč *@
-						<input type="hidden" name="values[@column.ColumnName]" value="" />
-						<input type="text" disabled value="Automaticky generováno" />
-					}
-					else if (onlyEdit)
-					{
-						<input type="hidden" name="values[@column.ColumnName]" value="" />
-						<input type="text" disabled value="Lze pouze editovat" />
-					}
-					else
-					{
-						@* Normální vstup pro ostatní sloupce *@
-						<input type="text" name="values[@column.ColumnName]" />
-					}
-				</label>
-				<br />
-			}
+					bool isOsobaPrimaryKey = tableGroup.Key.ToUpper() == "OSOBY" && column.ColumnName == "ID_OSOBA"; // Specifická kontrola pro tabulku 'osoby'
+					bool onlyEdit = (column.ColumnName == "KONEC_KARANTENY") || (column.ColumnName == "KONEC_POBYTU") || (column.ColumnName == "UMRTI") || (column.ColumnName == "ID_ADOPCE" && tableGroup.Key.ToUpper() == "REZERVACE") || (column.ColumnName == "DATUM_ZMENY") || (column.ColumnName == "ZMENENO_ID_OSOBA") || (column.ColumnName == "VRACENI_PSA");
+					<label>
+						@* @column.ColumnName (@column.DataType): *@
+						@if (isPrimaryKey || isOsobaPrimaryKey)
+						{
+							@* Zakázání vstupu pro primární klíč *@
+							<input type="hidden" name="values[@column.ColumnName]" value="" />
+							@* <input type="text" disabled value="Automaticky generováno" /> *@
+						}
+						else if (onlyEdit)
+						{
+							<text>@column.ColumnName.ToLower():</text>
+							<input type="hidden" name="values[@column.ColumnName]" value="" />
+							<input type="text" disabled value="Lze pouze editovat" />
+						}
+						else
+						{
+							@* //////////////////////////////////////////////////////////////////////////////////////////// *@
+							bool isForeignKey = column.ColumnName.StartsWith("ID_") || column.ColumnName.StartsWith("MAJITEL_ID")
+							|| column.ColumnName.StartsWith("REZERVATOR_ID_") || column.ColumnName.StartsWith("NAHRANO_ID_");
+							@if (isForeignKey)
+							{
+								@if (column.ColumnName.Equals("ID_PSA"))
+								{
+									<text>Vyberte psa:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte psa --</option>
+										@foreach (var pes in ViewBag.Psi as List<Pes>)
+										{
+											<option value="@pes.ID_PSA">@pes.JMENO (@pes.CISLO_CIPU)</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_NADRIZENEHO"))
+								{
+									<text>Vyberte zaměstnance:</text>
+									<select name = "values[@column.ColumnName]">
+									<option value = "" > --Vyberte-- </option>
+										@foreach (var osoba in ViewBag.Zamestnanci as List<Osoba>)
+										{
+										<option value = "@osoba.ID_OSOBA" > @osoba.JMENO @osoba.PRIJMENI </option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("MAJITEL_ID_OSOBA"))
+								{
+									<text>Vyberte majitele:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var majitel in ViewBag.Majitele as List<Osoba>)
+										{
+											<option value="@majitel.ID_OSOBA">@majitel.JMENO @majitel.PRIJMENI</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("REZERVATOR_ID_OSOBA"))
+								{
+									<text>Vyberte rezervátora:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var rezervator in ViewBag.Rezervatori as List<Osoba>)
+										{
+											<option value="@rezervator.ID_OSOBA">@rezervator.JMENO @rezervator.PRIJMENI</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("NAHRANO_ID_OSOBA"))
+								{
+									<text>Kdo fotografii nahrál:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var rezervator in ViewBag.Osoby as List<Osoba>)
+										{
+											<option value="@rezervator.ID_OSOBA">@rezervator.JMENO @rezervator.PRIJMENI</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_OSOBA"))
+								{
+									<text>Vyberte osobu:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var rezervator in ViewBag.Osoby as List<Osoba>)
+										{
+											<option value="@rezervator.ID_OSOBA">@rezervator.JMENO @rezervator.PRIJMENI</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_DUVOD"))
+								{
+									<text>Vyberte důvod pobytu:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var duvod in ViewBag.Duvody as List<DuvodPobytu>)
+										{
+											<option value="@duvod.Id">@duvod.Nazev</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_BARVA"))
+								{
+									<text>Vyberte barvu:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var barva in ViewBag.Barvy as List<Barva>)
+										{
+											<option value="@barva.Id">@barva.Nazev</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_PLEMENO"))
+								{
+									<text>Vyberte plemeno:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var plemeno in ViewBag.Plemena as List<Plemeno>)
+										{
+											<option value="@plemeno.Id">@plemeno.Nazev</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_PREDPIS"))
+								{
+									<text>Vyberte počet dní karantény:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var predpis in ViewBag.Predpisy as List<Predpis>)
+										{
+											<option value="@predpis.Id">@predpis.PocetDni</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_POHLAVI"))
+								{
+									<text>Vyberte pohlaví:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var pohlavi in ViewBag.Pohlavi as List<Pohlavi>)
+										{
+											<option value="@pohlavi.Id">@pohlavi.Nazev</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_VLASTNOST"))
+								{
+									<text>Vyberte vlastnost:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var vlastnost in ViewBag.Vlastnosti as List<Vlastnost>)
+										{
+											<option value="@vlastnost.Id">@vlastnost.Nazev</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_FOTOGRAFIE"))
+								{
+									<text>Vyberte fotografii:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var fotografie in ViewBag.Fotografie as List<Fotografie>)
+										{
+											<option value="@fotografie.id_fotografie">@fotografie.nazev_souboru</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_ZAZNAM_POBYT"))
+								{
+									<text>Vyberte psa:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var zaznam in ViewBag.Zaznamy as List<Zaznam>)
+										{
+											<option value="@zaznam.Id">@zaznam.JmenoPsa (@zaznam.cisloCipu)</option>
+										}
+									</select>
+								}
+								else if (column.ColumnName.Equals("ID_POBYT"))
+								{
+									<text>Vyberte psa:</text>
+									<select name="values[@column.ColumnName]">
+										<option value="">-- Vyberte --</option>
+										@foreach (var pobyt in ViewBag.Pobyty as List<Pobyt>)
+										{
+											<option value="@pobyt.Id">@pobyt.JmenoPsa (@pobyt.cisloCipu)</option>
+										}
+									</select>
+								}
+								
+
+
+
+							}
+							else
+							{
+								<text>@column.ColumnName.ToLower():</text>
+								@* Normální vstup pro ostatní sloupce *@
+								<input type="text" name="values[@column.ColumnName]" />
+							}
+							@* //////////////////////////////////////////////////////////////////////////////////////////// *@
+							@* Normální vstup pro ostatní sloupce *@
+							@* <input type="text" name="values[@column.ColumnName]" /> *@
+						}
+					</label>
+					<br />
+				}
 				<button class="btn btn-primary" type="submit">Přidat záznam</button>
-		</form>
+			</form>
 		}
 
 

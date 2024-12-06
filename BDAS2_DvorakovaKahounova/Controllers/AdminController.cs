@@ -3,8 +3,10 @@ using BDAS2_DvorakovaKahounova.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
+using Org.BouncyCastle.Crypto;
 using System.Security.Claims;
 using static System.Runtime.InteropServices.Marshalling.IIUnknownCacheStrategy;
 
@@ -81,9 +83,9 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			}
 
 			ViewBag.TableNames = tableNames;
-            ViewBag.HasSearched = false;
+			ViewBag.HasSearched = false;
 
-            var originalRole = HttpContext.Session.GetString("OriginalRole");
+			var originalRole = HttpContext.Session.GetString("OriginalRole");
 			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
 
 			return View();
@@ -99,7 +101,7 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			}
 			else
 			{
-                try
+				try
 				{
 					// Prohledání tabulky
 					var results = _dataAccess.SearchTableProcedure(selectedTable, searchQuery);
@@ -287,6 +289,23 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			{
 				model.TableContents[tableName] = _dataAccess.TableContent(tableName);
 			}
+
+			//comboboxy:
+			ViewBag.Zamestnanci = _dataAccess.GetZamestnanci();
+			ViewBag.Psi = _dataAccess.GetPsi();
+			ViewBag.Majitele = _dataAccess.GetMajitele();
+			ViewBag.Rezervatori = _dataAccess.GetRezervatori();
+			ViewBag.Osoby = _dataAccess.GetOsoby();
+			ViewBag.Duvody = _dataAccess.GetDuvody();
+			ViewBag.Barvy = _dataAccess.GetBarvy();
+			ViewBag.Plemena = _dataAccess.GetPlemena();
+			ViewBag.Predpisy = _dataAccess.GetPredpisy();
+			ViewBag.Pohlavi = _dataAccess.GetPohlavi();
+			ViewBag.Vlastnosti = _dataAccess.GetVlastnosti();
+			ViewBag.Fotografie = _dataAccess.GetFotografie();
+			ViewBag.Pobyty = _dataAccess.GetPobyty();
+			ViewBag.Zaznamy = _dataAccess.GetZaznamy();
+
 			ViewBag.IsEditMode = TempData["IsEditMode"];
 			ViewBag.NazevTabulky = TempData["NazevTabulky"];
 			ViewBag.EditValues = TempData["EditValues"];
@@ -302,6 +321,69 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		{
 			try
 			{
+				//přidáno - potřeba upravit a pak přidat do editace stejný foreach
+				foreach (var key in values.Keys.ToList())
+				{
+					if (key.StartsWith("ID_NADRIZENEHO") && int.TryParse(values[key], out var result))
+					{
+						values[key] = result.ToString();
+					}
+					else if (key.StartsWith("MAJITEL_ID_OSOBA") && int.TryParse(values[key], out var result1))
+					{
+						values[key] = result1.ToString();
+					}
+					else if (key.StartsWith("REZERVATOR_ID_OSOBA") && int.TryParse(values[key], out var result2))
+					{
+						values[key] = result2.ToString();
+					}
+					else if (key.StartsWith("ID_PSA") && int.TryParse(values[key], out var result3))
+					{
+						values[key] = result3.ToString();
+					}
+					else if ((key.StartsWith("ID_OSOBA")|| key.StartsWith("NAHRANO_ID_OSOBA")) && int.TryParse(values[key], out var result4))
+					{
+						values[key] = result4.ToString();
+					}
+					else if (key.StartsWith("ID_DUVOD") && int.TryParse(values[key], out var result5))
+					{
+						values[key] = result5.ToString();
+					}
+					else if (key.StartsWith("ID_BARVA") && int.TryParse(values[key], out var result6))
+					{
+						values[key] = result6.ToString();
+					}
+					else if (key.StartsWith("ID_PLEMENO") && int.TryParse(values[key], out var result7))
+					{
+						values[key] = result7.ToString();
+					}
+					else if (key.StartsWith("ID_PREDPIS") && int.TryParse(values[key], out var result8))
+					{
+						values[key] = result8.ToString();
+					}
+					else if (key.StartsWith("ID_POHLAVI") && int.TryParse(values[key], out var result9))
+					{
+						values[key] = result9.ToString();
+					}
+					else if (key.StartsWith("ID_VLASTNOST") && int.TryParse(values[key], out var result10))
+					{
+						values[key] = result10.ToString();
+					}
+					else if (key.StartsWith("ID_FOTOGRAFIE") && int.TryParse(values[key], out var result11))
+					{
+						values[key] = result11.ToString();
+					}
+					else if (key.StartsWith("ID_POBYT") && int.TryParse(values[key], out var result12))
+					{
+						values[key] = result12.ToString();
+					}
+					else if (key.StartsWith("ID_ZAZNAM_POBYT") && int.TryParse(values[key], out var result13))
+					{
+						values[key] = result13.ToString();
+					}
+				}
+				//
+
+
 				_dataAccess.InsertRecord(tableName, values);
 			}
 			catch (Exception)
@@ -342,8 +424,8 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		{
 			//try
 			//{
-				// Zavolejte DataAccess metodu pro aktualizaci
-				_dataAccess.UpdateRecord(tableName, values, oldValues);
+			// Zavolejte DataAccess metodu pro aktualizaci
+			_dataAccess.UpdateRecord(tableName, values, oldValues);
 			//}
 			//catch (Exception)
 			//{
