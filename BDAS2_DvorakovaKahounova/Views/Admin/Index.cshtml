@@ -35,7 +35,7 @@
 		@* Pokud je aktivní režim editace, zobrazí se formulář pro editaci *@
 		@if (ViewBag.IsEditMode != null && ViewBag.IsEditMode == true && ViewBag.NazevTabulky == tableGroup.Key.ToUpper())
 		{
-			Console.WriteLine("zde");
+			
 			<h3>Editovat záznam</h3>
 			<form method="post" asp-action="UpdateRecord" asp-route-tableName="@tableGroup.Key">
 				@foreach (var (column, index) in tableGroup.Select((column, index) => (column, index)))
@@ -58,6 +58,12 @@
 						}
 						else
 						{
+								@if (@column.DataType.Equals("DATE"))
+								{
+									<p>Zadejte datum ve formátu: dd.mm.rrrr hh.mm.ss</p>
+								}
+
+
 							@* //////////////////////////////////////////////////////////////////////////////////////////// *@
 							bool isForeignKey = column.ColumnName.StartsWith("ID_") || column.ColumnName.StartsWith("MAJITEL_ID")
 							|| column.ColumnName.StartsWith("REZERVATOR_ID_") || column.ColumnName.StartsWith("NAHRANO_ID_") || column.ColumnName.StartsWith("ZMENENO_ID_");
@@ -289,11 +295,14 @@
 						}
 						else
 						{
+								
+
 							@* //////////////////////////////////////////////////////////////////////////////////////////// *@
 							bool isForeignKey = column.ColumnName.StartsWith("ID_") || column.ColumnName.StartsWith("MAJITEL_ID")
 							|| column.ColumnName.StartsWith("REZERVATOR_ID_") || column.ColumnName.StartsWith("NAHRANO_ID_");
 							@if (isForeignKey)
 							{
+
 								@if (column.ColumnName.Equals("ID_PSA"))
 								{
 									<text>Vyberte psa:</text>
@@ -459,9 +468,8 @@
 										}
 									</select>
 								}
-								
 
-
+									
 
 							}
 							else
@@ -473,6 +481,16 @@
 							@* //////////////////////////////////////////////////////////////////////////////////////////// *@
 							@* Normální vstup pro ostatní sloupce *@
 							@* <input type="text" name="values[@column.ColumnName]" /> *@
+
+
+								@if (@column.DataType.Equals("DATE"))
+								{
+									<p class="karantena-info">
+										<span class="tooltip-icon">?</span>
+										<span class="tooltip-text">Zadejte datum ve formátu: dd.mm.rrrr hh.mm.ss</span>
+									</p>
+								}
+
 						}
 					</label>
 					<br />
