@@ -20,6 +20,8 @@
 
 }
 
+<div class="search-page">
+
 @foreach (var tableGroup in Model.TablesAndColumns.GroupBy(t => t.TableName))
 {
 	@if (tableGroup.Key.ToUpper() == "LOGOVANI")
@@ -27,7 +29,7 @@
 		continue;
 	}
 
-	<div class="log-page">
+	<div class="search-container">
 		<h2>Tabulka: @tableGroup.Key</h2>
 
 		@* Pokud je aktivní režim editace, zobrazí se formulář pro editaci *@
@@ -479,8 +481,8 @@
 			</form>
 		}
 
-
-		<table class="log-table">
+		<div class="table-wrapper">
+		<table class="search-table">
 			<thead>
 				<tr>
 					@foreach (var column in tableGroup)
@@ -537,5 +539,7 @@
 				}
 			</tbody>
 		</table>
+		</div>
 	</div>
 }
+</div>
