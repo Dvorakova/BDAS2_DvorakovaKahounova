@@ -5,18 +5,26 @@
 <h1>Vyhledávání</h1>
 <div class="search-page">
 
-@if (TempData["ErrorMessage"] != null)
-{
+@* @if (TempData["ErrorMessage"] != null)
+{ *@
 	@* <div class="alert alert-danger">
 		@TempData["ErrorMessage"]
 	</div> *@
 
-	<div class="alert alert-danger alert-dismissible fade show" role="alert">
+	@* <div class="alert alert-danger alert-dismissible fade show" role="alert">
 		<strong>Chyba!</strong> @TempData["ErrorMessage"]
 		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 	</div>
 
-}
+} *@
+
+	@if (TempData["ErrorMessage"] != null)
+	{
+		<script>
+			alert("@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(TempData["ErrorMessage"].ToString()))");
+		</script>
+	}
+
 	<div class="search-container">
 <form method="post" asp-action="Search">
 	

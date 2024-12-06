@@ -1243,24 +1243,3 @@ a.btn.btn-primary {
         border-color: var(--fialova);
         cursor: url('/images/cursor.png'), auto;
     }
-
-/* Styl pro možnosti v dropdownu */
-.search-container select option {
-    padding: 10px 15px; /* Vnitøní odsazení pro možnost */
-    font-size: 16px; /* Velikost písma pro možnosti */
-    cursor: url('/images/cursor.png'), auto;
-}
-
-    .search-container select:hover {
-        cursor: url('/images/cursor.png'), auto; /* Kurzoru pøi najetí myší */
-    }
-
-    /* Styl pro vybranou možnost */
-    .search-container select option:checked {
-        background-color: var(--fialova); /* Barva pozadí pro vybranou možnost */
-        color: white; /* Barva textu pro vybranou možnost */
-        cursor: url('/images/cursor.png'), auto;
-    }
-.search-container select:focus {
-    cursor: url('/images/cursor.png'), auto; /* Kurzoru pøi kliknutí */
-}
