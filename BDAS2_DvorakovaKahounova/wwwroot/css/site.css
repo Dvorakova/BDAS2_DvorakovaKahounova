@@ -78,7 +78,6 @@ a:active {
     color: orange; /* Barva pøi kliknutí */
 }
 
-
 /* kontakty */
 
 .h1-kontakty {
@@ -948,6 +947,10 @@ a.btn.btn-primary {
     width: 100%;
 }
 
+.log-page h3{
+    color: var(--bordo);
+}
+
 .log-table {
     width: 100%;
     max-width: none;
@@ -1030,16 +1033,7 @@ a.btn.btn-primary {
         margin-top: 15px; /* Pøidá mezeru nad tlaèítko */
     }
 
-
 /*-- emulace --*/
-
-/*emulace-container {
-    background-color: aqua;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}*/
 
 .emulace-page {
     padding: 20px;
@@ -1266,6 +1260,8 @@ a.btn.btn-primary {
         position: absolute;
         animation: keyframes-fill .5s;
         cursor: url('/images/cursor.png'), auto;
+        margin-left: 130px;
+        top: 5px;
     }
 
     .container-profil2 .eye-slash {
@@ -1273,6 +1269,8 @@ a.btn.btn-primary {
         animation: keyframes-fill .5s;
         display: none;
         cursor: url('/images/cursor.png'), auto;
+        margin-left: 130px;
+        top: 5px;
     }
 
     /* ------ On check event ------ */

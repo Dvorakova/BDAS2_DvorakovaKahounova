@@ -236,8 +236,20 @@
 					@if (@Model.Majitel.EMAIL != null)
 					{
 						<p><strong>Majitel:</strong> @Model.Majitel.JMENO @Model.Majitel.PRIJMENI</p>
-						<p><strong>Telefon:</strong> @Model.Majitel.TELEFON</p>
-						<p><strong>Email:</strong> @Model.Majitel.EMAIL</p>
+						<div class="container-profil2">
+							<input type="checkbox" id="toggle-info" />
+							<span class="eye" onclick="toggleVisibility()">
+								<img src="~/images/eye-close.png" alt="Eye Icon" class="eye-icon">
+							</span> <!-- Symbol pro oko -->
+							<span class="eye-slash" onclick="toggleVisibility()">
+								<img src="~/images/eye.png" alt="Eye Icon" class="eye-icon">
+							</span> <!-- Symbol pro oko se škrtnutím -->
+						</div>
+
+						<div id="info-container">
+							<p><strong>Email: </strong><span id="email" style="display:none;">@Model.Majitel.EMAIL</span></p>
+							<p><strong>Telefon: </strong><span id="telefon" style="display:none;">@Model.Majitel.TELEFON</span></p>
+						</div>
 					}
 
 				</div>
@@ -385,4 +397,27 @@
 			errorMessage.style.display = 'none';
 		}
 	});
+</script>
+
+<script>
+	// Funkce pro přepínání zobrazení informací
+	function toggleVisibility() {
+		var email = document.getElementById('email');
+		var telefon = document.getElementById('telefon');
+		var eye = document.querySelector('.eye');
+		var eyeSlash = document.querySelector('.eye-slash');
+
+		// Pokud je "oko" zobrazené, skryjeme informace, jinak je zobrazíme
+		if (email.style.display === 'none' || telefon.style.display === 'none') {
+			email.style.display = 'inline';
+			telefon.style.display = 'inline';
+			eye.style.display = 'none'; // Skrýt "oko"
+			eyeSlash.style.display = 'inline'; // Zobrazit "oko se škrtnutím"
+		} else {
+			email.style.display = 'none';
+			telefon.style.display = 'none';
+			eye.style.display = 'inline'; // Zobrazit "oko"
+			eyeSlash.style.display = 'none'; // Skrýt "oko se škrtnutím"
+		}
+	}
 </script>

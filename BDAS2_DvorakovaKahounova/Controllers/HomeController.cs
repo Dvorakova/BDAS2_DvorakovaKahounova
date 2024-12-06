@@ -71,54 +71,51 @@ namespace BDAS2_DvorakovaKahounova.Controllers
         }
 
 
-        //[HttpPost]
-        //public IActionResult SendEmail(string email, string message)
-        //{
-        //    try
-        //    {
-        //        // Pokud je uivatel pøihlášenı, pouijeme jeho e-mail, jinak pouijeme e-mail z formuláøe
-        //        var userEmail = User.Identity.IsAuthenticated ? User.FindFirstValue(ClaimTypes.Email) : email;
+		[HttpPost]
+		public IActionResult SendEmail(string email, string message)
+		{
+			try
+			{
+				// Pokud je uivatel pøihlášenı, pouijeme jeho e-mail, jinak pouijeme e-mail z formuláøe
+				var userEmail = User.Identity.IsAuthenticated ? User.FindFirstValue(ClaimTypes.Email) : email;
 
-        //        // Pokud není zadanı e-mail (a uivatel není pøihlášenı), vrátíme chybovou hlášku
-        //        if (string.IsNullOrEmpty(userEmail))
-        //        {
-        //            TempData["ErrorMessage"] = "Pro odeslání zprávy musíte bıt pøihlášeni nebo zadat e-mail.";
-        //            return RedirectToAction("Kontakty");
-        //        }
+				// Pokud není zadanı e-mail (a uivatel není pøihlášenı), vrátíme chybovou hlášku
+				if (string.IsNullOrEmpty(userEmail))
+				{
+					TempData["ErrorMessage"] = "Pro odeslání zprávy musíte bıt pøihlášeni nebo zadat e-mail.";
+					return RedirectToAction("Kontakty");
+				}
 
-        //        var fromAddress = new MailAddress(userEmail, "Uivatel");  // Odesílatel bude mít e-mail pøihlášeného uivatele nebo z formuláøe
-        //        var toAddress = new MailAddress("utulek.lucky@seznam.cz", "Utulek Lucky");
-        //        const string subject = "Novı dotaz od uivatele";
+				var fromAddress = new MailAddress(userEmail, "Uivatel");  // Odesílatel bude mít e-mail pøihlášeného uivatele nebo z formuláøe
+				var toAddress = new MailAddress("utulek.lucky@seznam.cz", "Utulek Lucky");
+				const string subject = "Novı dotaz od uivatele";
 
-        //        var smtp = new SmtpClient
-        //        {
-        //            Host = "smtp.seznam.cz", // Napø. smtp.gmail.com pro Gmail
-        //            Port = 587,
-        //            EnableSsl = true,
-        //            Credentials = new NetworkCredential("utulek.lucky@seznam.cz", "BeLucky7") // Tvé pøihlašovací údaje
-        //        };
+				var smtp = new SmtpClient
+				{
+					Host = "smtp.seznam.cz", // Napø. smtp.gmail.com pro Gmail
+					Port = 587,
+					EnableSsl = true,
+					Credentials = new NetworkCredential("utulek.lucky@seznam.cz", "BeLucky7") // Tvé pøihlašovací údaje
+				};
 
-        //        var mailMessage = new MailMessage(fromAddress, toAddress)
-        //        {
-        //            Subject = subject,
-        //            Body = $"E-mail uivatele: {userEmail}\n\nZpráva:\n{message}"
-        //        };
+				var mailMessage = new MailMessage(fromAddress, toAddress)
+				{
+					Subject = subject,
+					Body = $"E-mail uivatele: {userEmail}\n\nZpráva:\n{message}"
+				};
 
-        //        smtp.Send(mailMessage);
+				smtp.Send(mailMessage);
 
-        //        // Po úspìšném odeslání pøesmìruj nebo vra nìjakou zpìtnou vazbu uivateli
-        //        TempData["SuccessMessage"] = "Vaše zpráva byla úspìšnì odeslána.";
-        //        return RedirectToAction("Kontakty");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Chybová hláška
-        //        TempData["ErrorMessage"] = $"Došlo k chybì: {ex.Message}";
-        //        return RedirectToAction("Kontakty");
-        //    }
-        //}
-
-
-
-    }
+				// Po úspìšném odeslání pøesmìruj nebo vra nìjakou zpìtnou vazbu uivateli
+				TempData["SuccessMessage"] = "Vaše zpráva byla úspìšnì odeslána.";
+				return RedirectToAction("Kontakty");
+			}
+			catch (Exception ex)
+			{
+				// Chybová hláška
+				TempData["ErrorMessage"] = $"Došlo k chybì: {ex.Message}";
+				return RedirectToAction("Kontakty");
+			}
+		}
+	}
 }
