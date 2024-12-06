@@ -1092,3 +1092,175 @@ a.btn.btn-primary {
 .tooltip-icon {
     cursor: url('/images/cursor.png'), auto;
 }
+
+
+/*-- vyhledávání --*/
+
+.table-wrapper {
+    display: block; /* Zajistí správné chování jako blok */
+    overflow-x: auto; /* Vodorovnı posuvník */
+    overflow-y: hidden; /* ádnı vertikální posuvník */
+    max-width: 100%; /* Kontejner se pøizpùsobí rodièi */
+    margin: 0 auto; /* Vycentrování */
+    padding-bottom: 8px; /* Rezerva pro scrollbar, pokud je potøeba */
+}
+
+.search-page {
+    padding: 0; /* Odstranìní vnitøního odsazení */
+    margin: 0 auto;
+    overflow-y: auto;
+    overflow-y: hidden; /* Zakázat vertikální posuvník */
+    direction: ltr;
+    /*max-height: 100vh;*/
+    /*max-height: 400px;*/
+    max-width: 1500px;
+    /*box-sizing: border-box;*/
+    width: 100%;
+}
+
+.search-table {
+    width: 100%;
+    max-width: none;
+    margin: 0 auto;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 30px;
+    direction: ltr; /* Obsah zùstane ve správném smìru */
+    cursor: url('/images/cursor.png'), auto;
+    direction: ltr;
+}
+
+    .search-table th, .search-table td {
+        padding: 15px;
+        text-align: left;
+        border: 1px solid #ccc;
+        cursor: url('/images/cursor.png'), auto;
+    }
+
+    .search-table th {
+        background-color: var(--levandule);
+        color: white;
+        font-weight: bold;
+    }
+
+    .search-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .se-table tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+/* Stylování posuvníku */
+.table-wrapper::-webkit-scrollbar {
+    width: 8px; /* Šíøka posuvníku */
+    height: 8px;
+    background-color: #f4f4f4; /* Barva pozadí */
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--levandule); /* Barva "palce" posuvníku */
+    border-radius: 4px; /* Zakulacení rohu */
+}
+
+    .table-wrapper::-webkit-scrollbar-thumb:hover {
+        background-color: var(--fialova); /* Barva pøi najetí myší */
+    }
+
+
+.search-container {
+    display: inline;
+    cursor: url('/images/cursor.png'), auto;
+}
+
+.input-search-container {
+    margin-bottom: 5px; /* Mezera mezi sekcemi */
+    color: var(--bordo);
+    cursor: url('/images/cursor.png'), auto;
+}
+
+    .input-search-container label,
+    .search-container label {
+        display: block; /* Kadı label bude na samostatném øádku */
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+        cursor: url('/images/cursor.png'), auto; /* Kurzoru pøi kliknutí */
+    }
+
+    .input-search-container input,
+    .search-container input,
+    .search-container select {
+        width: 100%; /* Zajišuje responzivní šíøku */
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box; /* Zohledòuje padding pøi vıpoètu šíøky */
+        font-size: 14px;
+        width: 400px;
+        cursor: url('/images/cursor.png'), auto;
+    }
+
+.search-container select {
+    /*background-color: #fff;
+    cursor: pointer;*/
+    background-color: #fff; /* Bílı pozadí */
+    border: 1px solid #ccc; /* Svìtle šedı okraj */
+    padding: 10px 15px; /* Vnitøní odsazení */
+    border-radius: 4px; /* Zaoblené rohy */
+    font-size: 16px; /* Velikost písma */
+    cursor: pointer; /* Ukazatel pøi najetí */
+    width: 100%; /* Vıplò na celou šíøku kontejneru */
+    width: 400px;
+    transition: border-color 0.3s ease-in-out; /* Plynulı pøechod pro zmìnu okraje */
+    cursor: url('/images/cursor.png'), auto;
+}
+
+.search-container button {
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px; /* Velikost písma pro tlaèítko */
+    background-color: var(--levandule);
+    outline: none;
+    color: white;
+    cursor: url('/images/cursor.png'), auto;
+}
+
+    .search-container button:hover {
+        background-color: var(--fialova); /* Barva pøi hoveru */
+        border-color: var(--fialova);
+        cursor: url('/images/cursor.png'), auto;
+    }
+
+    .search-container button:focus {
+        background-color: var(--fialova); /* Barva pøi hoveru */
+        border-color: var(--fialova);
+        cursor: url('/images/cursor.png'), auto;
+    }
+
+/* Styl pro monosti v dropdownu */
+.search-container select option {
+    padding: 10px 15px; /* Vnitøní odsazení pro monost */
+    font-size: 16px; /* Velikost písma pro monosti */
+    cursor: url('/images/cursor.png'), auto;
+}
+
+    .search-container select:hover {
+        cursor: url('/images/cursor.png'), auto; /* Kurzoru pøi najetí myší */
+    }
+
+    /* Styl pro vybranou monost */
+    .search-container select option:checked {
+        background-color: var(--fialova); /* Barva pozadí pro vybranou monost */
+        color: white; /* Barva textu pro vybranou monost */
+        cursor: url('/images/cursor.png'), auto;
+    }
+.search-container select:focus {
+    cursor: url('/images/cursor.png'), auto; /* Kurzoru pøi kliknutí */
+}

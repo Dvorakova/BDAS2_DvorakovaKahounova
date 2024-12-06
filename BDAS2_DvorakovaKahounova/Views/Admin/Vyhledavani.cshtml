@@ -3,6 +3,7 @@
 }
 
 <h1>Vyhledávání</h1>
+<div class="search-page">
 
 @if (TempData["ErrorMessage"] != null)
 {
@@ -16,8 +17,9 @@
 	</div>
 
 }
-
+	<div class="search-container">
 <form method="post" asp-action="Search">
+	
 	<label for="tableSelect">Vyberte tabulku:</label>
 	<select name="selectedTable" id="tableSelect">
 		<option value="">-- Vyberte tabulku --</option>
@@ -32,13 +34,15 @@
 
 	<button type="submit">Hledat</button>
 </form>
+	</div>
 
 @if (ViewBag.HasSearched != null && ViewBag.HasSearched)
 {
 	@if (ViewBag.SearchResults != null && ((List<Dictionary<string, string>>)ViewBag.SearchResults).Any())
 	{
 		<h2>Výsledky hledání v tabulce @ViewBag.SelectedTable:</h2>
-		<table>
+			<div class="table-wrapper">
+		<table class="search-table">
 			<thead>
 				<tr>
 					@foreach (var key in ((List<Dictionary<string, string>>)ViewBag.SearchResults)[0].Keys)
@@ -59,6 +63,7 @@
 				}
 			</tbody>
 		</table>
+		</div>
 	}
 	else if (ViewBag.NoResultsMessage != null)
 	{
@@ -70,6 +75,7 @@
 
 
 <h2>Vyhledání zaměstnance a jeho podřízených</h2>
+	<div class="search-container">
 <form method="post" asp-action="SearchHierarchy">
 	<label for="zamestnanecSelect">Vyberte zaměstnance:</label>
 	<select name="idOsoba" id="zamestnanecSelect">
@@ -82,13 +88,14 @@
 
 	<button type="submit">Zobrazit zaměstnance</button>
 </form>
+</div>
 
 @if (ViewBag.HasSearchedHierarchy != null && ViewBag.HasSearchedHierarchy)
 {
 	@if (ViewBag.HierarchyResults != null && ((List<Osoba>)ViewBag.HierarchyResults).Any())
 	{
 		<h3>Nalezení zaměstnanci:</h3>
-		<table>
+		<table class="search-table">
 			<thead>
 				<tr>
 					<th>ID</th>
@@ -117,3 +124,4 @@
 		<h3>Žádní podřízení nebyli nalezeni pro ID @ViewBag.SearchedId.</h3>
 	}
 }
+</div>
