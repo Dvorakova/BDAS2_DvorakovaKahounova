@@ -248,47 +248,47 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
 		//Metody pro Pridat psa:
 
-		public int? GetPesIdByCisloCipu(string cisloCipu)
-		{
-			try
+			public int? GetPesIdByCisloCipu(string cisloCipu)
 			{
-				using (var connection = new OracleConnection(_connectionString))
+				try
 				{
-					connection.Open();
-
-					// PL/SQL blok pro volání funkce s REF CURSOR
-					string query = "BEGIN :cursor := GETPESIDBYCISLOCIPU(:cisloCipu); END;";
-
-					using (var command = new OracleCommand(query, connection))
+					using (var connection = new OracleConnection(_connectionString))
 					{
-						// Přidání parametru pro výstupní SYS_REFCURSOR
-						command.Parameters.Add(new OracleParameter("cursor", OracleDbType.RefCursor, ParameterDirection.Output));
-						// Parametr pro číslo čipu
-						command.Parameters.Add(new OracleParameter("cisloCipu", cisloCipu));
+						connection.Open();
 
-						using (var reader = command.ExecuteReader())
+						// PL/SQL blok pro volání funkce s REF CURSOR
+						string query = "BEGIN :cursor := GETPESIDBYCISLOCIPU(:cisloCipu); END;";
+
+						using (var command = new OracleCommand(query, connection))
 						{
-							// Pokud je v REF CURSOR nějaký výsledek (tzn. pes byl nalezen)
-							if (reader.HasRows && reader.Read())
+							// Přidání parametru pro výstupní SYS_REFCURSOR
+							command.Parameters.Add(new OracleParameter("cursor", OracleDbType.RefCursor, ParameterDirection.Output));
+							// Parametr pro číslo čipu
+							command.Parameters.Add(new OracleParameter("cisloCipu", cisloCipu));
+
+							using (var reader = command.ExecuteReader())
 							{
-								return Convert.ToInt32(reader["id_psa"]); // Vrátíme id_psa
-							}
-							else
-							{
-								// Pokud není řádek v cursoru, vracíme NULL
-								Console.WriteLine("Pes nenalezen.");
-								return null;
+								// Pokud je v REF CURSOR nějaký výsledek (tzn. pes byl nalezen)
+								if (reader.HasRows && reader.Read())
+								{
+									return Convert.ToInt32(reader["id_psa"]); // Vrátíme id_psa
+								}
+								else
+								{
+									// Pokud není řádek v cursoru, vracíme NULL
+									Console.WriteLine("Pes nenalezen.");
+									return null;
+								}
 							}
 						}
 					}
 				}
+				catch (Exception ex)
+				{
+					Console.WriteLine($"Chyba při volání funkce: {ex.Message}");
+					throw;
+				}
 			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"Chyba při volání funkce: {ex.Message}");
-				throw;
-			}
-		}
 
 		//meotdy pro načítání do comboboxů:
 		public List<Barva> GetBarvy()

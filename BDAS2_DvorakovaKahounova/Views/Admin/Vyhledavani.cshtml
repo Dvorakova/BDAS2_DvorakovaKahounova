@@ -33,7 +33,7 @@
 	<button type="submit">Hledat</button>
 </form>
 
-@if (ViewBag.HasSearched)
+@if (ViewBag.HasSearched != null && ViewBag.HasSearched)
 {
 	@if (ViewBag.SearchResults != null && ((List<Dictionary<string, string>>)ViewBag.SearchResults).Any())
 	{
@@ -64,5 +64,56 @@
 	{
 		<br />
 		<h3>@ViewBag.NoResultsMessage</h3>
+	}
+}
+
+
+
+<h2>Vyhledání zaměstnance a jeho podřízených</h2>
+<form method="post" asp-action="SearchHierarchy">
+	<label for="zamestnanecSelect">Vyberte zaměstnance:</label>
+	<select name="idOsoba" id="zamestnanecSelect">
+		<option value="">-- Vyberte zaměstnance --</option>
+		@foreach (var osoba in ViewBag.Zamestnanci as List<Osoba>)
+		{
+			<option value="@osoba.ID_OSOBA">@osoba.JMENO @osoba.PRIJMENI</option>
+		}
+	</select>
+
+	<button type="submit">Zobrazit zaměstnance</button>
+</form>
+
+@if (ViewBag.HasSearchedHierarchy != null && ViewBag.HasSearchedHierarchy)
+{
+	@if (ViewBag.HierarchyResults != null && ((List<Osoba>)ViewBag.HierarchyResults).Any())
+	{
+		<h3>Nalezení zaměstnanci:</h3>
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Jméno</th>
+					<th>Příjmení</th>
+					<th>Telefon</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var osoba in (List<Osoba>)ViewBag.HierarchyResults)
+				{
+					<tr>
+						<td>@osoba.ID_OSOBA</td>
+						<td>@osoba.JMENO</td>
+						<td>@osoba.PRIJMENI</td>
+						<td>@osoba.TELEFON</td>
+						<td>@osoba.EMAIL</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+	else
+	{
+		<h3>Žádní podřízení nebyli nalezeni pro ID @ViewBag.SearchedId.</h3>
 	}
 }

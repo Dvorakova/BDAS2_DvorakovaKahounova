@@ -66,6 +66,20 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 				.Distinct()
 				.ToList();
 
+			try
+			{
+				// Načteme seznam zaměstnanců
+				var zamestnanci = _dataAccess.GetZamestnanci();
+				// Předáme seznam zaměstnanců do ViewBag pro použití v ComboBoxu
+				ViewBag.Zamestnanci = zamestnanci;
+
+			}
+			catch (Exception ex)
+			{
+				TempData["ErrorMessage"] = $"Chyba při načítání zaměstnanců: {ex.Message}";
+				return RedirectToAction("Error");
+			}
+
 			ViewBag.TableNames = tableNames;
             ViewBag.HasSearched = false;
 
@@ -104,6 +118,20 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 					TempData["ErrorMessage"] = "Došlo k chybě při vyhledávání: " + ex.Message;
 				}
 			}
+			try
+			{
+				// Načteme seznam zaměstnanců
+				var zamestnanci = _dataAccess.GetZamestnanci();
+				// Předáme seznam zaměstnanců do ViewBag pro použití v ComboBoxu
+				ViewBag.Zamestnanci = zamestnanci;
+
+			}
+			catch (Exception ex)
+			{
+				TempData["ErrorMessage"] = $"Chyba při načítání zaměstnanců: {ex.Message}";
+				return RedirectToAction("Error");
+			}
+
 			var tableNames = _dataAccess.VypisTabulkyASloupce()
 				.Select(t => t.TableName)
 				.Distinct()
@@ -117,6 +145,65 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			return View("Vyhledavani");
 		}
 
+
+		[HttpPost]
+		public IActionResult SearchHierarchy(string idOsoba)
+		{
+			ViewBag.HasSearchedHierarchy = true;
+
+			if (string.IsNullOrEmpty(idOsoba) || !int.TryParse(idOsoba, out int parsedId))
+			{
+				TempData["ErrorMessage"] = "Musíte zadat platné ID osoby.";
+			}
+			else
+			{
+				try
+				{
+					// Získání hierarchie
+					var hierarchyResults = _dataAccess.GetHierarchy(parsedId);
+
+					if (hierarchyResults == null || !hierarchyResults.Any())
+					{
+						ViewBag.NoResultsMessage = "Žádní podřízení nebyli nalezeni pro zadané ID.";
+					}
+					else
+					{
+						ViewBag.HierarchyResults = hierarchyResults;
+						ViewBag.SearchedId = parsedId;
+					}
+				}
+				catch (Exception ex)
+				{
+					TempData["ErrorMessage"] = "Došlo k chybě při zobrazení hierarchie: " + ex.Message;
+				}
+			}
+
+			try
+			{
+				// Načteme seznam zaměstnanců
+				var zamestnanci = _dataAccess.GetZamestnanci();
+				// Předáme seznam zaměstnanců do ViewBag pro použití v ComboBoxu
+				ViewBag.Zamestnanci = zamestnanci;
+
+			}
+			catch (Exception ex)
+			{
+				TempData["ErrorMessage"] = $"Chyba při načítání zaměstnanců: {ex.Message}";
+				return RedirectToAction("Error");
+			}
+
+			var tableNames = _dataAccess.VypisTabulkyASloupce()
+				.Select(t => t.TableName)
+				.Distinct()
+				.ToList();
+
+			ViewBag.TableNames = tableNames;
+
+			var originalRole = HttpContext.Session.GetString("OriginalRole");
+			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
+
+			return View("Vyhledavani");
+		}
 
 
 

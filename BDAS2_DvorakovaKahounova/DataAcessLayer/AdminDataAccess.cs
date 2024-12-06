@@ -356,6 +356,106 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             return results;
         }
 
+		// metoda pro zavolání funkce pro výpis zaměstnanců pracujících pod daným zaměstnancem (hierarchický dotaz)
+		public List<Osoba> GetHierarchy(int vstupniId)
+		{
+			var osoby = new List<Osoba>();
+
+			try
+			{
+				using (var connection = new OracleConnection(_connectionString))
+				{
+					connection.Open();
+
+					// PL/SQL blok pro volání funkce s REF CURSOR
+					string query = "BEGIN :cursor := ZISKEJ_HIERARCHII(:vstupniId); END;";
+
+					using (var command = new OracleCommand(query, connection))
+					{
+						// Přidání parametru pro výstupní SYS_REFCURSOR
+						var cursorParam = new OracleParameter("cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+						command.Parameters.Add(cursorParam);
+
+						// Parametr pro vstupní ID
+						var vstupniIdParam = new OracleParameter("vstupniId", OracleDbType.Int32);
+						vstupniIdParam.Value = vstupniId;
+						command.Parameters.Add(vstupniIdParam);
+
+						// Spuštění příkazu
+						using (var reader = command.ExecuteReader())
+						{
+							// Zpracování dat z REF CURSOR
+							while (reader.Read())
+							{
+								var osoba = new Osoba
+								{
+									ID_OSOBA = reader.GetInt32(reader.GetOrdinal("ID_OSOBA")),
+									//ID_NADRIZENEHO = reader.IsDBNull(reader.GetOrdinal("ID_NADRIZENEHO")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("ID_NADRIZENEHO")),
+									JMENO = reader.GetString(reader.GetOrdinal("JMENO")),
+									PRIJMENI = reader.GetString(reader.GetOrdinal("PRIJMENI")),
+									TELEFON = reader.IsDBNull(reader.GetOrdinal("TELEFON")) ? null : reader.GetString(reader.GetOrdinal("TELEFON")),
+									EMAIL = reader.IsDBNull(reader.GetOrdinal("EMAIL")) ? null : reader.GetString(reader.GetOrdinal("EMAIL"))
+								};
+
+								osoby.Add(osoba);
+							}
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Chyba při volání funkce: {ex.Message}");
+				throw;
+			}
+
+			return osoby;
+		}
+
+		public List<Osoba> GetZamestnanci()
+		{
+			var zamestnanci = new List<Osoba>();
+
+			try
+			{
+				using (var connection = new OracleConnection(_connectionString))
+				{
+					connection.Open();
+
+					// SQL dotaz pro získání seznamu zaměstnanců
+					string query = "SELECT ID_OSOBA, JMENO, PRIJMENI FROM VIEW_VYPIS_CHOVATELE";
+
+					using (var command = new OracleCommand(query, connection))
+					{
+						using (var reader = command.ExecuteReader())
+						{
+							// Zpracování výsledků
+							while (reader.Read())
+							{
+								var osoba = new Osoba
+								{
+									ID_OSOBA = reader.GetInt32(reader.GetOrdinal("ID_OSOBA")),
+									JMENO = reader.GetString(reader.GetOrdinal("JMENO")),
+									PRIJMENI = reader.GetString(reader.GetOrdinal("PRIJMENI"))
+								};
+
+								zamestnanci.Add(osoba);
+							}
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Chyba při načítání zaměstnanců: {ex.Message}");
+				throw;
+			}
+
+			return zamestnanci;
+		}
+
+
+
 		//metoda pro přidání nového záznamu do (jakékoli) tabulky v databázi
 		//rozcestník pro správnou proceduru pro přidání záznamu
 		public void InsertRecord(string tableName, Dictionary<string, string> values)
@@ -701,8 +801,9 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             string email = values.ContainsKey("EMAIL") ? values["EMAIL"] : null;
             string heslo = values.ContainsKey("HESLO") ? values["HESLO"] : null;
             string salt = values.ContainsKey("SALT") ? values["SALT"] : null;
+			string idNadrizenehoStr = values.ContainsKey("ID_NADRIZENEHO") ? values["ID_NADRIZENEHO"] : null;
 
-            using (var conn = new OracleConnection(_connectionString))
+			using (var conn = new OracleConnection(_connectionString))
             {
                 conn.Open();
 
@@ -719,9 +820,16 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     cmd.Parameters.Add(new OracleParameter("p_email", string.IsNullOrEmpty(email) ? DBNull.Value : (object)email));
                     cmd.Parameters.Add(new OracleParameter("p_heslo", string.IsNullOrEmpty(heslo) ? DBNull.Value : (object)heslo));
                     cmd.Parameters.Add(new OracleParameter("p_salt", string.IsNullOrEmpty(salt) ? DBNull.Value : (object)salt));
-
-                    // Spuštění procedury
-                    cmd.ExecuteNonQuery();
+					if (!string.IsNullOrEmpty(idNadrizenehoStr) && int.TryParse(idNadrizenehoStr, out int idNadrizeneho))
+					{
+						cmd.Parameters.Add(new OracleParameter("p_id_nadrizeneho", idNadrizeneho));
+					}
+					else
+					{
+						cmd.Parameters.Add(new OracleParameter("p_id_nadrizeneho", DBNull.Value));
+					}
+					// Spuštění procedury
+					cmd.ExecuteNonQuery();
                 }
             }
         }
@@ -1830,22 +1938,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 					{
 						cmd.Parameters.Add(new OracleParameter("p_typ_osoby", DBNull.Value)); // Použití prázdné hodnoty
 					}
-					//if (values.ContainsKey("TYP_OSOBY"))
-					//{
-					//	// Pokud je to číslo, přetypujeme, jinak předáme text
-					//	if (int.TryParse(values["TYP_OSOBY"], out int typOsoby))
-					//	{
-					//		cmd.Parameters.Add(new OracleParameter("p_typ_osoby", typOsoby));
-					//	}
-					//	else
-					//	{
-					//		cmd.Parameters.Add(new OracleParameter("p_typ_osoby", values["TYP_OSOBY"]));
-					//	}
-					//}
-					//else
-					//{
-					//	cmd.Parameters.Add(new OracleParameter("p_typ_osoby", DBNull.Value)); // Použití prázdné hodnoty
-					//}
 
 					// Předání e-mailu osoby
 					if (values.ContainsKey("EMAIL"))
@@ -1877,6 +1969,15 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 						cmd.Parameters.Add(new OracleParameter("p_salt", DBNull.Value)); // Použití prázdné hodnoty
 					}
 
+					// Předání ID osoby
+					if (values.ContainsKey("ID_NADRIZENEHO") && int.TryParse(values["ID_NADRIZENEHO"], out int idNadrizeneho))
+					{
+						cmd.Parameters.Add(new OracleParameter("p_id_nadrizeneho", idNadrizeneho));
+					}
+					else
+					{
+						cmd.Parameters.Add(new OracleParameter("p_id_nadrizeneho", DBNull.Value)); // Použití prázdné hodnoty
+					}
 					// Spuštění procedury
 					cmd.ExecuteNonQuery();
 				}
