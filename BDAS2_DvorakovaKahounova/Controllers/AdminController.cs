@@ -9,6 +9,7 @@ using Oracle.ManagedDataAccess.Client;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Utilities;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using static System.Runtime.InteropServices.Marshalling.IIUnknownCacheStrategy;
 
 namespace BDAS2_DvorakovaKahounova.Controllers
@@ -426,6 +427,13 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 					{
 						values[key] = result13.ToString();
 					}
+					else if (key.StartsWith("HESLO") && !string.IsNullOrEmpty(values[key]))
+					{
+						// Pokud je heslo zadáno, hashujeme ho
+						var (hashedPassword, salt) = HashPassword(values[key]);
+						values["HESLO"] = hashedPassword;  // Uložení hashe hesla
+						values["SALT"] = salt;  // Uložení salt
+					}
 				}
 				//přidání záznamu
 				_dataAccess.InsertRecord(tableName, values);
@@ -439,13 +447,124 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			return RedirectToAction("Index");
 		}
 
+		private (string hashedPassword, string salt) HashPassword(string password)
+		{
+			using (var rng = new RNGCryptoServiceProvider())
+			{
+				// Generování salt
+				byte[] saltBytes = new byte[16];
+				rng.GetBytes(saltBytes);
+				string salt = Convert.ToBase64String(saltBytes);
+
+				// Použití PBKDF2 k hashování hesla se salt
+				var pbkdf2 = new Rfc2898DeriveBytes(password, saltBytes, 10000); // 10,000 iterací
+				byte[] hash = pbkdf2.GetBytes(32); // Délka hashe
+
+				// Vrácení hashe a salt jako řetězců
+				return (Convert.ToBase64String(hash), salt);
+			}
+		}
+
+		[HttpPost]
+		public IActionResult AddPhoto(IFormFile file)
+		{
+			if (file != null && file.Length > 0)
+			{
+				using (var memoryStream = new MemoryStream())
+				{
+					// Kopírujeme soubor do streamu
+					file.CopyTo(memoryStream);
+
+					// Vytvoření objektu Fotografie
+					var fotografie = new Fotografie
+					{
+						nazev_souboru = file.FileName,
+						typ_souboru = file.ContentType,
+						pripona_souboru = Path.GetExtension(file.FileName),
+						datum_nahrani = DateTime.Now,
+						nahrano_id_osoba = GetLoggedInUserId(), // Metoda pro získání ID přihlášeného uživatele
+						obsah_souboru = memoryStream.ToArray()
+					};
+
+					try
+					{
+						// Uložení fotografie do databáze pomocí metody ve dataAccess
+						_dataAccess.SaveFotografie(fotografie);
+						return RedirectToAction("Index");
+					}
+					catch (Exception ex)
+					{
+						TempData["ErrorMessage"] = "Došlo k chybě při nahrávání fotografie.";
+						return RedirectToAction("Index");
+					}
+				}
+			}
+			else
+			{
+				TempData["ErrorMessage"] = "Nebyl vybrán žádný soubor.";
+				return View();
+			}
+		}
+
+		[HttpPost]
+		public IActionResult UpdatePhoto(IFormFile file, int id_fotografie)
+		{
+			Console.WriteLine("V controlleru");
+			if (file != null && file.Length > 0)
+			{
+				using (var memoryStream = new MemoryStream())
+				{
+					// Kopírujeme soubor do streamu
+					file.CopyTo(memoryStream);
+
+					// Vytvoření objektu Fotografie
+					var fotografie = new Fotografie
+					{
+						id_fotografie = id_fotografie,
+						nazev_souboru = file.FileName,
+						typ_souboru = file.ContentType,
+						pripona_souboru = Path.GetExtension(file.FileName),
+						datum_nahrani = DateTime.Now,
+						nahrano_id_osoba = GetLoggedInUserId(), // Metoda pro získání ID přihlášeného uživatele
+						obsah_souboru = memoryStream.ToArray()
+					};
+					Console.WriteLine("Před try");
+					try
+					{
+						Console.WriteLine("V try");
+						// Uložení fotografie do databáze pomocí metody ve dataAccess
+						_dataAccess.UpdateFotografie(fotografie);
+						return RedirectToAction("Index");
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine("V contorlleru. " + ex);
+						TempData["ErrorMessage"] = "Došlo k chybě při nahrávání fotografie.";
+						return RedirectToAction("Index");
+					}
+				}
+			}
+			else
+			{
+				Console.WriteLine("Nevybrán soubor");
+				TempData["ErrorMessage"] = "Nebyl vybrán žádný soubor.";
+				return View();
+			}
+		}
+
+			private int GetLoggedInUserId()
+		{
+			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+			if (userIdClaim != null)
+			{
+				return int.Parse(userIdClaim.Value);
+			}
+			return 0;
+		}
+
 		[HttpPost]
 		public IActionResult DeleteRecord(string tableName, Dictionary<string, string> values)
 		{
-			foreach (var pair in values)
-			{
-				Console.WriteLine($"{pair.Key} = {pair.Value}");
-			}
 			try
 			{
 				// Volání DataAccess metody pro smazání
@@ -466,6 +585,27 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		{
 			try
 			{
+				// Zkontroluje, zda bylo heslo změněno
+				if (values.ContainsKey("HESLO") && oldValues.ContainsKey("HESLO") && values["HESLO"] != oldValues["HESLO"])
+				{
+					// Pokud došlo ke změně hesla, zahashujte nové heslo
+					var (hashedPassword, salt) = HashPassword(values["HESLO"]);
+					values["HESLO"] = hashedPassword;  // Uložte zahashované heslo
+					values["SALT"] = salt;  // Uložte nový salt
+				}
+				else
+				{
+					// Pokud heslo nebylo změněno, ponechte hodnotu v `values` beze změny
+					if (oldValues.ContainsKey("HESLO"))
+					{
+						values["HESLO"] = oldValues["HESLO"];
+					}
+					if (oldValues.ContainsKey("SALT"))
+					{
+						values["SALT"] = oldValues["SALT"];
+					}
+				}
+
 				// VoláníDataAccess metody pro aktualizaci
 				_dataAccess.UpdateRecord(tableName, values, oldValues);
 			}
