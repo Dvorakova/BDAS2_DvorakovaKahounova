@@ -176,17 +176,18 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
                 try
                 {
+                    Console.WriteLine("0");
                     // Zpracování změny rezervátora (aktualizace typu osoby)
                     ZpracujRezervatorZmena(majitelIdOsoba, idPes, con, transaction);
-
-                    // Přidání majitele do tabulky majitele, pokud už tam není
-                    PridejMajitele(majitelIdOsoba, con, transaction);
-
-                    // Přidání adopce do tabulky Adopce
-                    PridejAdopci(idPes, majitelIdOsoba, con, transaction);
-
-                    // Pokud všechny operace proběhnou úspěšně, commitujeme transakci
-                    transaction.Commit();
+					Console.WriteLine("1");
+					// Přidání majitele do tabulky majitele, pokud už tam není
+					PridejMajitele(majitelIdOsoba, con, transaction);
+					Console.WriteLine("2");
+					// Přidání adopce do tabulky Adopce
+					PridejAdopci(idPes, majitelIdOsoba, con, transaction);
+					Console.WriteLine("3");
+					// Pokud všechny operace proběhnou úspěšně, commitujeme transakci
+					transaction.Commit();
                 }
                 catch (Exception)
                 {
@@ -215,13 +216,14 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
             }
         }
 
-        public bool ExistujeRezervace(int rezervatorIdOsoba, int idPes, OracleConnection con)
+        public bool ExistujeRezervace(int rezervatorIdOsoba, int idPes, OracleConnection con, OracleTransaction transaction)
         {
             Console.WriteLine("id osoby v Existuje rezervace:" + rezervatorIdOsoba);
             using (var cmd = new OracleCommand("SELECT ExistujeRezervace(:rezervatorIdOsoba, :idPes) FROM dual", con))
             {
-                // Přidání parametru pro funkci
-                cmd.Parameters.Add(new OracleParameter("rezervatorIdOsoba", rezervatorIdOsoba));
+				cmd.Transaction = transaction;
+				// Přidání parametru pro funkci
+				cmd.Parameters.Add(new OracleParameter("rezervatorIdOsoba", rezervatorIdOsoba));
                 cmd.Parameters.Add(new OracleParameter("idPes", idPes));
                 // Získání výsledku z funkce
                 var result = cmd.ExecuteScalar();
@@ -246,7 +248,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 		public void ZpracujRezervatorZmena(int majitelIdOsoba, int idPes, OracleConnection con, OracleTransaction transaction)
 		{
 			// 1. Zkontroluj, zda existuje rezervace pro daného rezervátora a psa
-			bool existujeRezervace = ExistujeRezervace(majitelIdOsoba, idPes, con);
+			bool existujeRezervace = ExistujeRezervace(majitelIdOsoba, idPes, con, transaction);
 
 			if (existujeRezervace)
 			{

@@ -1,7 +1,10 @@
 ﻿@model List<BDAS2_DvorakovaKahounova.Models.Pes>
 
 <div class="conteiner-chovatele">
-
+	@if (TempData["Message"] != null)
+	{
+		<p>TempData["ErrorMessage"]</p>
+	}
 	<table class="table-chovatele-vnejsi">
 		@foreach (var pes in Model)
 		{
@@ -29,9 +32,7 @@
 							<td><strong>Plemeno:</strong></td>
 						</tr>
 						<tr>
-							@* <td>@pes.JMENO</td> *@
 							<td>@(pes.JMENO ?? "Neznámé")</td>
-							@* <td>@pes.CISLO_CIPU</td> *@
 							<td>@(string.IsNullOrEmpty(pes.CISLO_CIPU) ? "Pes bez čipu" : pes.CISLO_CIPU)</td>
 							<td>@(pes.NAROZENI?.ToString("d") ?? "Neznámé")</td>
 

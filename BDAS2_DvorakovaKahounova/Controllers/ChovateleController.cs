@@ -8,108 +8,125 @@ using System.Reflection;
 
 namespace BDAS2_DvorakovaKahounova.Controllers
 {
-    public class ChovateleController : Controller
-    {
-        private readonly ChovateleDataAccess _dataAccess;
+	public class ChovateleController : Controller
+	{
+		private readonly ChovateleDataAccess _dataAccess;
 
-        public ChovateleController(IConfiguration configuration)
-        {
-            string connectionString = configuration.GetConnectionString("OracleConnection");
-            _dataAccess = new ChovateleDataAccess(connectionString);
-        }
+		public ChovateleController(IConfiguration configuration)
+		{
+			string connectionString = configuration.GetConnectionString("OracleConnection");
+			_dataAccess = new ChovateleDataAccess(connectionString);
+		}
 
-        public IActionResult Index()
-        {
-            int uzivatelID = GetLoggedInUserId();
-            if (uzivatelID == 0)
-            {
+		public IActionResult Index()
+		{
+			int uzivatelID = GetLoggedInUserId();
+			if (uzivatelID == 0)
+			{
 				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
-            }
+			}
+			List<Pes> psi = new List<Pes>();
 
-            List<Pes> psi = _dataAccess.GetAllPsiProChovatele();
+			try
+			{
+				psi = _dataAccess.GetAllPsiProChovatele();
+			}
+			catch (Exception)
+			{
+				TempData["Message"] = "chyba při načítání psů.";
+			}
 
 			var originallRole = HttpContext.Session.GetString("OriginalRole");
 			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
 			return View(psi);
-            
-        }
+
+		}
 		public IActionResult PridatPsa()
 		{
-            int uzivatelID = GetLoggedInUserId();
-            if (uzivatelID == 0)
-            {
+			int uzivatelID = GetLoggedInUserId();
+			if (uzivatelID == 0)
+			{
 				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
-            }
+			}
 
-            if (User.Identity.IsAuthenticated && User.IsInRole("C"))
-            {
+			if (User.Identity.IsAuthenticated && User.IsInRole("C"))
+			{
 
 				var originallRole = HttpContext.Session.GetString("OriginalRole");
 				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
 				return View(); // Zobrazí stránku rezervací
-            }
+			}
 
-			// Pokud podmínky nejsou splněny, přesměruj na přihlášení nebo jinou stránku
+			// Pokud podmínky nejsou splněny, přesměruje uživatele na přihlášení
 			return RedirectToAction("Login", "Osoba");
-        }
+		}
 
-        public IActionResult VyriditAdopci(int pesId)
-        {
-            int uzivatelID = GetLoggedInUserId();
-            if (uzivatelID == 0)
-            {
-                return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
-            }
+		public IActionResult VyriditAdopci(int pesId)
+		{
+			int uzivatelID = GetLoggedInUserId();
+			if (uzivatelID == 0)
+			{
+				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
+			}
 
-            if (User.Identity.IsAuthenticated && User.IsInRole("C"))
-            {
-                PesMajitelModel model = new PesMajitelModel();
-                //var pes = _dataAccess.GetPesById(pesId);
-                model.Pes = new Pes();
-                model.Pes.ID_PSA = pesId;
-                Console.WriteLine("Id psa ve VyriditAdopci nahore: " + pesId);
-                var originallRole = HttpContext.Session.GetString("OriginalRole");
-                ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
+			if (User.Identity.IsAuthenticated && User.IsInRole("C"))
+			{
+				PesMajitelModel model = new PesMajitelModel();
+				model.Pes = new Pes();
+				model.Pes.ID_PSA = pesId;
+				var originallRole = HttpContext.Session.GetString("OriginalRole");
+				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
-                return View(model); // Zobrazí stránku 
-            }
+				return View(model); // Zobrazí stránku 
+			}
 
-            // Pokud podmínky nejsou splněny, přesměruj na přihlášení nebo jinou stránku
-            return RedirectToAction("Login", "Osoba");
-        }
+			// Pokud podmínky nejsou splněny, přesměruje uživatele na přihlášení
+			return RedirectToAction("Login", "Osoba");
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public IActionResult PridatOdcerveniAkce(int pesId, DateTime datumOdcerveni)
 		{
-            int uzivatelID = GetLoggedInUserId();
-            if (uzivatelID == 0)
-            {
+			int uzivatelID = GetLoggedInUserId();
+			if (uzivatelID == 0)
+			{
 				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
-            }
-
-            // Zavolání metody PridatOdcerveni, která přidá odčervení pro konkrétního psa
-            _dataAccess.PridatOdcerveni(pesId, datumOdcerveni);
-
-			// Po dokončení akce přesměrujeme na nějakou stránku nebo zobrazíme zprávu
-			return RedirectToAction("Index"); // nebo nějaký jiný pohled
+			}
+			try
+			{
+				// Zavolání metody PridatOdcerveni, která přidá odčervení pro konkrétního psa
+				_dataAccess.PridatOdcerveni(pesId, datumOdcerveni);
+				TempData["Message"] = "Záznam o odčervení úspěšně přidán";
+			}
+			catch (Exception)
+			{
+				TempData["Message"] = "Záznam o odčervení se nepřidal";
+			}
+			return RedirectToAction("Index");
 		}
 
 		[HttpPost]
 		public IActionResult PridatOckovaniAkce(int pesId, DateTime datumOckovani)
 		{
-            int uzivatelID = GetLoggedInUserId();
-            if (uzivatelID == 0)
-            {
+			int uzivatelID = GetLoggedInUserId();
+			if (uzivatelID == 0)
+			{
 				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
-            }
+			}
+			try
+			{
+				// Zavolání metody PridatOdckovani, která přidá očkování pro konkrétního psa
+				_dataAccess.PridatOckovani(pesId, datumOckovani);
+				TempData["Message"] = "Záznam o očkování úspěšně přidán";
+			}
+			catch (Exception)
+			{
+				TempData["Message"] = "Záznam o očkování se nepřidal";
+			}
 
-            // Zavolání metody PridatOdcerveni, která přidá odčervení pro konkrétního psa
-            _dataAccess.PridatOckovani(pesId, datumOckovani);
-
-			// Po dokončení akce přesměrujeme na nějakou stránku nebo zobrazíme zprávu
-			return RedirectToAction("Index"); // nebo nějaký jiný pohled
+			return RedirectToAction("Index");
 		}
 
 
@@ -137,22 +154,14 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 						obsah_souboru = stream.ToArray()
 					};
 
-					// Získání existující fotografie pro psa
-					var existujiciFotografie = _dataAccess.GetFotografieByPesId(pesId);
-
-					if (existujiciFotografie == null)
+					try
 					{
-						// Pokud pes ještě nemá fotografii, přidáme novou
-						int fotografieId = _dataAccess.SaveFotografie(fotografie);
-						_dataAccess.UpdatePesFotografie(pesId, fotografieId);
+						// Zavolání metody s transakcí
+						_dataAccess.UpravFotografiiTransakci(fotografie, pesId);
 					}
-					else
+					catch (Exception ex)
 					{
-						// Pokud pes již má fotografii, aktualizujeme stávající
-						fotografie.id_fotografie = existujiciFotografie.id_fotografie;
-
-						// Aktualizace existující fotografie v databázi
-						_dataAccess.UpdateFotografie(fotografie);
+						TempData["Message"] = "Došlo k chybě při nahrávání fotografie.";
 					}
 				}
 			}
@@ -170,249 +179,186 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			return 0;
 		}
 
-        //Metody rpo Pridat psa:
+		//Metody pro Pridat psa:
 
 
-        [HttpPost]
-        public IActionResult PridatPsa(string cisloCipu, string action, int[] vlastnosti, IFormFile fotografie)
-        {
-            int uzivatelID = GetLoggedInUserId();
-            if (uzivatelID == 0)
-            {
+		[HttpPost]
+		public IActionResult PridatPsa(string cisloCipu, string action, int[] vlastnosti, IFormFile fotografie)
+		{
+			int uzivatelID = GetLoggedInUserId();
+			if (uzivatelID == 0)
+			{
 				return RedirectToAction("Login", "Osoba"); // Pokud není uživatel přihlášen
-            }
+			}
+			//vyhledání psa podle čísla čipu
+			if (action == "search")
+			{
+				ViewBag.CisloCipu = cisloCipu;
+				Console.WriteLine("cislo cipu v controlleru" + cisloCipu);
+				var idPsa = _dataAccess.GetPesIdByCisloCipu(cisloCipu);
+				PesMajitelModel viewModel = new PesMajitelModel();
+				if (idPsa.HasValue)
+				{
+					// Pokud je pes nalezen
+					var pes = _dataAccess.ZobrazInfoOPsovi(idPsa.Value) ?? new Pes();
+					var majitel = pes.ID_MAJITEL.HasValue
+						? _dataAccess.GetUserProfileById(pes.ID_MAJITEL)
+						: new Osoba();
 
-            if (action == "search")
-            {
-                ViewBag.CisloCipu = cisloCipu;
-                Console.WriteLine("cislo cipu v controlleru" + cisloCipu);
-                var idPsa = _dataAccess.GetPesIdByCisloCipu(cisloCipu);
-                //Pes pes = new Pes();
-                PesMajitelModel viewModel = new PesMajitelModel();
-                if (idPsa.HasValue)
-                {
-                    // Pokud je pes nalezen
-                    var pes = _dataAccess.ZobrazInfoOPsovi(idPsa.Value) ?? new Pes();
-                    var majitel = pes.ID_MAJITEL.HasValue
-                        ? _dataAccess.GetUserProfileById(pes.ID_MAJITEL)
-                        : new Osoba();
+					viewModel.Pes = pes;
+					viewModel.Majitel = majitel;
 
-                    viewModel.Pes = pes;
-                    viewModel.Majitel = majitel;
+					ViewData["Duvody"] = _dataAccess.GetDuvodyPobytu(); // Získání důvodů pobytu
+				}
+				else
+				{
+					// Pokud pes neexistuje, zobrazíme formulář pro přidání nového psa
+					ViewBag.Message = "Pes nenalezen. Ujistěte se, že máte správně zadané číslo čipu. Pokud ano, zadejte údaje pro nového psa.";
 
-                    ViewData["Duvody"] = _dataAccess.GetDuvodyPobytu(); // Získání důvodů pobytu
-                }
-                else
-                {
-                    // Pokud pes neexistuje, zobrazíme formulář pro přidání nového psa
-                    ViewBag.Message = "Pes nenalezen. Ujistěte se, že máte správně zadané číslo čipu. Pokud ano, zadejte údaje pro nového psa.";
+					// Načítáme hodnoty pro comboboxy
+					ViewData["Barvy"] = _dataAccess.GetBarvy();// Získání všech barev
+					ViewData["Plemena"] = _dataAccess.GetPlemene();// Získání všech plemen
+					ViewData["Duvody"] = _dataAccess.GetDuvodyPobytu(); // Získání důvodů pobytu
+					ViewData["Vlastnosti"] = _dataAccess.GetVlastnosti(); // Získání všech vlastností
+				}
 
-                    // Načítáme hodnoty pro comboboxy
-                    ViewData["Barvy"] = _dataAccess.GetBarvy();// Získání všech barev
-                    ViewData["Plemena"] = _dataAccess.GetPlemene();// Získání všech plemen
-                    ViewData["Duvody"] = _dataAccess.GetDuvodyPobytu(); // Získání důvodů pobytu
-                    ViewData["Vlastnosti"] = _dataAccess.GetVlastnosti(); // Získání všech vlastností
-                }
-
-                ViewBag.ShowForm = !idPsa.HasValue;
+				ViewBag.ShowForm = !idPsa.HasValue;
 
 				var originallRole = HttpContext.Session.GetString("OriginalRole");
 				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
-				//return View(pes);
 				return View(viewModel);
-            }
-            else if (action == "nochip")
-            {
-                // Logika pro "Pes bez čipu"
-                ViewData["Barvy"] = _dataAccess.GetBarvy();
-                ViewData["Plemena"] = _dataAccess.GetPlemene();
-                ViewData["Duvody"] = _dataAccess.GetDuvodyPobytu();
-                ViewData["Vlastnosti"] = _dataAccess.GetVlastnosti(); // Získání všech vlastností
-                ViewBag.ShowForm = true;
-                ViewBag.Message = null;
+			}
+			else if (action == "nochip")
+			{
+				// Logika pro "Pes bez čipu"
+				ViewData["Barvy"] = _dataAccess.GetBarvy();
+				ViewData["Plemena"] = _dataAccess.GetPlemene();
+				ViewData["Duvody"] = _dataAccess.GetDuvodyPobytu();
+				ViewData["Vlastnosti"] = _dataAccess.GetVlastnosti(); // Získání všech vlastností
+				ViewBag.ShowForm = true;
+				ViewBag.Message = null;
 
 				var originallRole = HttpContext.Session.GetString("OriginalRole");
 				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
 				return View(new PesMajitelModel());
-            }
-            else if (action == "createDog")
-            {
-                // Načtení hodnot z formuláře
-                var jmeno = Request.Form["jmeno"];
-                var cisloNovehoCipu = Request.Form["cisloCipu"];
-                Console.WriteLine("Číslo čipu: " + cisloNovehoCipu);
-                var datumNarozeni = string.IsNullOrEmpty(Request.Form["datumNarozeni"])
-                                    ? (DateTime?)null
-                                    : DateTime.Parse(Request.Form["datumNarozeni"]);
-                var barvaId = int.Parse(Request.Form["barva"]);
-                var plemenoId = int.Parse(Request.Form["plemeno"]);
-                var pohlaviId = int.Parse(Request.Form["pohlavi"]);
-                var duvodPobytuId = int.Parse(Request.Form["duvodPobytu"]);
-                var zacatekPobytu = DateTime.Parse(Request.Form["zacatekPobytu"]);
-                //var vlastnostiIds = Request.Form["vlastnosti[]"].ToString().Split(',').Select(int.Parse).ToList();
-                var vaha = int.Parse(Request.Form["vaha"]);
+			}
+			//zadání nového psa do databáze
+			else if (action == "createDog")
+			{
+				// Načtení hodnot z formuláře
+				var jmeno = Request.Form["jmeno"];
+				var cisloNovehoCipu = Request.Form["cisloCipu"];
+				Console.WriteLine("Číslo čipu: " + cisloNovehoCipu);
+				var datumNarozeni = string.IsNullOrEmpty(Request.Form["datumNarozeni"])
+									? (DateTime?)null
+									: DateTime.Parse(Request.Form["datumNarozeni"]);
+				var barvaId = int.Parse(Request.Form["barva"]);
+				var plemenoId = int.Parse(Request.Form["plemeno"]);
+				var pohlaviId = int.Parse(Request.Form["pohlavi"]);
+				var duvodPobytuId = int.Parse(Request.Form["duvodPobytu"]);
+				var zacatekPobytu = DateTime.Parse(Request.Form["zacatekPobytu"]);
+				var vaha = int.Parse(Request.Form["vaha"]);
 
-                //////////////////////
-                int? fotografieId = null;
-                try
-                {
-                    // Pokud je soubor fotografie přítomen, ulož ho
+				//////////////////////
+				int? fotografieId = null;
+				try
+				{
+					// Pokud je soubor fotografie přítomen, ulož ho
 
-                    if (fotografie != null && fotografie.Length > 0)
-                    {
-                        // Převeď soubor na byte[]
-                        using (var memoryStream = new MemoryStream())
-                        {
-                            fotografie.CopyTo(memoryStream);
-                            byte[] obsahFotografie = memoryStream.ToArray();
+					if (fotografie != null && fotografie.Length > 0)
+					{
+						// Převeď soubor na byte[]
+						using (var memoryStream = new MemoryStream())
+						{
+							fotografie.CopyTo(memoryStream);
+							byte[] obsahFotografie = memoryStream.ToArray();
 
-                            // Vytvoř objekt Fotografie a nastav parametry
-                            var fotografieObj = new Fotografie
-                            {
-                                nazev_souboru = fotografie.FileName,
-                                typ_souboru = fotografie.ContentType,
-                                pripona_souboru = Path.GetExtension(fotografie.FileName),
-                                datum_nahrani = DateTime.Now,
-                                nahrano_id_osoba = GetLoggedInUserId(),  // Pokud máš ID majitele, můžeš ho použít
-                                obsah_souboru = obsahFotografie
-                            };
+							// Vytvoř objekt Fotografie a nastav parametry
+							var fotografieObj = new Fotografie
+							{
+								nazev_souboru = fotografie.FileName,
+								typ_souboru = fotografie.ContentType,
+								pripona_souboru = Path.GetExtension(fotografie.FileName),
+								datum_nahrani = DateTime.Now,
+								nahrano_id_osoba = GetLoggedInUserId(), // získání id přihlášeného uživatele
+								obsah_souboru = obsahFotografie
+							};
 
-                            // Ulož fotografii a získej ID
-                            fotografieId = _dataAccess.SaveFotografie(fotografieObj);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
+							// Ulož fotografii a získej ID
+							fotografieId = _dataAccess.SaveFotografie(fotografieObj);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
 
 					var originallllRole = HttpContext.Session.GetString("OriginalRole");
 					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallllRole == "A" || User.IsInRole("A")));
 
 					// Ošetření chyby
-					ViewBag.ErrorMessage = ex.Message;
-                    return View();
-                }
-                ////////////////////////
+					ViewBag.ErrorMessage = "Chyba při načítání fotografie.";
+					return View();
+				}
+				////////////////////////
 
-                // 1. Vložení psa do tabulky Psi
-                var pesId = _dataAccess.VlozPsa(jmeno, cisloNovehoCipu, datumNarozeni, plemenoId, barvaId, pohlaviId, fotografieId, vaha);
+				try
+				{
+					_dataAccess.VlozNovehoPsa(jmeno, cisloNovehoCipu, datumNarozeni, plemenoId, barvaId, pohlaviId, fotografieId, vaha,
+						zacatekPobytu, duvodPobytuId, vlastnosti);
+				}
+				catch (Exception ex) { ViewBag.ErrorMessage = "Chyba při vkládání psa do databáze."; }
 
-                // 2. Vložení pobytu psa do tabulky Pobyty
-                var pobytId = _dataAccess.VlozPobyt(pesId, zacatekPobytu, duvodPobytuId, vaha);
-
-                // 3. Vložení záznamu o pobytu
-                _dataAccess.VlozZaznamOPobytu(pobytId);
-
-                // 4. Vložení vlastností do tabulky psi_vlastnosti
-
-                _dataAccess.PridatVlastnostiDoDatabaze(pesId, vlastnosti);
-
-                // Přesměrování nebo zobrazení potvrzení
-                TempData["Message"] = "Pes byl úspěšně přidán!";
-                Console.WriteLine("Pes přidán");
-                ViewBag.Message = "Pes přidán";
+				// Přesměrování nebo zobrazení potvrzení
+				TempData["Message"] = "Pes byl úspěšně přidán!";
+				Console.WriteLine("Pes přidán");
+				ViewBag.Message = "Pes přidán";
 
 				var originallRole = HttpContext.Session.GetString("OriginalRole");
 				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
 				return View();
-            }
-            else if (action == "addStay")
-            {
-                var pesId = int.Parse(Request.Form["pesId"]);
-                var zacatekPobytu = DateTime.Parse(Request.Form["zacatekPobytu"]);
-                var idDuvod = int.Parse(Request.Form["idDuvod"]);
-                var vaha = double.Parse(Request.Form["vaha"]);
+			}
+			else if (action == "addStay")
+			{
+				var pesId = int.Parse(Request.Form["pesId"]);
+				var zacatekPobytu = DateTime.Parse(Request.Form["zacatekPobytu"]);
+				var idDuvod = int.Parse(Request.Form["idDuvod"]);
+				var vaha = double.Parse(Request.Form["vaha"]);
 
-                try
-                {
-                    // 1. Pokud je důvod pobytu "odložen majitelem", aktualizujeme psa
-                    if (idDuvod == 1)
-                    {
-                        // Aktualizace psa - nastavení majitele na null
-                        var osobaId = _dataAccess.GetMajitelIdByPesId(pesId);
-                        _dataAccess.AktualizujMajitelePsaNaNull(pesId);                        
-                        if (osobaId != null)
-                        {
-                            _dataAccess.ZpracujMajiteleBezPsa(osobaId.Value);
-                        }
-                    }
+				try
+				{
+					//přidání nového pobytu psovi, který už v útulku kdysi byl
+					_dataAccess.PridatPobytPsovi(pesId, zacatekPobytu, idDuvod, vaha);
 
-                    // 2. Aktualizace váhy psa
-                    _dataAccess.AktualizujVahuPsa(pesId, vaha); // Tato metoda bude aktualizovat váhu v tabulce psi
-
-                    // 3. Vložení nového pobytu
-                    int pobytId = _dataAccess.VlozPobyt(pesId, zacatekPobytu, idDuvod, vaha);
-
-                    // 4. Vložení záznamu o pobytu
-                    _dataAccess.VlozZaznamOPobytu(pobytId);
-
-					//return RedirectToAction("PesDetails", new { id = pesId }); // Přesměrování na detail psa
 					return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    // Ošetření chyby
-                    Console.WriteLine("Chyba při přdání starého psa");
-                    ViewBag.ErrorMessage = ex.Message;
+				}
+				catch (Exception ex)
+				{
+					// Ošetření chyby
+					Console.WriteLine("Chyba při přidání nového pobytu pro psa.");
+					ViewBag.ErrorMessage = ex.Message;
 
 					var originallRole = HttpContext.Session.GetString("OriginalRole");
 					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
 
 					return View();
-                }
-            }
+				}
+			}
 
 			var originalRole = HttpContext.Session.GetString("OriginalRole");
 			ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalRole == "A" || User.IsInRole("A")));
 
 			return View();
 
-        }
+		}
 
-
-        [HttpPost]
-        public IActionResult PridatPobyt(int pesId, DateTime zacatekPobytu, int idDuvod, double vaha)
-        {
-            try
-            {
-                // 1. Pokud je důvod pobytu "odložen majitelem", aktualizujeme psa
-                if (idDuvod == 1)
-                {
-                    // Aktualizace psa - nastavení majitele na null
-                    _dataAccess.AktualizujMajitelePsaNaNull(pesId); 
-                }
-
-                // 2. Aktualizace váhy psa
-                _dataAccess.AktualizujVahuPsa(pesId, vaha); // Tato metoda bude aktualizovat váhu v tabulce psi
-
-                // 3. Vložení nového pobytu
-                int pobytId = _dataAccess.VlozPobyt(pesId, zacatekPobytu, idDuvod, vaha);
-
-                // 4. Vložení záznamu o pobytu
-                _dataAccess.VlozZaznamOPobytu(pobytId);
-
-				return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                // Ošetření chyby
-                Console.WriteLine("Chyba při přdání starého psa");
-                ViewBag.ErrorMessage = ex.Message;
-
-				var originallRole = HttpContext.Session.GetString("OriginalRole");
-				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallRole == "A" || User.IsInRole("A")));
-
-				return View();
-            }
-        }
 
 		[HttpPost]
 		public IActionResult VyzvednoutMajitelem(int pesId)
 		{
-            _dataAccess.UkonciPobyt(pesId);
+			_dataAccess.UkonciPobyt(pesId);
 			return RedirectToAction("Index");
 		}
 
@@ -426,7 +372,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		[HttpPost]
 		public IActionResult VyriditAdopci(string email, string action, int idPes, int majitelIdOsoba)
 		{
-            Console.WriteLine("Druha VyriditAdopce id pes: " + idPes);
 			int uzivatelID = GetLoggedInUserId();
 			if (uzivatelID == 0)
 			{
@@ -435,24 +380,18 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 			if (User.Identity.IsAuthenticated && User.IsInRole("C"))
 			{
-                if (action == "search")
-                {
-					var osoba = _dataAccess.OveritEmail(email);
+				if (action == "search")
+				{
 					// Zavoláme metodu v data access vrstvě pro ověření emailu
-
+					var osoba = _dataAccess.OveritEmail(email);
 
 					if (osoba != null)
 					{
-						//PesMajitelModel majitel = new PesMajitelModel
-						//{
-						//	Majitel = osoba // Pokud email existuje, přiřadíme objekt 'osoba' do 'Majitel'
-						//};
-                       PesMajitelModel majitel = new PesMajitelModel();
-                        majitel.Pes = new Pes();
-                        majitel.Pes.ID_PSA = idPes;
-                        majitel.Majitel = osoba;
-						
-                        Console.WriteLine(majitel.Majitel.EMAIL.ToString());
+						PesMajitelModel majitel = new PesMajitelModel();
+						majitel.Pes = new Pes();
+						majitel.Pes.ID_PSA = idPes;
+						majitel.Majitel = osoba;
+
 						var originalllRole = HttpContext.Session.GetString("OriginalRole");
 						ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
 						// Pokud email existuje, přesměrujeme uživatele na stránku pro potvrzení adopce
@@ -462,26 +401,32 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 					{
 						// Pokud email není nalezen, zobrazíme chybovou zprávu
 						ViewBag.ErrorMessage = "Osoba s tímto emailem není zaregistrována.";
-						
-                        PesMajitelModel majitel = new PesMajitelModel();
+
+						PesMajitelModel majitel = new PesMajitelModel();
 						majitel.Pes = new Pes();
 						majitel.Pes.ID_PSA = idPes;
 
 						var originalllRole = HttpContext.Session.GetString("OriginalRole");
 						ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
-						
-                        return View(majitel);
+
+						return View(majitel);
 					}
 
-					var originallllRole = HttpContext.Session.GetString("OriginalRole");
-					ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originallllRole == "A" || User.IsInRole("A")));
+				}
+				else if (action == "adoptovatPsa")
+				{
+					try
+					{
+						_dataAccess.AdopcePsa(majitelIdOsoba, idPes);
+					}
+					catch (Exception)
+					{
+						// Ošetření chyby
+						ViewBag.ErrorMessage = "Psa se nepodařilo adoptovat.";
+						return View();
+					}
 
-					return View(); // Zobrazí stránku s formulářem
-				} else if (action == "adoptovatPsa")
-                {
-					_dataAccess.ZpracujRezervatorZmena(majitelIdOsoba, idPes);
-					_dataAccess.PridejMajitele(majitelIdOsoba);
-					_dataAccess.PridejAdopci(idPes, majitelIdOsoba);
+
 					return RedirectToAction("Index");
 				}
 				// Pokud podmínky nejsou splněny, zobrazíme formulář pro vyřízení adopce
