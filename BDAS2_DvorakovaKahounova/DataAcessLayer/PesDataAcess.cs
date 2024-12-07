@@ -174,7 +174,7 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 		{
 
 			// Vytvoření příkazu pro volání uložené procedury
-			using (var cmd = new OracleCommand("AKTUALIZUJ_TYPOSOBY_PRO_ADOPCI", con))
+			using (var cmd = new OracleCommand("AKTUALIZUJ_TYPOSOBY_PRO_REZERVACI", con))
 			{
 				cmd.CommandType = CommandType.StoredProcedure;
 				cmd.Transaction = transaction; // Přiřazení transakce k příkazu
