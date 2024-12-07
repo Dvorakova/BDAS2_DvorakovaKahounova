@@ -52,10 +52,10 @@
 							</td>
 							<td>@pes.BARVA</td>
 							<td>@pes.PLEMENO</td>
-							
-							</tr>
 
-							<tr>
+						</tr>
+
+						<tr>
 							<td><strong>Hmotnost (kg):</strong></td>
 							<td><strong>Vlastnosti:</strong></td>
 							<td><strong>Důvod pobytu:</strong></td>
@@ -63,9 +63,9 @@
 							<td><strong>Majitel:</strong></td>
 							<td><strong>Karanténa do:</strong></td>
 
-							</tr>
+						</tr>
 
-							<tr>
+						<tr>
 							<td>@pes.VAHA.ToString("F1")</td>
 							<td>@pes.VLASTNOSTI</td>
 							<td>@pes.DUVOD_POBYTU</td>
@@ -85,7 +85,7 @@
 								<td>@pes.KARANTENA_DO?.ToShortDateString()</td>
 							}
 
-							</tr>
+						</tr>
 					</table>
 				</td>
 			</tr>
@@ -117,7 +117,7 @@
 
 				</td>
 				<td class="td-chovatele" colspan="2">
-					
+
 					<div class="button-chovatele">
 						@if (@pes.ID_MAJITEL == null && @pes.REZERVOVANO == null)
 						{
@@ -125,20 +125,24 @@
 								<input type="hidden" name="pesId" value="@pes.ID_PSA" />
 								<button class="btn btn-primary" type="submit">Vyřídit adopci</button>
 							</form>
-						} else if (pes.ID_MAJITEL != null){
+						}
+						else if (pes.ID_MAJITEL != null)
+						{
 							<form asp-action="VyzvednoutMajitelem" method="post" class="button-form">
 								<input type="hidden" name="pesId" value="@pes.ID_PSA" />
 								<button class="btn btn-primary" type="submit">Vyzvednut majitelem</button>
 							</form>
 						}
 
-
-					<button class="btn btn-primary">Upravit vlastnosti</button>
-
-					<button class="btn btn-primary" onclick="showDewormingForm(@pes.ID_PSA)">Přidat záznam o odčervení</button>
+						<button class="btn btn-primary" onclick="showDewormingForm(@pes.ID_PSA)">Přidat záznam o odčervení</button>
 
 
-					<button class="btn btn-primary" onclick="showVaccinationForm(@pes.ID_PSA)">Přidat záznam o očkování</button>
+						<button class="btn btn-primary" onclick="showVaccinationForm(@pes.ID_PSA)">Přidat záznam o očkování</button>
+
+						<form asp-action="ZaznamenatUmrti" method="post">
+							<input type="hidden" name="pesId" value="@pes.ID_PSA" />
+							<button class="btn btn-primary" type="submit">Zaznamenat úmrtí</button>
+						</form>
 					</div>
 				</td>
 			</tr>
@@ -155,7 +159,7 @@
 						</form>
 					</div>
 				</td>
-				<td style ="width: 50%;">
+				<td style="width: 50%;">
 					<div id="vaccinationForm_@pes.ID_PSA" style="display: none; margin-top: 10px;">
 						<form asp-action="PridatOckovaniAkce" method="post">
 							<input type="hidden" name="pesId" value="@pes.ID_PSA" />
@@ -189,5 +193,5 @@
 		document.getElementById(`vaccinationForm_${pesId}`).style.display = 'none';
 	}
 </script>
-	
+
 

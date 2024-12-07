@@ -244,6 +244,23 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			return fotografie;
 		}
 
+		public void ZaznamenatUmrti(int pesId)
+		{
+			using (var connection = new OracleConnection(_connectionString))
+			{
+				connection.Open();
+
+				// Zavolání uložené procedury v databázi pro zaznamenání úmrtí
+				using (var command = new OracleCommand("zaznamenat_umrti", connection))
+				{
+					command.CommandType = CommandType.StoredProcedure;
+					command.Parameters.Add("p_id_psa", OracleDbType.Int32).Value = pesId;
+					command.ExecuteNonQuery();
+				}
+			}
+		}
+
+
 		public void PridatOdcerveni(int pesId, DateTime datumOdcerveni)
 		{
 			using (var con = new OracleConnection(_connectionString))

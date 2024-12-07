@@ -129,6 +129,21 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			return RedirectToAction("Index");
 		}
 
+		[HttpPost]
+		public IActionResult ZaznamenatUmrti(int pesId)
+		{
+			try
+			{
+				_dataAccess.ZaznamenatUmrti(pesId);
+				TempData["Message"] = "Úmrtí bylo úspěšně zaznamenáno.";
+			}
+			catch (Exception ex)
+			{
+				TempData["ErrorMessage"] = "Chyba při zaznamenávání úmrtí: ";
+			}
+
+			return RedirectToAction("Index");
+		}
 
 
 		public IActionResult ShowOwnerProfile(int ownerId)
