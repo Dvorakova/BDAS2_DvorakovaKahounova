@@ -1320,3 +1320,40 @@ a.btn.btn-primary {
 #toggle-info:not(:checked) ~ #info-container #telefon {
     display: none;
 }
+
+.container-profil3 .eye {
+    position: absolute;
+    animation: keyframes-fill .5s;
+    cursor: url('/images/cursor.png'), auto;
+    margin-left: 230px;
+    top: 330px;
+}
+
+.container-profil3 .eye-slash {
+    position: absolute;
+    animation: keyframes-fill .5s;
+    display: none;
+    cursor: url('/images/cursor.png'), auto;
+    margin-left: 230px;
+    top: 330px;
+}
+
+/* ------ On check event ------ */
+.container-profil3 input:checked ~ .eye {
+    display: none;
+    cursor: url('/images/cursor.png'), auto;
+}
+
+.container-profil3 input:checked ~ .eye-slash {
+    display: block;
+    cursor: url('/images/cursor.png'), auto;
+}
+
+/* ------ Hide the default checkbox ------ */
+.container-profil3 input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
