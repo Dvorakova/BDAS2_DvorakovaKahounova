@@ -58,11 +58,6 @@
 						}
 						else
 						{
-								@if (@column.DataType.Equals("DATE"))
-								{
-									<p>Zadejte datum ve formátu: dd.mm.rrrr hh.mm.ss</p>
-								}
-
 
 							@* //////////////////////////////////////////////////////////////////////////////////////////// *@
 							bool isForeignKey = column.ColumnName.StartsWith("ID_") || column.ColumnName.StartsWith("MAJITEL_ID")
@@ -257,7 +252,14 @@
 								<input type="text" name="values[@column.ColumnName]" value="@ViewBag.EditValues[column.ColumnName]" />
 							}
 							@* //////////////////////////////////////////////////////////////////////////////////////////// *@
-							
+
+								@if (@column.DataType.Equals("DATE"))
+								{
+									<p class="karantena-info">
+										<span class="tooltip-icon">?</span>
+										<span class="tooltip-text">Zadejte datum ve formátu: dd.mm.rrrr hh.mm.ss</span>
+									</p>
+								}
 						}
 					</label>
 
