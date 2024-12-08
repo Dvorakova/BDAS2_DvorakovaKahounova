@@ -8,15 +8,6 @@
 
 @if (TempData["ErrorMessage"] != null)
 {
-	@* <div class="alert alert-danger">
-		@TempData["ErrorMessage"]
-	</div> *@
-
-	@* <div class="alert alert-danger alert-dismissible fade show" role="alert">
-		<strong>Chyba!</strong> @TempData["ErrorMessage"]
-		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-	</div> *@
-
 	<script>
 		alert(@Html.Raw(Json.Serialize(TempData["ErrorMessage"])));
 	</script>

@@ -8,10 +8,6 @@
 
 @if (TempData["ErrorMessage"] != null)
 {
-    @* <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div> *@
-
     <script>
         alert(@Html.Raw(Json.Serialize(TempData["ErrorMessage"])));
     </script>

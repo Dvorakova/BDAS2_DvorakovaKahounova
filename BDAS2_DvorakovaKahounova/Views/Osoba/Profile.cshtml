@@ -6,7 +6,6 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Účet</title>
-	@* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
@@ -65,10 +64,7 @@
 					<div class="container-profil">
 						<p><strong>Jméno: </strong>@Model.JMENO</p>
 						<p><strong>Příjmení: </strong>@Model.PRIJMENI</p>
-						@* <p><strong>Telefon: </strong>@Model.TELEFON</p>
-						<p><strong>Email: </strong>@Model.EMAIL</p> *@
 
-						<!----------------------------------------------------------------------------------------------------->
 
 						<div class="container-profil2">
 							<input type="checkbox" id="toggle-info" />
@@ -85,7 +81,6 @@
 							<p><strong>Telefon: </strong><span id="telefon" style="display:none;">@Model.TELEFON</span></p>
 						</div>
 
-						<!----------------------------------------------------------------------------------------------------->
 					</div>
 				}
 			</div>

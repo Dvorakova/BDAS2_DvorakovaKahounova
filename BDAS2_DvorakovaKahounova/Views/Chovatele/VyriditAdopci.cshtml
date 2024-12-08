@@ -17,12 +17,9 @@
 </div>
 
 <div class="info-majitel">
-@* @if (Model?.Majitel?.EMAIL != null) *@
 @if (@Model?.Majitel?.EMAIL != null)
 {
 	<p><strong>Majitel:</strong> @Model.Majitel.JMENO @Model.Majitel.PRIJMENI</p>
-	@* <p><strong>Telefon:</strong> @Model.Majitel.TELEFON</p>
-	<p><strong>Email:</strong> @Model.Majitel.EMAIL</p> *@
 
 		<div class="container-profil3">
 			<input type="checkbox" id="toggle-info" />
@@ -49,8 +46,6 @@
 }
 else if (ViewBag.ErrorMessage != null)
 {
-	@* <p>Osoba nenalezena. Žadatel o adopci se musí nejprve zaregistrovat.</p>
-        <a href="@Url.Action("Register", "Osoba")" class="btn btn-primary">Registrovat se</a> *@
 		<script type="text/javascript">
 			alert('Osoba nenalezena. Žadatel o adopci se musí nejprve zaregistrovat.');
 		</script>

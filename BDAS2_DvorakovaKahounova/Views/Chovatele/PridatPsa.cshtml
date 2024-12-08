@@ -15,7 +15,6 @@
 	<div class="input-container-rezervace">
 		<form method="post">
 
-			@* <label for="cisloCipu">Číslo čipu:</label> *@
 			<input type="text" id="cisloCipu" name="cisloCipu" value="@ViewBag.CisloCipu"
 				   required placeholder="Zadejte číslo čipu psa" pattern="\d{15}" oninvalid="this.setCustomValidity('Číslo čipu musí obsahovat přesně 15 číslic.')"
 				   oninput="this.setCustomValidity('')" /><p></p>
@@ -26,14 +25,6 @@
 			<button type="submit" class="btn-rezervace" name="action" value="nochip">Pes bez čipu</button>
 		</form>
 	</div>
-
-	@* @if (ViewBag.Message != null)
-	{
-	<div>
-	<p>@ViewBag.Message</p>
-	</div>
-	}
-	*@
 
 </div>
 
@@ -213,7 +204,6 @@
 			<div class="grid-container-pridatpsa-item">
 				<div class="info-mujpes">
 					<h2><strong>Jméno psa: </strong> @Model.Pes.JMENO</h2>
-					@* třeba opravit pro možnost, že neznáme narození psa *@
 					<p><strong>Věk:</strong> @(DateTime.Now.Year - @Model.Pes.NAROZENI?.Year) let</p>
 					@if (@Model.Pes.POHLAVI == 0)
 					{
@@ -228,9 +218,6 @@
 					<p><strong>Barva:</strong> @Model.Pes.BARVA</p>
 					<p><strong>Vlastnosti:</strong> @Model.Pes.VLASTNOSTI</p>
 					<p><strong>Číslo čipu:</strong> @Model.Pes.CISLO_CIPU</p>
-
-					@* <button onclick="pridatPobyt()">Přidat pobyt</button> *@
-
 
 
 					@if (@Model.Majitel.EMAIL != null)
@@ -260,7 +247,6 @@
 			<div class="container-pridatPsa">
 				<div class="input-container-pridatPsa">
 					<form method="post">
-						@* ChovateleController/PridatPobyt *@
 						<!-- Skryté pole pro ID psa -->
 						<input type="hidden" name="pesId" value="@Model.Pes.ID_PSA" />
 
@@ -366,24 +352,6 @@
 		document.querySelector('.custom-file-label').textContent = fileName;
 	});
 </script>
-
-@* <script>
-    document.getElementById("pesForm").addEventListener("submit", function (event) {
-        const jmenoInput = document.getElementById("jmeno");
-        if (!jmenoInput.value.trim()) {
-            jmenoInput.value = "Neznámé";
-        }
-    });
-</script> *@
-
-@* <script>
-    document.getElementById('cisloCipu').addEventListener('input', function (e) {
-        const input = e.target;
-        if (input.value.length > 15) {
-            input.value = input.value.slice(0, 15); // Omezí délku na 15 znaků
-        }
-    });
-</script> *@
 
 <script>
 	const input = document.getElementById('cisloCipu');
