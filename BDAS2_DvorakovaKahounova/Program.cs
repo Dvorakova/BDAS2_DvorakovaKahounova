@@ -1,10 +1,11 @@
 using BDAS2_DvorakovaKahounova.DataAcessLayer;
+using BDAS2_DvorakovaKahounova.Email;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<BDAS2_DvorakovaKahounova.Email.IEmailSender, EmailSender>();
 
 builder.Services.AddControllersWithViews();
 

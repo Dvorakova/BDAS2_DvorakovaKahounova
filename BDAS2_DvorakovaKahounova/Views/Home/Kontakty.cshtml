@@ -1,54 +1,5 @@
-﻿@* <div class="container-fluid">
-    <h1>Kontakty</h1>
-
-    <div class="row kontakt-mapa">
-        <div class="col-md-6">
-            <div class="container-kontakty">
-                <h2 class="h2-kontakty">Kontakty</h2>
-                <p class="p-kontakty">
-                    <strong>Majitel:</strong> Jan Novák<br />
-                    <strong>Telefon:</strong> +420 123 456 789<br />
-                    <strong>Email:</strong> jan.novak@email.com<br />
-                    <strong>Pracovní doba:</strong> Po-Pá 9:00 - 17:00
-                </p>
-
-                <h2 class="h2-kontakty">Adresa</h2>
-                <p class="p-kontakty">
-                    <strong>Psí útulek LUCKY</strong><br />
-                    Dvořákova 48<br />
-                    Pelhřimov, PSČ 39301<br />
-                    Česká republika
-                </p>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="container-mapa">
-                <h2 class="h2-kontakty">Kde nás najdete</h2>
-                <iframe class="mapa" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2790.254268100934!2d15.58586631555536!3d49.39568687932711!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470de6e4ffab8d93%3A0x9a2f9276c62f45f5!2sPelh%C5%99imov%2C%20%C4%8Cesk%C3%A1%20republika!5e0!3m2!1sen!2s!4v1698278562341!5m2!1sen!2s&z=10"
-                </iframe>
-            </div>
-        </div>
-
-        <h2 class="h2-kontakty">Máte dotaz? Napište nám</h2>
-        <form id="contactForm" runat="server">
-            <div class="form-group">
-                <label for="name">Jméno:</label>
-                <input type="text" id="name" class="form-control" runat="server" required />
-            </div>
-            <div class="form-group">
-                <label for="email">E-mail:</label>
-                <input type="email" id="email" class="form-control" runat="server" required />
-            </div>
-            <div class="form-group">
-                <label for="message">Dotaz:</label>
-                <textarea id="message" class="form-control" runat="server" rows="5" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary" runat="server" onserverclick="SendEmail_Click">Odeslat</button>
-        </form>
-    </div>
-</div> *@
-
+﻿
+@model BDAS2_DvorakovaKahounova.Models.EmailModel
 
 <div class="container-fluid">
     <h1>Kontakty</h1>
@@ -90,21 +41,23 @@
     <div class="row mt-4">
         <div class="col-12">
             <h2 class="h2-kontakty">Máte dotaz? Napište nám</h2>
-            <form id="contactForm" class="form-kontakty" runat="server">
+            <form asp-action="Kontakty" class="form-kontakty" method="post">
                 <div class="form-group">
                     <label for="email">Váš e-mail:</label>
                     @* <input type="email" id="email" class="form-control" runat="server" required /> *@
-                    <input type="email" id="email" class="form-control" value="@ViewBag.UserEmail" runat="server" required />
+                    <input type="email" name="email" id="email" class="form-control" value="@ViewBag.UserEmail" runat="server" required />
                 </div>
                 <div class="form-group">
-                    <label for="message">Dotaz:</label>
-                    <textarea id="message" class="form-control" runat="server" rows="5" required></textarea>
+                    <label for="Message">Dotaz:</label>
+                    <textarea asp-for="Message" class="form-control" id="Message" rows="5" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Odeslat</button>
             </form>
+
         </div>
     </div>
 </div>
+
 
 
 @if (TempData["SuccessMessage"] != null)
