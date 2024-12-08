@@ -1357,3 +1357,40 @@ a.btn.btn-primary {
     height: 0;
     width: 0;
 }
+
+.container-profil4 .eye {
+    position: absolute;
+    animation: keyframes-fill .5s;
+    cursor: url('/images/cursor.png'), auto;
+    margin-left: 320px;
+    top: 790px;
+}
+
+.container-profil4 .eye-slash {
+    position: absolute;
+    animation: keyframes-fill .5s;
+    display: none;
+    cursor: url('/images/cursor.png'), auto;
+    margin-left: 320px;
+    top: 790px;
+}
+
+/* ------ On check event ------ */
+.container-profil4 input:checked ~ .eye {
+    display: none;
+    cursor: url('/images/cursor.png'), auto;
+}
+
+.container-profil4 input:checked ~ .eye-slash {
+    display: block;
+    cursor: url('/images/cursor.png'), auto;
+}
+
+/* ------ Hide the default checkbox ------ */
+.container-profil4 input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
