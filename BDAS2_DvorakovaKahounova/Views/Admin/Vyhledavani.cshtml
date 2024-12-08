@@ -129,7 +129,12 @@
 	}
 	else
 	{
-		<h3>Žádní podřízení nebyli nalezeni pro ID @ViewBag.SearchedId.</h3>
+		@if (ViewBag.SearchedId != null)
+		{
+			 <script>
+				 alert("Žádní podřízení nebyli nalezeni pro ID @Html.Raw(ViewBag.SearchedId)");
+			</script>
+		}
 	}
 }
 </div>

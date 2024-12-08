@@ -1,10 +1,5 @@
-/* BARVICKY */
+/* BARVY */
 :root {
-    /*--fialova: #6B4E71;*/ /* fialkova */
-    /*--tmaveModra: #3A4454;*/ /* tmave modra */
-    /*--svetleModra: #53687E;*/ /* svetle modra */
-    /*--text-color: #333;*/ /* Barva textu */
-
     --cerna: #000000;
     --fialova: #70587C;
     --bordo: #502F4C;
@@ -25,11 +20,11 @@ html {
 
 @media (max-width: 768px) {
     .profile-grid {
-        grid-template-columns: 1fr; /* Pro menší obrazovky jeden sloupec */
+        grid-template-columns: 1fr;
     }
 
     table {
-        width: 100%; /* Tabulka bude mít 100% šíøku */
+        width: 100%;
     }
 }
 
@@ -51,7 +46,7 @@ body {
 
 .main-container {
     width: 100%;
-    max-width: 1200px; /* Nastavuje maximální šíøku stránky */
+    max-width: 1200px;
     padding: 20px;
     margin: 0 auto;
 }
@@ -61,21 +56,21 @@ body {
 }
 
 a:link {
-    color: var(--levandule); /* Barva odkazu pøed návštìvou */
+    color: var(--levandule);
     cursor: url('/images/cursor.png'), pointer;
 }
 
 a:visited {
-    color: var(--bordo); /* Barva odkazu po návštìvì */
+    color: var(--bordo);
 }
 
 a:hover {
-    color: var(--fialova); /* Barva pøi najetí myší */
-    text-decoration: none; /* Zvıraznìní textu */
+    color: var(--fialova);
+    text-decoration: none;
 }
 
 a:active {
-    color: orange; /* Barva pøi kliknutí */
+    color: orange;
 }
 
 /* kontakty */
@@ -101,30 +96,30 @@ a:active {
     padding: 20px;
     max-width: 400px;
     max-height: 500px;
-    margin: initial; /* Vycentrování kontejneru */
+    margin: initial; 
     border-radius: 10px;
-    border: 2px solid transparent; /* Umoní efekt rozplynutí na okrajích */
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Jemnı stín pro zvıraznìní */
+    border: 2px solid transparent;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
     margin-top: 20px;
     background-color: white;
 }
 
 .kontakt-mapa {
-    display: flex; /* Pouití flexboxu pro zarovnání kontejnerù */
-    justify-content: space-between; /* Mezera mezi kontejnery */
+    display: flex; 
+    justify-content: space-between; 
 }
 
 .container-kontakty, .container-mapa {
-    padding: 20px; /* Pøidání paddingu pro vnitøní odsazení */
+    padding: 20px; 
 }
 
-/* Zajistit, e iframe má správnou vıšku a šíøku */
+
 .mapa {
-    width: 100%; /* Šíøka mapy */
-    height: 300px; /* Vıška mapy */
-    border-radius: 10px; /* Zaoblené rohy mapy */
-    overflow: hidden; /* Skrytí pøeteèení obsahu */
-    border: 2px solid transparent; /* Umoní efekt rozplynutí na okrajích */
+    width: 100%; 
+    height: 300px; 
+    border-radius: 10px; 
+    overflow: hidden; 
+    border: 2px solid transparent; 
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -163,8 +158,8 @@ a:active {
 
 .input-container {
     position: relative;
-    margin: 20px auto; /* Zmenšené odsazení pro menší mezeru */
-    width: 100%; /* Upravte podle potøeby */
+    margin: 20px auto; 
+    width: 100%; 
 }
 
     .input-container input[type="text"],
@@ -234,7 +229,7 @@ a:active {
 /*konec*/
 
 .btn {
-    font-size: 16px; /* Velikost písma pro tlaèítko */
+    font-size: 16px; 
     background-color: var(--levandule);
     border-color: var(--levandule);
     outline: none;
@@ -242,24 +237,24 @@ a:active {
 }
 
     .btn:hover {
-        background-color: var(--fialova); /* Barva pøi hoveru */
+        background-color: var(--fialova); 
         border-color: var(--fialova);
         cursor: url('/images/cursor.png'), auto;
     }
 
     .btn:focus {
-        background-color: var(--fialova); /* Barva pøi hoveru */
+        background-color: var(--fialova); 
         border-color: var(--fialova);
         cursor: url('/images/cursor.png'), auto;
     }
 
 .text-custom {
     color: var(--bordo);
-    text-decoration: none; /* Pokud chceš, aby nebyl podtrenı */
+    text-decoration: none; 
 }
 
     .text-custom:hover {
-        text-decoration: underline; /* Pøidá podtrení pøi najetí myší */
+        text-decoration: underline; 
     }
 
 /* -- index --*/
@@ -286,38 +281,38 @@ h2{
     background-color: var(--levandule);
     color: white;
     padding: 30px;
-    width: 60%; /* Zmìnìno pro lepší zarovnání vlevo */
-    margin-left: 0; /* Zarovnání vlevo */
-    border-radius: 15px; /* Zaoblené okraje */
+    width: 60%; 
+    margin-left: 0; 
+    border-radius: 15px; 
     position: relative;
     font-size: 1.1em;
-    border: 2px solid transparent; /* Umoní efekt rozplynutí na okrajích */
-    background: linear-gradient(var(--levandule), var(--levandule)) padding-box, linear-gradient(to right, rgba(255, 255, 255, 0), var(--levandule), rgba(255, 255, 255, 0)) border-box; /* Gradientovı efekt */
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Jemnı stín pro zvıraznìní */
+    border: 2px solid transparent; 
+    background: linear-gradient(var(--levandule), var(--levandule)) padding-box, linear-gradient(to right, rgba(255, 255, 255, 0), var(--levandule), rgba(255, 255, 255, 0)) border-box; 
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); 
     margin-top: -70px;
 }
 
-/* Kontejner pro vedlejší umístìní kontejneru a obrázku */
+
 .content-container {
     display: flex;
-    align-items: center; /* Vertikální zarovnání na støed */
-    gap: 150px; /* Mezera mezi kontejnerem a obrázkem */
+    align-items: center; 
+    gap: 150px; 
 }
 
-/* Styl pro obrázek */
+
 .logo-image {
-    width: 250px; /* Zvıšená šíøka obrázku */
+    width: 250px; 
     height: auto;
-    border-radius: 10px; /* Zaoblené rohy pro vizuální harmonii s kontejnerem */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Jemnı stín pro zvıraznìní */
+    border-radius: 10px; 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
 }
 
 /* -- profil --*/
 
 .profile-grid {
     display: grid;
-    grid-template-columns:  1fr; /* 1. sloupec má šíøku 1fr, 2. sloupec má 2fr */
-    gap: 5px; /* Mezera mezi sloupci */
+    grid-template-columns:  1fr; 
+    gap: 5px; 
     padding: 40px;
     max-width: 100%;
 }
@@ -343,7 +338,7 @@ h2{
 }
 
 .profile-details {
-    padding-left: 15px; /* Odstup textu od obrázku */
+    padding-left: 15px; 
 }
 
 table {
@@ -378,8 +373,8 @@ table {
 
 .input-container-profile {
     position: relative;
-    margin: 10px; /* Zmenšené odsazení pro menší mezeru */
-    width: 100%; /* Upravte podle potøeby */
+    margin: 10px; 
+    width: 100%; 
 }
 
     .input-container-profile input[type="password"] {
@@ -426,27 +421,27 @@ table {
         transform: scaleX(1);
     } 
 
-/* Styl pro tlaèítko po kliknutí (focus) */
+
 button[type="button"]:focus {
-    background-color: var(--fialova); /* pozadí */
+    background-color: var(--fialova); 
     border: var(--fialova);
-    outline: none; /* Odstraní modrı okraj pøi kliknutí */
+    outline: none; 
     cursor: url('/images/cursor.png'), auto;
 }
 
-/* Pokud chceš, aby tlaèítko po kliknutí zùstalo èerné i po ztrátì fokusu */
+
 button[type="button"]:active,
 button[type="button"]:hover,
 button[type="button"]:focus {
-    background-color: var(--fialova); /* Èerné pozadí pøi kliknutí */
-    color: #fff; /* Bílı text */
-    border: var(--fialova); /* Pøípadnì pøidej okraj podle potøeby */
+    background-color: var(--fialova); 
+    color: #fff; 
+    border: var(--fialova); 
     outline: none;
     cursor: url('/images/cursor.png'), auto;
 }
 
 .btn-secondary {
-    color: white !important; /* Nastaví bílou barvu textu */
+    color: white !important; 
 }
 
     .btn-secondary:hover {
@@ -471,7 +466,7 @@ button[type="button"]:focus {
     }
 
 .info-mujpes p {
-    margin-left: 30px; /* Posune odstavce více doprava */
+    margin-left: 30px; 
 }
 
 .info-mujpes {
@@ -480,43 +475,43 @@ button[type="button"]:focus {
 
 .karantena-info {
     display: inline-flex;
-    align-items: center; /* Zarovná text a ikonu na støed vertikálnì */
-    gap: 10px; /* Mezera mezi textem a ikonou */
-    position: relative; /* Pro tooltip */
+    align-items: center; 
+    gap: 10px; 
+    position: relative; 
 }
 
 .tooltip-icon {
     display: inline-block;
     width: 20px;
     height: 20px;
-    background-color: var(--levandule); /* Barva ikony */
+    background-color: var(--levandule); 
     color: white;
     border-radius: 50%;
     text-align: center;
-    line-height: 20px; /* Zarovnání textu vevnitø kruhu */
+    line-height: 20px; 
     font-size: 14px;
     cursor: pointer;
     position: relative;
 }
 
 .tooltip-text {
-    display: none; /* Skryje text ve vıchozím stavu */
+    display: none; 
     position: absolute;
-    top: calc(100% + 5px); /* Umístí tooltip tìsnì pod ikonu */
-    left: 0; /* Tooltip bude zaèínat zarovnanı s ikonou */
-    background-color: var(--snehova); /* Svìtlé pozadí */
-    color: var(--bordo); /* Barva textu */
-    border: 1px solid var(--bordo); /* Rámeèek */
-    border-radius: 5px; /* Zaoblené rohy */
+    top: calc(100% + 5px); 
+    left: 0; 
+    background-color: var(--snehova); 
+    color: var(--bordo); 
+    border: 1px solid var(--bordo); 
+    border-radius: 5px; 
     padding: 5px;
     font-size: 12px;
-    white-space: nowrap; /* Zabrání zalomení textu */
-    z-index: 10; /* Pøedsune tooltip pøed ostatní prvky */
+    white-space: nowrap;
+    z-index: 10; 
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .tooltip-icon:hover + .tooltip-text {
-    display: block; /* Zobrazí tooltip pøi hoveru na ikonu */
+    display: block; 
 }
 
 
@@ -531,32 +526,32 @@ button[type="button"]:focus {
 
 .input-container-rezervace {
     position: center;
-    margin: 20px auto; /* Zmenšené odsazení pro menší mezeru */
-    width: 30%; /* Upravte podle potøeby */
+    margin: 20px auto; 
+    width: 30%; 
     text-align: center;
 }
 
 .btn-rezervace {
-    font-size: 16px; /* Velikost písma pro tlaèítko */
+    font-size: 16px; 
     background-color: var(--levandule);
     border-color: var(--levandule);
     color: white;
     border-radius: 5px;
     margin: 5px auto;
     padding: 10px;
-    border: none; /* odstraní okraj */
-    outline: none; /* odstraní obrys */
+    border: none; 
+    outline: none; 
     cursor: url('/images/cursor.png'), auto;
 }
 
     .btn-rezervace:hover {
-        background-color: var(--fialova); /* Barva pøi hoveru */
+        background-color: var(--fialova); 
         border-color: var(--fialova);
         cursor: url('/images/cursor.png'), auto;
     }
 
     .btn-rezervace:focus {
-        background-color: var(--fialova); /* Barva pøi hoveru */
+        background-color: var(--fialova); 
         border-color: var(--fialova);
         cursor: url('/images/cursor.png'), auto;
     }
@@ -589,26 +584,26 @@ button[type="button"]:focus {
     }
 
 .btn-rezervace2 {
-    font-size: 16px; /* Velikost písma pro tlaèítko */
+    font-size: 16px; 
     background-color: var(--levandule);
     border-color: var(--levandule);
     color: white;
     border-radius: 5px;
     margin-left: 27px;
     padding: 10px;
-    border: none; /* odstraní okraj */
-    outline: none; /* odstraní obrys */
+    border: none; 
+    outline: none; 
     cursor: url('/images/cursor.png'), auto;
 }
 
     .btn-rezervace2:hover {
-        background-color: var(--fialova); /* Barva pøi hoveru */
+        background-color: var(--fialova); 
         border-color: var(--fialova);
         cursor: url('/images/cursor.png'), auto;
     }
 
     .btn-rezervace2:focus {
-        background-color: var(--fialova); /* Barva pøi hoveru */
+        background-color: var(--fialova); 
         border-color: var(--fialova);
         cursor: url('/images/cursor.png'), auto;
     }
@@ -629,29 +624,29 @@ button[type="button"]:focus {
 }
 
 .td-chovatele {
-    text-align: center; /* Horizontální zarovnání obsahu */
-    vertical-align: bottom; /* Vertikální zarovnání obsahu */
+    text-align: center; 
+    vertical-align: bottom; 
     
 }
 
 .button-chovatele {
     display: flex;
-    justify-content: center; /* Horizontální zarovnání */
-    align-items: flex-start; /* Vertikální zarovnání */
-    gap: 15px; /* Mezera mezi tlaèítky */
+    justify-content: center; 
+    align-items: flex-start; 
+    gap: 15px; 
     font-size: 40px;
     cursor: url('/images/cursor.png'), auto;
 }
 
     .button-chovatele button,
     .form-button button {
-        height: 40px; /* Stejná vıška pro všechna tlaèítka */
-        line-height: 40px; /* Vertikální zarovnání textu */
-        display: flex; /* Flexbox pro formuláø */
-        align-items: center; /* Vertikální zarovnání tlaèítka */
-        margin: 5px; /* Zrušení marginu formuláøe */
-        padding: 5px; /* Odstranìní jakéhokoli paddingu */
-        justify-content: center; /* Zarovnání formuláøe do støedu */
+        height: 40px; 
+        line-height: 40px; 
+        display: flex; 
+        align-items: center; 
+        margin: 5px; 
+        padding: 5px; 
+        justify-content: center; 
         cursor: url('/images/cursor.png'), auto;
     }
 
@@ -661,31 +656,30 @@ button[type="button"]:focus {
     height: 100%;
     max-width: 1400px;
     border-collapse: collapse;
-    border: 2px solid #ccc; /* Okraj tabulky */
-    border-radius: 10px; /* Zakulacení rohù */
-    overflow: hidden; /* Skryje obsah, kterı pøesahuje zakulacení */
-/*    max-height: 600px;*/
+    border: 2px solid #ccc; 
+    border-radius: 10px; 
+    overflow: hidden; 
 }
 
     .table-chovatele-vnitrni td,
     .table-chovatele-vnitrni th {
-        border: 1px solid #ccc; /* Ohranièení jednotlivıch bunìk */
-        padding: 8px; /* Mezera uvnitø bunìk */
-        text-align: left; /* Zarovnání textu */
+        border: 1px solid #ccc; 
+        padding: 8px; 
+        text-align: left;
     }
 
 /*-- pridat psa --*/
 #vlastnostiContainer {
     padding-left: 20px;
-    margin-left: auto; /* Automatické levé a pravé okraje pro vycentrování */
+    margin-left: auto; 
     margin-right: auto;
-    display: none; /* Zaèíná skrytı */
+    display: none; 
 }
 
 .vlastnosti-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Dva sloupce */
-    gap: 5px; /* Mezera mezi polokami */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px; 
     margin-top: 20px;
     margin-left: 150px;
 }
@@ -699,10 +693,9 @@ button[type="button"]:focus {
         display: none;
     }
 
-    /* Vytvoøení vlastního designu checkboxu */
     .vlastnost-item label {
         position: relative;
-        padding-left: 30px; /* Místo pro vlastní checkbox */
+        padding-left: 30px; 
         cursor: pointer;
         font-size: 16px;
         margin: 0 5px;
@@ -721,13 +714,11 @@ button[type="button"]:focus {
             transition: background-color 0.3s, border-color 0.3s;
         }
 
-    /* Zmìna vzhledu pøi zaškrtnutí */
     .vlastnost-item input[type="checkbox"]:checked + label::before {
-        background-color: var(--bordo); /* Zelené pozadí */
-        border-color: var(--bordo); /* Zelenı rámeèek */
+        background-color: var(--bordo);
+        border-color: var(--bordo); 
     }
 
-    /* Zmìna vzhledu pøi zaškrtnutí a pøi najetí myší */
     .vlastnost-item input[type="checkbox"]:checked + label::after {
         content: "\2713";
         position: absolute;
@@ -737,24 +728,13 @@ button[type="button"]:focus {
         color: white;
     }
 
-    /* Zmìna barvy pøi najetí myší */
     .vlastnost-item input[type="checkbox"]:hover + label::before {
         border-color: var(--bordo);
     }
 
-
-
-/*.input-container-rezervace3 {
-    position: relative;
-    margin-left: 0;
-    width: 30%;*/ /* Upravte podle potøeby */
-    /*text-align: left;
-}*/
-
-
 .container-pridatPsa {
-    max-width: 500px; /* Maximální šíøka kontejneru */
-    margin: 20px auto; /* Centrované na stránce */
+    max-width: 500px; 
+    margin: 20px auto; 
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -764,13 +744,13 @@ button[type="button"]:focus {
 }
 
 .input-container-pridatPsa {
-    margin-bottom: 5px; /* Mezera mezi sekcemi */
+    margin-bottom: 5px; 
     color: var(--bordo);
 }
 
     .input-container-pridatPsa label,
     .container-pridatPsa label {
-        display: block; /* Kadı label bude na samostatném øádku */
+        display: block; 
         font-weight: bold;
         margin-bottom: 5px;
         color: #333;
@@ -780,25 +760,23 @@ button[type="button"]:focus {
     .container-rezervace input,
     .container-rezervace select,
     .container-rezervace button {
-        width: 100%; /* Zajišuje responzivní šíøku */
+        width: 100%; 
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        box-sizing: border-box; /* Zohledòuje padding pøi vıpoètu šíøky */
+        box-sizing: border-box; 
         font-size: 14px;
     }
 
 .container-pridatPsa select {
-    /*background-color: #fff;
-    cursor: pointer;*/
-    background-color: #fff; /* Bílı pozadí */
-    border: 1px solid #ccc; /* Svìtle šedı okraj */
-    padding: 10px 15px; /* Vnitøní odsazení */
-    border-radius: 4px; /* Zaoblené rohy */
-    font-size: 16px; /* Velikost písma */
-    cursor: pointer; /* Ukazatel pøi najetí */
-    width: 100%; /* Vıplò na celou šíøku kontejneru */
-    transition: border-color 0.3s ease-in-out; /* Plynulı pøechod pro zmìnu okraje */
+    background-color: #fff; 
+    border: 1px solid #ccc; 
+    padding: 10px 15px; 
+    border-radius: 4px; 
+    font-size: 16px; 
+    cursor: pointer; 
+    width: 100%; 
+    transition: border-color 0.3s ease-in-out;
 }
 
 .container-pridatPsa button {
@@ -807,7 +785,7 @@ button[type="button"]:focus {
     margin-top: 10px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px; /* Velikost písma pro tlaèítko */
+    font-size: 16px; 
     background-color: var(--levandule);
     outline: none;
     color: white;
@@ -815,17 +793,16 @@ button[type="button"]:focus {
 }
 
     .container-pridatPsa button:hover {
-        background-color: var(--fialova); /* Barva pøi hoveru */
+        background-color: var(--fialova); 
         border-color: var(--fialova);
         cursor: url('/images/cursor.png'), auto;
     }
 
     .container-pridatPsa button:focus {
-        background-color: var(--fialova); /* Barva pøi hoveru */
+        background-color: var(--fialova); 
         border-color: var(--fialova);
         cursor: url('/images/cursor.png'), auto;
     }
-
 
 .hidden-file-input {
     display: none;
@@ -837,7 +814,7 @@ button[type="button"]:focus {
     margin-top: 10px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px; /* Velikost písma pro tlaèítko */
+    font-size: 16px; 
     font-weight: normal !important;
     background-color: var(--levandule);
     border-color: var(--levandule);
@@ -848,7 +825,7 @@ button[type="button"]:focus {
 }
 
     .custom-file-label:hover {
-        background-color: var(--fialova); /* Barva pøi hoveru */
+        background-color: var(--fialova); 
         border-color: var(--fialova);
     }
 
@@ -858,23 +835,20 @@ button[type="button"]:focus {
     color: white;
 }
 
-/* Styl pro select pøi focus */
 .container-pridatPsa select:focus {
-    border-color: var(--fialova); /* Zmìna okraje pøi aktivaci */
-    outline: none; /* Odstranìní defaultního rámeèku */
+    border-color: var(--fialova); 
+    outline: none; 
 
 }
 
-/* Styl pro monosti v dropdownu */
 .container-pridatPsa select option {
-    padding: 10px 15px; /* Vnitøní odsazení pro monost */
-    font-size: 16px; /* Velikost písma pro monosti */
+    padding: 10px 15px;
+    font-size: 16px;
 }
 
-    /* Styl pro vybranou monost */
     .container-pridatPsa select option:checked {
-        background-color: var(--fialova); /* Barva pozadí pro vybranou monost */
-        color: white; /* Barva textu pro vybranou monost */
+        background-color: var(--fialova); 
+        color: white; 
     }
 
 
@@ -936,14 +910,12 @@ a.btn.btn-primary {
 }
 
 .log-page {
-    padding: 0; /* Odstranìní vnitøního odsazení */
+    padding: 0; 
     margin: 0 auto;
     overflow-y: auto;
     direction: ltr;
-    /*max-height: 100vh;*/
     max-height: 400px;
     max-width: 1500px;
-    /*box-sizing: border-box;*/
     width: 100%;
 }
 
@@ -960,7 +932,7 @@ a.btn.btn-primary {
     border-radius: 8px;
     overflow: hidden;
     margin-top: 30px;
-    direction: ltr; /* Obsah zùstane ve správném smìru */
+    direction: ltr; 
     cursor: url('/images/cursor.png'), auto;
     direction: ltr;
 }
@@ -987,30 +959,29 @@ a.btn.btn-primary {
         cursor: pointer;
     }
 
-    /* Stylování posuvníku */
 .log-page::-webkit-scrollbar {
-    width: 8px; /* Šíøka posuvníku */
-    background-color: #f4f4f4; /* Barva pozadí */
+    width: 8px; 
+    background-color: #f4f4f4;
 }
 
 .log-page::-webkit-scrollbar-thumb {
-    background-color: var(--levandule); /* Barva "palce" posuvníku */
-    border-radius: 4px; /* Zakulacení rohu */
+    background-color: var(--levandule); 
+    border-radius: 4px; 
 }
 
 .log-page::-webkit-scrollbar-thumb:hover {
-    background-color: var(--fialova); /* Barva pøi najetí myší */
+    background-color: var(--fialova); 
 }
 
 .form-kontakty {
     background-color: white;
-    width: 70%; /* Nastavíme šíøku na 50% rodièe */
-    max-width: 600px; /* Maximální šíøka pro malé obrazovky */
-    margin: 20px auto; /* Automatické zarovnání na støed horizontálnì */
+    width: 70%; 
+    max-width: 600px; 
+    margin: 20px auto; 
     padding: 15px;
     border-radius: 10px;
-    border: 2px solid transparent; /* Umoní efekt rozplynutí na okrajích */
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Jemnı stín pro zvıraznìní */
+    border: 2px solid transparent; 
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
 }
 
     .form-kontakty label {
@@ -1030,7 +1001,7 @@ a.btn.btn-primary {
         }
 
     .form-kontakty button.btn-primary {
-        margin-top: 15px; /* Pøidá mezeru nad tlaèítko */
+        margin-top: 15px; 
     }
 
 /*-- emulace --*/
@@ -1091,24 +1062,21 @@ a.btn.btn-primary {
 /*-- vyhledávání --*/
 
 .table-wrapper {
-    display: block; /* Zajistí správné chování jako blok */
-    overflow-x: auto; /* Vodorovnı posuvník */
-    overflow-y: hidden; /* ádnı vertikální posuvník */
-    max-width: 100%; /* Kontejner se pøizpùsobí rodièi */
-    margin: 0 auto; /* Vycentrování */
-    padding-bottom: 8px; /* Rezerva pro scrollbar, pokud je potøeba */
+    display: block; 
+    overflow-x: auto; 
+    overflow-y: hidden; 
+    max-width: 100%; 
+    margin: 0 auto; 
+    padding-bottom: 8px; 
 }
 
 .search-page {
-    padding: 0; /* Odstranìní vnitøního odsazení */
+    padding: 0; 
     margin: 0 auto;
     overflow-y: auto;
-    overflow-y: hidden; /* Zakázat vertikální posuvník */
+    overflow-y: hidden; 
     direction: ltr;
-    /*max-height: 100vh;*/
-    /*max-height: 400px;*/
     max-width: 1500px;
-    /*box-sizing: border-box;*/
     width: 100%;
 }
 
@@ -1121,7 +1089,7 @@ a.btn.btn-primary {
     border-radius: 8px;
     overflow: hidden;
     margin-top: 30px;
-    direction: ltr; /* Obsah zùstane ve správném smìru */
+    direction: ltr; 
     cursor: url('/images/cursor.png'), auto;
     direction: ltr;
 }
@@ -1148,20 +1116,19 @@ a.btn.btn-primary {
         cursor: pointer;
     }
 
-/* Stylování posuvníku */
 .table-wrapper::-webkit-scrollbar {
-    width: 8px; /* Šíøka posuvníku */
+    width: 8px; 
     height: 8px;
-    background-color: #f4f4f4; /* Barva pozadí */
+    background-color: #f4f4f4; 
 }
 
 .table-wrapper::-webkit-scrollbar-thumb {
-    background-color: var(--levandule); /* Barva "palce" posuvníku */
-    border-radius: 4px; /* Zakulacení rohu */
+    background-color: var(--levandule); 
+    border-radius: 4px; 
 }
 
     .table-wrapper::-webkit-scrollbar-thumb:hover {
-        background-color: var(--fialova); /* Barva pøi najetí myší */
+        background-color: var(--fialova); 
     }
 
 
@@ -1179,43 +1146,41 @@ a.btn.btn-primary {
     color: var(--bordo);
     cursor: url('/images/cursor.png'), auto;
     display: flex;
-    align-items: flex-start; /* Zarovnání k levému okraji */ 
+    align-items: flex-start; 
 }
 
     .input-search-container label,
     .search-container label {
-        display: block; /* Kadı label bude na samostatném øádku */
+        display: block; 
         font-weight: bold;
         margin-bottom: 5px;
         color: #333;
-        cursor: url('/images/cursor.png'), auto; /* Kurzoru pøi kliknutí */
+        cursor: url('/images/cursor.png'), auto; 
     }
 
     .input-search-container input,
     .search-container input,
     .search-container select {
-        width: 100%; /* Zajišuje responzivní šíøku */
+        width: 100%; 
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        box-sizing: border-box; /* Zohledòuje padding pøi vıpoètu šíøky */
+        box-sizing: border-box; 
         font-size: 14px;
         width: 400px;
         cursor: url('/images/cursor.png'), auto;
     }
 
 .search-container select {
-    /*background-color: #fff;
-    cursor: pointer;*/
-    background-color: #fff; /* Bílı pozadí */
-    border: 1px solid #ccc; /* Svìtle šedı okraj */
-    padding: 10px 15px; /* Vnitøní odsazení */
-    border-radius: 4px; /* Zaoblené rohy */
-    font-size: 16px; /* Velikost písma */
-    cursor: pointer; /* Ukazatel pøi najetí */
-    width: 100%; /* Vıplò na celou šíøku kontejneru */
+    background-color: #fff; 
+    border: 1px solid #ccc; 
+    padding: 10px 15px; 
+    border-radius: 4px; 
+    font-size: 16px; 
+    cursor: pointer; 
+    width: 100%; 
     width: 400px;
-    transition: border-color 0.3s ease-in-out; /* Plynulı pøechod pro zmìnu okraje */
+    transition: border-color 0.3s ease-in-out; 
     cursor: url('/images/cursor.png'), auto;
 }
 
@@ -1225,7 +1190,7 @@ a.btn.btn-primary {
     margin-top: 10px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px; /* Velikost písma pro tlaèítko */
+    font-size: 16px; 
     background-color: var(--levandule);
     outline: none;
     color: white;
@@ -1233,20 +1198,19 @@ a.btn.btn-primary {
 }
 
     .search-container button:hover {
-        background-color: var(--fialova); /* Barva pøi hoveru */
+        background-color: var(--fialova); 
         border-color: var(--fialova);
         cursor: url('/images/cursor.png'), auto;
     }
 
     .search-container button:focus {
-        background-color: var(--fialova); /* Barva pøi hoveru */
+        background-color: var(--fialova); 
         border-color: var(--fialova);
         cursor: url('/images/cursor.png'), auto;
     }
 
 
     /* zobrazení informací u mého profilu*/
-/*------ Settings ------*/
 .container-profil2 {
     --color: #a5a5b0;
     --size: 30px;
@@ -1278,7 +1242,6 @@ a.btn.btn-primary {
         top: 5px;
     }
 
-    /* ------ On check event ------ */
     .container-profil2 input:checked ~ .eye {
         display: none;
         cursor: url('/images/cursor.png'), auto;
@@ -1289,7 +1252,6 @@ a.btn.btn-primary {
         cursor: url('/images/cursor.png'), auto;
     }
 
-    /* ------ Hide the default checkbox ------ */
     .container-profil2 input {
         position: absolute;
         opacity: 0;
@@ -1298,7 +1260,6 @@ a.btn.btn-primary {
         width: 0;
     }
 
-/* ------ Animation ------ */
 @keyframes keyframes-fill {
     0% {
         transform: scale(0);
@@ -1310,7 +1271,6 @@ a.btn.btn-primary {
     }
 }
 
-/* Zobrazení/skrytí informací na základì stavu checkboxu */
 #toggle-info:checked ~ #info-container #email,
 #toggle-info:checked ~ #info-container #telefon {
     display: inline;
@@ -1338,7 +1298,6 @@ a.btn.btn-primary {
     top: 330px;
 }
 
-/* ------ On check event ------ */
 .container-profil3 input:checked ~ .eye {
     display: none;
     cursor: url('/images/cursor.png'), auto;
@@ -1349,7 +1308,6 @@ a.btn.btn-primary {
     cursor: url('/images/cursor.png'), auto;
 }
 
-/* ------ Hide the default checkbox ------ */
 .container-profil3 input {
     position: absolute;
     opacity: 0;
@@ -1375,7 +1333,6 @@ a.btn.btn-primary {
     top: 790px;
 }
 
-/* ------ On check event ------ */
 .container-profil4 input:checked ~ .eye {
     display: none;
     cursor: url('/images/cursor.png'), auto;
@@ -1386,7 +1343,6 @@ a.btn.btn-primary {
     cursor: url('/images/cursor.png'), auto;
 }
 
-/* ------ Hide the default checkbox ------ */
 .container-profil4 input {
     position: absolute;
     opacity: 0;

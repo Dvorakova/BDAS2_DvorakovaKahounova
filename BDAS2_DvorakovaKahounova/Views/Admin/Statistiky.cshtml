@@ -50,5 +50,10 @@
 
 } else
 {
-    <h2>@ViewBag.Error</h2>
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            alert(@Html.Raw(Json.Serialize(ViewBag.Error)));
+        </script>
+    }
 }

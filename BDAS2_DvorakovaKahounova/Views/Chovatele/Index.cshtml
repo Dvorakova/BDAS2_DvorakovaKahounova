@@ -3,7 +3,9 @@
 <div class="conteiner-chovatele">
 	@if (TempData["Message"] != null)
 	{
-		<p>TempData["ErrorMessage"]</p>
+		<script>
+			alert(@Html.Raw(Json.Serialize(TempData["Message"])));
+		</script>
 	}
 	<table class="table-chovatele-vnejsi">
 		@foreach (var pes in Model)

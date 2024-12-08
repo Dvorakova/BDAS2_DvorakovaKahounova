@@ -29,13 +29,6 @@ namespace BDAS2_DvorakovaKahounova.Email
 
             return client.SendMailAsync(mailMessage);
 
-            //return client.SendMailAsync(
-            //    new MailMessage(from: fromEmail,
-            //                    to: "utuleklucky@gmail.com",
-            //                    subject,
-            //                    message
-            //                    ));
-
         }
     }
 }

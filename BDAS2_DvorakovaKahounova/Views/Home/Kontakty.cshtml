@@ -12,7 +12,7 @@
                 <p class="p-kontakty">
                     <strong>Majitel:</strong> Jan Novák<br />
                     <strong>Telefon:</strong> +420 123 456 789<br />
-                    <strong>Email:</strong> jan.novak@email.com<br />
+                    <strong>Email:</strong> utuleklucky@gmail.com<br />
                     <strong>Pracovní doba:</strong> Po-Pá 9:00 - 17:00
                 </p>
 
@@ -58,19 +58,22 @@
     </div>
 </div>
 
-
-
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
+    <script>
+        alert(@Html.Raw(Json.Serialize(TempData["SuccessMessage"])));
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const textarea = document.getElementById("Message");
+            if (textarea) textarea.value = ""; 
+        });
+    </script>
 }
 
 @if (TempData["ErrorMessage"] != null)
 {
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>
+    <script>
+        alert(@Html.Raw(Json.Serialize(TempData["ErrorMessage"])));
+    </script>
 }
 
