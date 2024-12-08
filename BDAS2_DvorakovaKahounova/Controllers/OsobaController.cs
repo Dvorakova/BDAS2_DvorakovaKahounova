@@ -236,8 +236,8 @@ namespace BDAS2_DvorakovaKahounova.Controllers
             {
                 ViewBag.CanEdit = true;
                 ViewBag.InvalidPassword = false;
-
-				var originalllRole = HttpContext.Session.GetString("OriginalRole");
+                ViewBag.IsOwner = true;
+                var originalllRole = HttpContext.Session.GetString("OriginalRole");
 				ViewData["IsAdmin"] = (User.Identity.IsAuthenticated && (originalllRole == "A" || User.IsInRole("A")));
 
 				return View("Profile", osoba); // Zobrazí profil s možností úprav
