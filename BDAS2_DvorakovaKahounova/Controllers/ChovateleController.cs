@@ -209,7 +209,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			if (action == "search")
 			{
 				ViewBag.CisloCipu = cisloCipu;
-				Console.WriteLine("cislo cipu v controlleru" + cisloCipu);
 				var idPsa = _dataAccess.GetPesIdByCisloCipu(cisloCipu);
 				PesMajitelModel viewModel = new PesMajitelModel();
 				if (idPsa.HasValue)
@@ -265,7 +264,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 				// Načtení hodnot z formuláře
 				var jmeno = Request.Form["jmeno"];
 				var cisloNovehoCipu = Request.Form["cisloCipu"];
-				Console.WriteLine("Číslo čipu: " + cisloNovehoCipu);
 				var datumNarozeni = string.IsNullOrEmpty(Request.Form["datumNarozeni"])
 									? (DateTime?)null
 									: DateTime.Parse(Request.Form["datumNarozeni"]);
@@ -327,7 +325,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 				// Přesměrování nebo zobrazení potvrzení
 				TempData["Message"] = "Pes byl úspěšně přidán!";
-				Console.WriteLine("Pes přidán");
 				ViewBag.Message = "Pes přidán";
 
 				var originallRole = HttpContext.Session.GetString("OriginalRole");
@@ -352,7 +349,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 				catch (Exception ex)
 				{
 					// Ošetření chyby
-					Console.WriteLine("Chyba při přidání nového pobytu pro psa.");
 					ViewBag.ErrorMessage = ex.Message;
 
 					var originallRole = HttpContext.Session.GetString("OriginalRole");

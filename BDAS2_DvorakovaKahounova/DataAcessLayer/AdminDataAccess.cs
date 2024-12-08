@@ -144,7 +144,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 				catch (Exception ex)
 				{
 					// Zpracování chyby
-					Console.WriteLine("Chyba při volání procedury: " + ex.Message);
 					pocetPsu = 0; // Pokud nastane chyba, nastavíme výstup na 0
 				}
 			}
@@ -427,7 +426,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Chyba při volání funkce: {ex.Message}");
 				throw;
 			}
 
@@ -497,7 +495,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Chyba při načítání zaměstnanců: {ex.Message}");
 				throw;
 			}
 
@@ -1340,8 +1337,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			using (var con = new OracleConnection(_connectionString))
 			{
 				con.Open();
-				Console.WriteLine("Před try dataAccess");
-				Console.WriteLine(fotografie.id_fotografie.ToString(), fotografie.nazev_souboru);
 				try
 				{
 					using (var cmd = new OracleCommand("update_fotografie", con))
@@ -1365,7 +1360,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine("try catch chyba"+ex.ToString());
 					throw new Exception("Došlo k chybě při ukládání fotografie.", ex);
 				}
 
@@ -1458,11 +1452,9 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 					var keyColumn = values.Keys.ElementAtOrDefault(3); // Získání názvu 4. sloupce (index 3)
 					if (keyColumn != null && int.TryParse(values[keyColumn], out primaryKeyID))
 					{
-						Console.WriteLine($"Primární klíč pro tabulku {tableName}: {primaryKeyID}");
 					}
 					else
 					{
-						Console.WriteLine($"Chyba: Nepodařilo se získat primární klíč pro tabulku {tableName}.");
 						return;
 					}
 				}
@@ -1472,11 +1464,9 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 					var keyColumn = values.Keys.FirstOrDefault(); // Získání názvu 1. sloupce
 					if (keyColumn != null && int.TryParse(values[keyColumn], out primaryKeyID))
 					{
-						Console.WriteLine($"Primární klíč pro tabulku {tableName}: {primaryKeyID}");
 					}
 					else
 					{
-						Console.WriteLine($"Chyba: Nepodařilo se získat primár  ní klíč pro tabulku {tableName}.");
 						return;
 					}
 				}
@@ -1528,11 +1518,9 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 						var keyColumn = values.Keys.ElementAtOrDefault(1);
 						if (keyColumn != null && int.TryParse(values[keyColumn], out secondaryKeyID))
 						{
-							Console.WriteLine($"Primární klíč pro tabulku {tableName}: {secondaryKeyID}");
 						}
 						else
 						{
-							Console.WriteLine($"Chyba: Nepodařilo se získat primární klíč pro tabulku {tableName}.");
 							return;
 						}
 						CallDeleteDogsProcedure(primaryKeyID, secondaryKeyID);
@@ -1589,7 +1577,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 					}
 				}
 
-				Console.WriteLine($"Procedura {procedureName} byla úspěšně vykonána pro ID {primaryKeyID}.");
 			}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //--------------------------------------------------------------------------------------------------------------------------------------------------

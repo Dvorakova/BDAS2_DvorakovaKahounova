@@ -268,7 +268,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 
 				var adminId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
 				HttpContext.Session.SetString("OriginalUserId", adminId ?? "0"); // původní id
-				Console.WriteLine("Emulace poprvé. Id: " + adminId);
 			}
 
 			// Získání dat uživatele z databáze
@@ -509,7 +508,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 		[HttpPost]
 		public IActionResult UpdatePhoto(IFormFile file, int id_fotografie)
 		{
-			Console.WriteLine("V controlleru");
 			if (file != null && file.Length > 0)
 			{
 				using (var memoryStream = new MemoryStream())
@@ -528,17 +526,14 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 						nahrano_id_osoba = GetLoggedInUserId(), // Metoda pro získání ID přihlášeného uživatele
 						obsah_souboru = memoryStream.ToArray()
 					};
-					Console.WriteLine("Před try");
 					try
 					{
-						Console.WriteLine("V try");
 						// Uložení fotografie do databáze pomocí metody ve dataAccess
 						_dataAccess.UpdateFotografie(fotografie);
 						return RedirectToAction("Index");
 					}
 					catch (Exception ex)
 					{
-						Console.WriteLine("V contorlleru. " + ex);
 						TempData["ErrorMessage"] = "Došlo k chybě při nahrávání fotografie.";
 						return RedirectToAction("Index");
 					}
@@ -546,7 +541,6 @@ namespace BDAS2_DvorakovaKahounova.Controllers
 			}
 			else
 			{
-				Console.WriteLine("Nevybrán soubor");
 				TempData["ErrorMessage"] = "Nebyl vybrán žádný soubor.";
 				return View();
 			}

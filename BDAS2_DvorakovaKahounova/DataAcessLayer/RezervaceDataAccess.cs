@@ -176,16 +176,12 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
                 try
                 {
-                    Console.WriteLine("0");
                     // Zpracování změny rezervátora (aktualizace typu osoby)
                     ZpracujRezervatorZmena(majitelIdOsoba, idPes, con, transaction);
-					Console.WriteLine("1");
 					// Přidání majitele do tabulky majitele, pokud už tam není
 					PridejMajitele(majitelIdOsoba, con, transaction);
-					Console.WriteLine("2");
 					// Přidání adopce do tabulky Adopce
 					PridejAdopci(idPes, majitelIdOsoba, con, transaction);
-					Console.WriteLine("3");
 					// Pokud všechny operace proběhnou úspěšně, commitujeme transakci
 					transaction.Commit();
                 }
@@ -218,7 +214,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
         public bool ExistujeRezervace(int rezervatorIdOsoba, int idPes, OracleConnection con, OracleTransaction transaction)
         {
-            Console.WriteLine("id osoby v Existuje rezervace:" + rezervatorIdOsoba);
             using (var cmd = new OracleCommand("SELECT ExistujeRezervace(:rezervatorIdOsoba, :idPes) FROM dual", con))
             {
 				cmd.Transaction = transaction;
@@ -231,7 +226,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                 // Pokud je výsledek null, vrátíme false
                 if (result == DBNull.Value)
                 {
-                    Console.WriteLine("Výsledek funkce je NULL");
                     return false;
                 }
 
@@ -309,7 +303,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
                     // Pokud je výsledek null, vrátíme 'Pes nemá aktivní pobyt'
                     if (result == DBNull.Value)
                     {
-                        Console.WriteLine("Výsledek funkce je NULL");
                         return "Pes nemá aktivní pobyt.";
                     }
 

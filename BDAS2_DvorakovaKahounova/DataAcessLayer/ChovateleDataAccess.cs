@@ -359,7 +359,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 							else
 							{
 								// Pokud není řádek v cursoru, vracíme NULL
-								Console.WriteLine("Pes nenalezen.");
 								return null;
 							}
 						}
@@ -368,7 +367,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Chyba při volání funkce: {ex.Message}");
 				throw;
 			}
 		}
@@ -391,7 +389,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 						Nazev = reader["nazev"].ToString()
 					});
 				}
-				Console.WriteLine($"Počet načtených barev: {barvy.Count}");
 				return barvy;
 			}
 		}
@@ -855,7 +852,6 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 
 		public bool ExistujeRezervace(int rezervatorIdOsoba, int idPes, OracleConnection con, OracleTransaction transaction)
 		{
-			Console.WriteLine("id osoby v Existuje rezervace:" + rezervatorIdOsoba);
 			using (var cmd = new OracleCommand("SELECT ExistujeRezervace(:rezervatorIdOsoba, :idPes) FROM dual", con))
 			{
 				cmd.Transaction = transaction;
@@ -868,12 +864,9 @@ namespace BDAS2_DvorakovaKahounova.DataAcessLayer
 				// Pokud je výsledek null, vrátíme false
 				if (result == DBNull.Value)
 				{
-					Console.WriteLine("Výsledek funkce je NULL");
 					return false;
 				}
 
-				// Výpis výsledku pro debugování
-				Console.WriteLine("result v ExistujeRezervace je: " + result + " (1 znamená TRUE, 0 znamená FALSE)");
 
 				// Kontrola, zda výsledek je 1 (TRUE) nebo 0 (FALSE)
 				return Convert.ToInt32(result) == 1;
